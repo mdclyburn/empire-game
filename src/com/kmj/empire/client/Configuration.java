@@ -1,5 +1,12 @@
 package com.kmj.empire.client;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
+
 public class Configuration {
 	
 	private String username;
@@ -8,6 +15,8 @@ public class Configuration {
 	private int serverPort;
 	
 	private static Configuration configuration;
+	
+	public static final String CONFIGURATION_FILE = "resources/client_configuration";
 	
 	private Configuration() {
 		username = "";
@@ -32,4 +41,53 @@ public class Configuration {
 	public String getPassword() { return password; }
 	public String getServerAddress() { return serverAddress; }
 	public int getServerPort() { return serverPort; }
+	
+	// Load the serialized Configuration from disk.
+	public void save() {
+		File configurationFile = new File(CONFIGURATION_FILE);
+		
+		// Check for file.
+		if(!configurationFile.exists() || configurationFile.isDirectory()) {
+			System.out.println("The configuration file \'" + CONFIGURATION_FILE + "\' could not be " +
+					"opened because it does not exist, or it is a directory.");
+		}
+		else {
+			try {
+				FileInputStream fis = new FileInputStream(configurationFile);
+				ObjectInputStream ois = new ObjectInputStream(fis);
+				configuration = (Configuration) ois.readObject();
+				ois.close();
+				fis.close();
+				System.out.println("Loaded configuration from file.");
+			}
+			catch(ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+			catch(IOException e) {
+				System.out.println("The configuration file \'" + CONFIGURATION_FILE + "\' does not exist.");
+			}
+		}
+	}
+	
+	public void load() {
+		File configurationFile = new File(CONFIGURATION_FILE);
+		
+		// Check for file.
+		if(!configurationFile.exists() || configurationFile.isDirectory()) {
+			System.out.println("The configuration file \'" + CONFIGURATION_FILE + "\' could not be " +
+					"opened because it does not exist, or it is a directory.");
+		}
+		else {
+			try {
+				FileOutputStream fos = new FileOutputStream(configurationFile);
+				ObjectOutputStream oos = new ObjectOutputStream(fos);
+				oos.writeObject(configuration);
+				oos.close();
+				fos.close();
+			}
+			catch(IOException e) {
+				System.out.println("Failed to save configuration to file.");
+			}
+		}
+	}
 }
