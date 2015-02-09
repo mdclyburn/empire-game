@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 
 public class Configuration {
 	
@@ -68,6 +70,24 @@ public class Configuration {
 	}
 	
 	public void load() {
+		File configurationFile = new File(CONFIGURATION_FILE);
 		
+		// Check for file.
+		if(!configurationFile.exists() || configurationFile.isDirectory()) {
+			System.out.println("The configuration file \'" + CONFIGURATION_FILE + "\' could not be " +
+					"opened because it does not exist, or it is a directory.");
+		}
+		else {
+			try {
+				FileOutputStream fos = new FileOutputStream(configurationFile);
+				ObjectOutputStream oos = new ObjectOutputStream(fos);
+				oos.writeObject(configuration);
+				oos.close();
+				fos.close();
+			}
+			catch(IOException e) {
+				System.out.println("Failed to save configuration to file.");
+			}
+		}
 	}
 }
