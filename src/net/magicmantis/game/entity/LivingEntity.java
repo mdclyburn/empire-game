@@ -7,7 +7,6 @@ This interface should be implemented by any living Entity. Allows for health and
  */
 
 import net.magicmantis.game.level.*;
-import net.magicmantis.game.render.*;
 
 public abstract class LivingEntity extends Entity {
 

@@ -7,7 +7,6 @@ Class handles code for creating, interacting with, and rendering buttons on menu
  */
 
 import net.magicmantis.game.Game;
-import net.magicmantis.game.InputHandler;
 import net.magicmantis.game.render.Screen;
 
 public class ButtonImpl {

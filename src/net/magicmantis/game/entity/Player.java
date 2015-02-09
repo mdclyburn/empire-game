@@ -6,7 +6,6 @@ Class: Player
 This class is handles the player Entity.
  */
 
-import jdk.internal.util.xml.impl.Input;
 import net.magicmantis.game.InputHandler;
 import net.magicmantis.game.level.*;
 import net.magicmantis.game.render.*;
