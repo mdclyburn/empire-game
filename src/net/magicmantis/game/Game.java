@@ -11,10 +11,13 @@ import net.magicmantis.game.menu.Action;
 import net.magicmantis.game.menu.ButtonImpl;
 import net.magicmantis.game.menu.Menu;
 import net.magicmantis.game.render.*;
+
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
+import java.io.File;
 
 public class Game extends Canvas implements Runnable {
 
@@ -75,7 +78,7 @@ public class Game extends Canvas implements Runnable {
         buffer = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
         pixels = ((DataBufferInt) buffer.getRaster().getDataBuffer()).getData();
 
-        screen = new Screen(width, height, new SpriteSheet(32, 32, "/main/resources/SpriteSheet.png"));
+        screen = new Screen(width, height, new SpriteSheet(32, 32, "resources/SpriteSheet.png"));
     }
 
     private void setupInput() {

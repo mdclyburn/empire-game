@@ -6,9 +6,11 @@ Class: SpriteSheet
 This class accepts the file path of an image and turns it into a SpriteSheet
  */
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 public class SpriteSheet {
 
@@ -24,7 +26,7 @@ public class SpriteSheet {
 
         //read the SpriteSheet image
         try {
-            image = ImageIO.read(getClass().getResourceAsStream(imagePath));
+            image = ImageIO.read(new File(imagePath));
         } catch (IOException ioe) {
             System.out.println("Couldn't find image: "+imagePath);
             return;
