@@ -6,7 +6,6 @@ Class: ButtonHighLight
 Wrapper for the Button class that adds a second sprite for when the mouse is hovering over it.
  */
 
-import net.magicmantis.game.Game;
 import net.magicmantis.game.render.Screen;
 
 public class ButtonHighlight implements Button {
