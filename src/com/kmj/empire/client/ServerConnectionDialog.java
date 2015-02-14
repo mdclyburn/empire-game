@@ -88,6 +88,7 @@ public class ServerConnectionDialog extends JFrame implements ActionListener {
 		// Port field:
 		portField = new JTextField();
 		portField.setBounds(LINE_START_X + LABEL_WIDTH + PADDING, LINE_START_Y + (LINE_HEIGHT * 1), FIELD_WIDTH / 5, FIELD_HEIGHT);
+		
 		add(portField);
 		
 		// Username field:
@@ -131,9 +132,14 @@ public class ServerConnectionDialog extends JFrame implements ActionListener {
 		// Initiate connection to server.
 		if(s.equals(ACTION_CONNECT)) {
 			try {
+				// A bit of a kludge here. Go ahead and check the port field
+				// first and throw an exception.
+				int port;
+				try { port = Integer.parseInt(portField.getText()); }
+				catch(NumberFormatException n) { throw new BadConfigurationException("Invalid characters in port field."); }
 				Configuration conf = Configuration.getInstance();
 				conf.setServerAddress(addressField.getText());
-				conf.setServerPort(Integer.parseInt(portField.getText()));
+				conf.setServerPort(port);
 				conf.setUsername(usernameField.getText());
 				conf.setPassword(passwordField.getText());
 			}
