@@ -11,8 +11,17 @@ import javax.swing.JTextField;
 
 public class ServerConnectionDialog extends JFrame implements ActionListener {
 	
-	// Define the positioning of elements based on these
-	// values.
+	// =======================
+	// ===== TEXT FIELDS =====
+	// =======================
+	protected JTextField addressField;
+	protected JTextField portField;
+	protected JTextField usernameField;
+	protected JTextField passwordField;
+	
+	// ==============================
+	// ===== POSITIONING VALUES =====
+	// ==============================
 	protected final static int WINDOW_WIDTH = 500;
 	protected final static int WINDOW_HEIGHT = 225;
 	protected final static int PADDING = 15;
@@ -30,11 +39,6 @@ public class ServerConnectionDialog extends JFrame implements ActionListener {
 	// ==============================
 	protected final static String ACTION_CONNECT = "connect";
 	protected final static String ACTION_CANCEL = "cancel";
-	
-	protected JTextField addressField;
-	protected JTextField portField;
-	protected JTextField usernameField;
-	protected JTextField passwordField;
 
 	public ServerConnectionDialog() {
 		super();
