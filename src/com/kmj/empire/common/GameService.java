@@ -11,4 +11,5 @@ public interface GameService {
 	// Get the list of active games from the server.
 	// Returns an ArrayList on success; throws exception on failure.
 	public ArrayList<Game> getGameList() throws ConnectionFailedException;
+
 }
