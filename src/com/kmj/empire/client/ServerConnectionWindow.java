@@ -155,6 +155,7 @@ public class ServerConnectionWindow extends JFrame implements ActionListener {
 				int id = server.authenticate(Configuration.getInstance().getUsername(),
 						Configuration.getInstance().getPassword());
 				ServerListWindow serverListWindow = new ServerListWindow(id);
+				dispose();
 			}
 			catch(AuthenticationFailedException a) {
 				JOptionPane.showMessageDialog(this, a.getMessage(), "Authentication Error", JOptionPane.ERROR_MESSAGE);
