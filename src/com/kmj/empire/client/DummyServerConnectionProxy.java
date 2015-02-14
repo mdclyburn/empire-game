@@ -11,6 +11,10 @@ import com.kmj.empire.common.GameService;
 
 public class DummyServerConnectionProxy implements GameService {
 
+	public DummyServerConnectionProxy() {
+		
+	}
+
 	// This function will always proceed to feed the client
 	// a valid ID that will allow it to interact with a non-existent
 	// server.
