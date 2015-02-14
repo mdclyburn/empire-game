@@ -25,6 +25,12 @@ public class ServerConnectionDialog extends JFrame implements ActionListener {
 	protected final static int BUTTON_WIDTH = FIELD_WIDTH / 3;
 	protected final static int BUTTON_HEIGHT = LINE_HEIGHT;
 	
+	// ==============================
+	// ===== ACTION DEFINITIONS =====
+	// ==============================
+	protected final static String ACTION_CONNECT = "connect";
+	protected final static String ACTION_CANCEL = "cancel";
+	
 	protected JTextField addressField;
 	protected JTextField portField;
 	protected JTextField usernameField;
@@ -98,12 +104,16 @@ public class ServerConnectionDialog extends JFrame implements ActionListener {
 		button = new JButton();
 		button.setText("Connect");
 		button.setBounds(LINE_START_X, LINE_START_Y + (LINE_HEIGHT * 5), BUTTON_WIDTH, BUTTON_HEIGHT);
+		button.addActionListener(this);
+		button.setActionCommand(ACTION_CONNECT);
 		add(button);
 		
 		// Close button:
 		button = new JButton();
 		button.setText("Close");
 		button.setBounds(LINE_START_X + PADDING + BUTTON_WIDTH, LINE_START_Y + (LINE_HEIGHT * 5), BUTTON_WIDTH, BUTTON_HEIGHT);
+		button.addActionListener(this);
+		button.setActionCommand(ACTION_CANCEL);
 		add(button);
 		
 		setVisible(true);
