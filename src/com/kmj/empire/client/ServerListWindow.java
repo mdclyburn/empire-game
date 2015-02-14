@@ -1,5 +1,7 @@
 package com.kmj.empire.client;
 
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.ArrayList;
@@ -18,7 +20,7 @@ import com.kmj.empire.common.GameService;
 // on a server. The session ID should be set before
 // the client queries the server.
 
-public class ServerListWindow extends JFrame implements WindowListener {
+public class ServerListWindow extends JFrame implements WindowListener, MouseListener {
 
 	protected int sessionId;
 	protected ArrayList<Game> gameList;
@@ -26,6 +28,7 @@ public class ServerListWindow extends JFrame implements WindowListener {
 	protected GameService server;
 	
 	protected JTable table;
+	protected JButton joinButton; // Needed for dynamic behaviour.
 	
 	protected static final int WINDOW_WIDTH = 800;
 	protected static final int WINDOW_HEIGHT = 450;
@@ -60,6 +63,7 @@ public class ServerListWindow extends JFrame implements WindowListener {
 		// Set up JTable.
 		table = new JTable();
 		table.setBounds(PADDING, PADDING, TABLE_WIDTH, TABLE_HEIGHT);
+		table.addMouseListener(this);
 		JScrollPane jsp = new JScrollPane(table);
 		jsp.setBounds(table.getBounds());
 		add(jsp);
@@ -77,6 +81,7 @@ public class ServerListWindow extends JFrame implements WindowListener {
 		button.setBounds(PADDING + (BUTTON_WIDTH + PADDING), PADDING + TABLE_HEIGHT + PADDING, BUTTON_WIDTH, BUTTON_HEIGHT);
 		button.setEnabled(false); // Only enable when an item is selected.
 		add(button);
+		joinButton = button;
 		
 		button = new JButton("Disconnect");
 		button.setBounds(PADDING + (2 * (BUTTON_WIDTH + PADDING)), PADDING + TABLE_HEIGHT + PADDING, BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -107,6 +112,11 @@ public class ServerListWindow extends JFrame implements WindowListener {
 		dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 		return;
 	}
+	
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		joinButton.setEnabled(true);
+	}
 
 	@Override
 	public void windowClosing(WindowEvent e) {
@@ -136,4 +146,16 @@ public class ServerListWindow extends JFrame implements WindowListener {
 
 	@Override
 	public void windowDeactivated(WindowEvent e) {}
+
+	@Override
+	public void mousePressed(MouseEvent e) {}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {}
+
+	@Override
+	public void mouseExited(MouseEvent e) {}
 }
