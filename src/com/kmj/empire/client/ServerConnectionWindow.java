@@ -11,6 +11,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import com.kmj.empire.common.AuthenticationFailedException;
+import com.kmj.empire.common.ConnectionFailedException;
+
 public class ServerConnectionWindow extends JFrame implements ActionListener {
 	
 	// =======================
@@ -146,6 +149,20 @@ public class ServerConnectionWindow extends JFrame implements ActionListener {
 			catch(BadConfigurationException b) {
 				JOptionPane.showMessageDialog(this, b.getMessage(), "Configuration Error", JOptionPane.ERROR_MESSAGE);
 			}
+			
+			try {
+				DummyServerConnectionProxy server = new DummyServerConnectionProxy();
+				int id = server.authenticate(Configuration.getInstance().getUsername(),
+						Configuration.getInstance().getPassword());
+				ServerListWindow serverListWindow = new ServerListWindow(id);
+			}
+			catch(AuthenticationFailedException a) {
+				JOptionPane.showMessageDialog(this, a.getMessage(), "Authentication Error", JOptionPane.ERROR_MESSAGE);
+			}
+			catch(ConnectionFailedException c) {
+				JOptionPane.showMessageDialog(this, c.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
+			}
+			
 		}
 		
 		// Close window.
