@@ -35,7 +35,7 @@ public class DummyServerConnectionProxy implements GameService {
 	// the purposes of this class and do not represent actual, live
 	// Games.
 	@Override
-	public ArrayList<Game> getGameList() throws ConnectionFailedException {
+	public ArrayList<Game> getGameList(int sessionId) throws ConnectionFailedException {
 		return gameList;
 	}
 
