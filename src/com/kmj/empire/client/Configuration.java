@@ -26,7 +26,7 @@ public class Configuration {
 	}
 
 	static {
-		Configuration configuration = new Configuration();
+		configuration = new Configuration();
 	}
 	
 	public static Configuration getInstance() { return configuration; }
