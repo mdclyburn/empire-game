@@ -1,0 +1,84 @@
+package com.kmj.empire.client;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+
+public class ServerConnectionDialog extends JFrame {
+	
+	protected final static int WINDOW_WIDTH = 500;
+	protected final static int WINDOW_HEIGHT = 200;
+	protected final static int PADDING = 15;
+	protected final static int LINE_START_X = PADDING;
+	protected final static int LINE_START_Y = PADDING;
+	protected final static int LINE_HEIGHT = 30;
+	protected final static int LABEL_WIDTH = WINDOW_WIDTH / 5;
+	protected final static int FIELD_WIDTH = WINDOW_WIDTH - LABEL_WIDTH - (3 * PADDING);
+	protected final static int FIELD_HEIGHT = LINE_HEIGHT;
+	
+	protected JTextField addressField;
+	protected JTextField portField;
+	protected JTextField usernameField;
+	protected JTextField passwordField;
+
+	public ServerConnectionDialog() {
+		super();
+		setTitle("Connect To Server");
+		setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setLayout(null);
+		
+		setResizable(false);
+		
+		// =======================
+		// ===== LABEL SETUP =====
+		// =======================
+		JLabel label;
+		
+		// Server address label:
+		label = new JLabel("Address:");
+		label.setBounds(LINE_START_X, LINE_START_Y, LABEL_WIDTH, LINE_HEIGHT);
+		add(label);
+		
+		// Server port label:
+		label = new JLabel("Port:");
+		label.setBounds(LINE_START_X, LINE_START_Y + (LINE_HEIGHT * 1), LABEL_WIDTH, LINE_HEIGHT);
+		add(label);
+		
+		// Username label:
+		label = new JLabel("Username:");
+		label.setBounds(LINE_START_X, LINE_START_Y + (LINE_HEIGHT * 2), LABEL_WIDTH, LINE_HEIGHT);
+		add(label);
+		
+		// Password label:
+		label = new JLabel("Password:");
+		label.setBounds(LINE_START_X, LINE_START_Y + (LINE_HEIGHT * 3), LABEL_WIDTH, LINE_HEIGHT);
+		add(label);
+		
+		// ===========================
+		// ===== TEXTFIELD SETUP =====
+		// ===========================
+		
+		// Address field:
+		addressField = new JTextField();
+		addressField.setBounds(LINE_START_X + LABEL_WIDTH + PADDING, LINE_START_Y, FIELD_WIDTH, FIELD_HEIGHT);
+		add(addressField);
+		
+		// Port field:
+		portField = new JTextField();
+		portField.setBounds(LINE_START_X + LABEL_WIDTH + PADDING, LINE_START_Y + (LINE_HEIGHT * 1), FIELD_WIDTH / 5, FIELD_HEIGHT);
+		add(portField);
+		
+		// Username field:
+		usernameField = new JTextField();
+		usernameField.setBounds(LINE_START_X + LABEL_WIDTH + PADDING, LINE_START_Y + (LINE_HEIGHT * 2), FIELD_WIDTH, FIELD_HEIGHT);
+		add(usernameField);
+		
+		// Password field:
+		passwordField = new JTextField();
+		passwordField.setBounds(LINE_START_X + LABEL_WIDTH + PADDING, LINE_START_Y + (LINE_HEIGHT * 3), FIELD_WIDTH, FIELD_HEIGHT);
+		add(passwordField);
+		
+		setVisible(true);
+	}
+}
