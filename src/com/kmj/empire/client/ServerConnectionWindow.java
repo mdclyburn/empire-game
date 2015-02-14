@@ -148,6 +148,7 @@ public class ServerConnectionWindow extends JFrame implements ActionListener {
 			}
 			catch(BadConfigurationException b) {
 				JOptionPane.showMessageDialog(this, b.getMessage(), "Configuration Error", JOptionPane.ERROR_MESSAGE);
+				return;
 			}
 			
 			try {
