@@ -4,6 +4,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.ArrayList;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -28,7 +29,14 @@ public class ServerListWindow extends JFrame implements WindowListener {
 	
 	protected static final int WINDOW_WIDTH = 800;
 	protected static final int WINDOW_HEIGHT = 450;
+	
 	protected static final int PADDING = 15;
+	
+	protected static final int TABLE_WIDTH = WINDOW_WIDTH - (2 * PADDING);
+	protected static final int TABLE_HEIGHT = 4 * WINDOW_HEIGHT / 5;
+	
+	protected static final int BUTTON_WIDTH = 100;
+	protected static final int BUTTON_HEIGHT = 30;
 
 	public ServerListWindow() {
 		super();
@@ -51,10 +59,28 @@ public class ServerListWindow extends JFrame implements WindowListener {
 		
 		// Set up JTable.
 		table = new JTable();
-		table.setBounds(PADDING, PADDING, WINDOW_WIDTH - (2 * PADDING), 4 * WINDOW_HEIGHT / 5);
+		table.setBounds(PADDING, PADDING, TABLE_WIDTH, TABLE_HEIGHT);
 		JScrollPane jsp = new JScrollPane(table);
 		jsp.setBounds(table.getBounds());
 		add(jsp);
+		
+		// ===================
+		// ===== BUTTONS =====
+		// ===================
+		JButton button;
+		
+		button = new JButton("Create");
+		button.setBounds(PADDING, PADDING + TABLE_HEIGHT + PADDING, BUTTON_WIDTH, BUTTON_HEIGHT);
+		add(button);
+		
+		button = new JButton("Join");
+		button.setBounds(PADDING + (BUTTON_WIDTH + PADDING), PADDING + TABLE_HEIGHT + PADDING, BUTTON_WIDTH, BUTTON_HEIGHT);
+		button.setEnabled(false); // Only enable when an item is selected.
+		add(button);
+		
+		button = new JButton("Disconnect");
+		button.setBounds(PADDING + (2 * (BUTTON_WIDTH + PADDING)), PADDING + TABLE_HEIGHT + PADDING, BUTTON_WIDTH, BUTTON_HEIGHT);
+		add(button);
 		
 		// Get active game list. This uses the dummy service for
 		// the prototype and should be changed later.
