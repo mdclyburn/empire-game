@@ -2,6 +2,7 @@ package com.kmj.empire.client;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -124,6 +125,17 @@ public class ServerConnectionDialog extends JFrame implements ActionListener {
 	}
 	
 	public void actionPerformed(ActionEvent e) {
+		String s = e.getActionCommand();
 		
+		// Initiate connection to server.
+		if(s.equals(ACTION_CONNECT)) {
+			
+		}
+		
+		// Close window.
+		else if(s.equals(ACTION_CANCEL)) {
+			setVisible(false);
+			dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+		}
 	}
 }
