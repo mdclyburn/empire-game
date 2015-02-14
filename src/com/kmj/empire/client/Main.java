@@ -8,6 +8,6 @@ public class Main {
 		// prompt the user to enter details. The window
 		// handles the launching of the needed tasks. This
 		// is all that is needed here.
-		ServerConnectionDialog d = new ServerConnectionDialog();
+		ServerConnectionWindow d = new ServerConnectionWindow();
 	}
 }

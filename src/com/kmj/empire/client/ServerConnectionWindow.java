@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-public class ServerConnectionDialog extends JFrame implements ActionListener {
+public class ServerConnectionWindow extends JFrame implements ActionListener {
 	
 	// =======================
 	// ===== TEXT FIELDS =====
@@ -42,7 +42,7 @@ public class ServerConnectionDialog extends JFrame implements ActionListener {
 	protected final static String ACTION_CONNECT = "connect";
 	protected final static String ACTION_CANCEL = "cancel";
 
-	public ServerConnectionDialog() {
+	public ServerConnectionWindow() {
 		super();
 		setTitle("Connect To Server");
 		setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
