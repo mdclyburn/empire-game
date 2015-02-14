@@ -1,12 +1,15 @@
 package com.kmj.empire.client;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-public class ServerConnectionDialog extends JFrame {
+public class ServerConnectionDialog extends JFrame implements ActionListener {
 	
 	// Define the positioning of elements based on these
 	// values.
@@ -104,5 +107,9 @@ public class ServerConnectionDialog extends JFrame {
 		add(button);
 		
 		setVisible(true);
+	}
+	
+	public void actionPerformed(ActionEvent e) {
+		
 	}
 }
