@@ -32,10 +32,39 @@ public class Configuration {
 	public static Configuration getInstance() { return configuration; }
 	
 	// Getters and Setters
-	public void setUsername(String username) { this.username = username; }
-	public void setPassword(String password) { this.password = password; }
-	public void setServerAddress(String serverAddress) { this.serverAddress = serverAddress; }
-	public void setServerPort(int serverPort) { this.serverPort = serverPort; }
+	public void setUsername(String username) throws BadConfigurationException {
+		// The username:
+		// - cannot be blank
+		if(username.length() == 0)
+			throw new BadConfigurationException("The username cannot be blank.");
+		this.username = username;
+	}
+	
+	public void setPassword(String password) throws BadConfigurationException {
+		// The password:
+		// - cannot be blank
+		if(password.length() == 0)
+			throw new BadConfigurationException("The password cannot be blank.");
+		this.password = password;
+	}
+	
+	public void setServerAddress(String serverAddress) throws BadConfigurationException {
+		// The server address:
+		// - cannot be blank
+		if(serverAddress.length() == 0)
+			throw new BadConfigurationException("The server address cannot be blank.");
+		this.serverAddress = serverAddress;
+	}
+	public void setServerPort(int serverPort) throws BadConfigurationException {
+		// The server port:
+		// - must be greater than or equal to 0
+		// - must be less than 65536
+		if(serverPort < 0)
+			throw new BadConfigurationException("The port number cannot be less than zero.");
+		else if(serverPort > 65535)
+			throw new BadConfigurationException("The port number cannot be greater than 65535.");
+		this.serverPort = serverPort;
+	}
 	
 	public String getUsername() { return username; }
 	public String getPassword() { return password; }
