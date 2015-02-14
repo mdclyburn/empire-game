@@ -1,13 +1,17 @@
 package com.kmj.empire.client;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 public class ServerConnectionDialog extends JFrame {
 	
+	// Define the positioning of elements based on these
+	// values.
 	protected final static int WINDOW_WIDTH = 500;
-	protected final static int WINDOW_HEIGHT = 200;
+	protected final static int WINDOW_HEIGHT = 225;
 	protected final static int PADDING = 15;
 	protected final static int LINE_START_X = PADDING;
 	protected final static int LINE_START_Y = PADDING;
@@ -15,6 +19,8 @@ public class ServerConnectionDialog extends JFrame {
 	protected final static int LABEL_WIDTH = WINDOW_WIDTH / 5;
 	protected final static int FIELD_WIDTH = WINDOW_WIDTH - LABEL_WIDTH - (3 * PADDING);
 	protected final static int FIELD_HEIGHT = LINE_HEIGHT;
+	protected final static int BUTTON_WIDTH = FIELD_WIDTH / 3;
+	protected final static int BUTTON_HEIGHT = LINE_HEIGHT;
 	
 	protected JTextField addressField;
 	protected JTextField portField;
@@ -75,9 +81,27 @@ public class ServerConnectionDialog extends JFrame {
 		add(usernameField);
 		
 		// Password field:
-		passwordField = new JTextField();
+		passwordField = new JPasswordField();
 		passwordField.setBounds(LINE_START_X + LABEL_WIDTH + PADDING, LINE_START_Y + (LINE_HEIGHT * 3), FIELD_WIDTH, FIELD_HEIGHT);
 		add(passwordField);
+		
+		// ========================
+		// ===== BUTTON SETUP =====
+		// ========================
+		
+		JButton button;
+		
+		// Connect button:
+		button = new JButton();
+		button.setText("Connect");
+		button.setBounds(LINE_START_X, LINE_START_Y + (LINE_HEIGHT * 5), BUTTON_WIDTH, BUTTON_HEIGHT);
+		add(button);
+		
+		// Close button:
+		button = new JButton();
+		button.setText("Close");
+		button.setBounds(LINE_START_X + PADDING + BUTTON_WIDTH, LINE_START_Y + (LINE_HEIGHT * 5), BUTTON_WIDTH, BUTTON_HEIGHT);
+		add(button);
 		
 		setVisible(true);
 	}
