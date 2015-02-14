@@ -7,6 +7,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
@@ -129,7 +130,16 @@ public class ServerConnectionDialog extends JFrame implements ActionListener {
 		
 		// Initiate connection to server.
 		if(s.equals(ACTION_CONNECT)) {
-			
+			try {
+				Configuration conf = Configuration.getInstance();
+				conf.setServerAddress(addressField.getText());
+				conf.setServerPort(Integer.parseInt(portField.getText()));
+				conf.setUsername(usernameField.getText());
+				conf.setPassword(passwordField.getText());
+			}
+			catch(BadConfigurationException b) {
+				JOptionPane.showMessageDialog(this, b.getMessage(), "Configuration Error", JOptionPane.ERROR_MESSAGE);
+			}
 		}
 		
 		// Close window.
