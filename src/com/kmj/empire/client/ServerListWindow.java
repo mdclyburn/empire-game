@@ -1,5 +1,7 @@
 package com.kmj.empire.client;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
@@ -20,7 +22,7 @@ import com.kmj.empire.common.GameService;
 // on a server. The session ID should be set before
 // the client queries the server.
 
-public class ServerListWindow extends JFrame implements WindowListener, MouseListener {
+public class ServerListWindow extends JFrame implements ActionListener, MouseListener, WindowListener {
 
 	protected int sessionId;
 	protected ArrayList<Game> gameList;
@@ -40,6 +42,10 @@ public class ServerListWindow extends JFrame implements WindowListener, MouseLis
 	
 	protected static final int BUTTON_WIDTH = 100;
 	protected static final int BUTTON_HEIGHT = 30;
+
+	protected static final String ACTION_CREATE = "create";
+	protected static final String ACTION_JOIN = "join";
+	protected static final String ACTION_DISCONNECT = "disconnect";
 
 	public ServerListWindow() {
 		super();
@@ -75,16 +81,22 @@ public class ServerListWindow extends JFrame implements WindowListener, MouseLis
 		
 		button = new JButton("Create");
 		button.setBounds(PADDING, PADDING + TABLE_HEIGHT + PADDING, BUTTON_WIDTH, BUTTON_HEIGHT);
+		button.setActionCommand(ACTION_CREATE);
+		button.addActionListener(this);
 		add(button);
 		
 		button = new JButton("Join");
 		button.setBounds(PADDING + (BUTTON_WIDTH + PADDING), PADDING + TABLE_HEIGHT + PADDING, BUTTON_WIDTH, BUTTON_HEIGHT);
+		button.setActionCommand(ACTION_JOIN);
+		button.addActionListener(this);
 		button.setEnabled(false); // Only enable when an item is selected.
 		add(button);
 		joinButton = button;
 		
 		button = new JButton("Disconnect");
 		button.setBounds(PADDING + (2 * (BUTTON_WIDTH + PADDING)), PADDING + TABLE_HEIGHT + PADDING, BUTTON_WIDTH, BUTTON_HEIGHT);
+		button.setActionCommand(ACTION_DISCONNECT);
+		button.addActionListener(this);
 		add(button);
 		
 		// Get active game list. This uses the dummy service for
@@ -110,6 +122,28 @@ public class ServerListWindow extends JFrame implements WindowListener, MouseLis
 	
 	public void close() {
 		dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+		return;
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		String s = e.getActionCommand();
+		
+		// Create a new game.
+		if(s.equals(ACTION_CREATE)) {
+			
+		}
+		
+		// Join the selected game.
+		else if(s.equals(ACTION_JOIN)) {
+			
+		}
+		
+		// Disconnect from the server.
+		else if(s.equals(ACTION_DISCONNECT)) {
+			close();
+		}
+		
 		return;
 	}
 	
