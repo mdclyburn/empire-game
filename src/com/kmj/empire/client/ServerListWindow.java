@@ -6,6 +6,8 @@ import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 import com.kmj.empire.common.ConnectionFailedException;
 import com.kmj.empire.common.Game;
@@ -21,6 +23,12 @@ public class ServerListWindow extends JFrame implements WindowListener {
 	protected ArrayList<Game> gameList;
 	
 	protected GameService server;
+	
+	protected JTable table;
+	
+	protected static final int WINDOW_WIDTH = 800;
+	protected static final int WINDOW_HEIGHT = 450;
+	protected static final int PADDING = 15;
 
 	public ServerListWindow() {
 		super();
@@ -34,11 +42,19 @@ public class ServerListWindow extends JFrame implements WindowListener {
 	}
 	
 	protected void launch() {
-		setSize(800, 450);
+		setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		setResizable(false);
-		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setLayout(null);
 		addWindowListener(this);
 		setVisible(true);
+		
+		// Set up JTable.
+		table = new JTable();
+		table.setBounds(PADDING, PADDING, WINDOW_WIDTH - (2 * PADDING), 4 * WINDOW_HEIGHT / 5);
+		JScrollPane jsp = new JScrollPane(table);
+		jsp.setBounds(table.getBounds());
+		add(jsp);
 		
 		// Get active game list. This uses the dummy service for
 		// the prototype and should be changed later.
@@ -50,6 +66,11 @@ public class ServerListWindow extends JFrame implements WindowListener {
 			JOptionPane.showMessageDialog(this, e.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
 			close();
 		}
+
+		// Attach the table model for viewing.
+		GameListTableModel model = new GameListTableModel();
+		model.setTableSource(gameList);
+		table.setModel(model);
 		
 		return;
 	}
