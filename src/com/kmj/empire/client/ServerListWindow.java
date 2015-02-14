@@ -38,7 +38,6 @@ public class ServerListWindow extends JFrame implements WindowListener {
 
 	@Override
 	public void windowClosing(WindowEvent e) {
-		System.out.println("Closing serverlistwindow.");
 		// Reopen the server connection window.
 		ServerConnectionWindow w = new ServerConnectionWindow();
 		
