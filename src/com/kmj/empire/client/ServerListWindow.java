@@ -38,11 +38,11 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 	protected static final int PADDING = 15;
 	
 	protected static final int TABLE_WIDTH = (3 * WINDOW_WIDTH / 4) - (2 * PADDING);
-	protected static final int TABLE_HEIGHT = WINDOW_HEIGHT - (2 * PADDING);
+	protected static final int TABLE_HEIGHT = WINDOW_HEIGHT - (4 * PADDING);
 	
 	protected static final int BUTTON_WIDTH = (WINDOW_WIDTH / 4) - (2 * PADDING);
 	protected static final int BUTTON_HEIGHT = 30;
-	protected static final int BUTTON_START = WINDOW_WIDTH + (2 * PADDING);
+	protected static final int BUTTON_START = TABLE_WIDTH + (2 * PADDING);
 
 	protected static final String ACTION_CREATE = "create";
 	protected static final String ACTION_JOIN = "join";
