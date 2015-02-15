@@ -47,7 +47,7 @@ public class Server extends JFrame implements GameService {
 	private Socket socket;
 	private DataOutputStream out;
 	private DataInputStream in;
-	private static Users user[] = new Users[MAX_USERS];
+	private static User user[] = new User[MAX_USERS];
 	
 	private JPanel chatWindow;
 	private JTextPane chatPane;
@@ -74,7 +74,7 @@ public class Server extends JFrame implements GameService {
 				in = new DataInputStream(socket.getInputStream());
 				if (user[i] == null)
 				{
-					user[i] = new Users(out, in, user, this, i);
+					user[i] = new User(out, in, user, this, i);
 					Thread thread = new Thread(user[i]);
 					thread.start();
 					break;

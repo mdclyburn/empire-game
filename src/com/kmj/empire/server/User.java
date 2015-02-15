@@ -5,13 +5,13 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-class Users implements Runnable {
+class User implements Runnable {
 
 	DataOutputStream out;
 	DataInputStream in;
-	Users user[] = new Users[Server.MAX_USERS];
-	ArrayList<Users> userQueue = new ArrayList<Users>();
-	ArrayList<Users> removeQueue = new ArrayList<Users>();
+	User user[] = new User[Server.MAX_USERS];
+	ArrayList<User> userQueue = new ArrayList<User>();
+	ArrayList<User> removeQueue = new ArrayList<User>();
 	ArrayList<String> chatQueue = new ArrayList<String>();
 	Server server;
 	int outputMode = 0;
@@ -23,7 +23,7 @@ class Users implements Runnable {
 	private int x, y;
 	private int hp, maxhp;
 	
-	public Users(DataOutputStream out, DataInputStream in, Users[] user, Server server, int pid)
+	public User(DataOutputStream out, DataInputStream in, User[] user, Server server, int pid)
 	{
 		this.out = out;
 		this.in = in;
@@ -199,7 +199,7 @@ class Users implements Runnable {
 		this.hp = hp;
 	}
 	
-	public void setupUser(Users user) throws Exception {
+	public void setupUser(User user) throws Exception {
 		out.writeUTF("pa");
 		out.writeInt(user.getPlayerID());
 		out.writeInt(user.getX());
@@ -209,7 +209,7 @@ class Users implements Runnable {
 		userQueue.remove(user);
 	}
 	
-	public void removeUser(Users user) throws Exception {
+	public void removeUser(User user) throws Exception {
 		
 		int pid = user.getPlayerID();
 		out.writeUTF("pr");
