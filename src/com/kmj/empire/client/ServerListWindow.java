@@ -46,6 +46,7 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 
 	protected static final String ACTION_CREATE = "create";
 	protected static final String ACTION_JOIN = "join";
+	protected static final String ACTION_REFRESH = "refresh";
 	protected static final String ACTION_DISCONNECT = "disconnect";
 
 	public ServerListWindow() {
@@ -94,8 +95,14 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 		add(button);
 		joinButton = button;
 		
-		button = new JButton("Disconnect");
+		button = new JButton("Refresh");
 		button.setBounds(BUTTON_START, PADDING + (2 * BUTTON_HEIGHT) + (2 * PADDING), BUTTON_WIDTH, BUTTON_HEIGHT);
+		button.setActionCommand(ACTION_REFRESH);
+		button.addActionListener(this);
+		add(button);
+		
+		button = new JButton("Disconnect");
+		button.setBounds(BUTTON_START, PADDING + (3 * BUTTON_HEIGHT) + (3 * PADDING), BUTTON_WIDTH, BUTTON_HEIGHT);
 		button.setActionCommand(ACTION_DISCONNECT);
 		button.addActionListener(this);
 		add(button);
