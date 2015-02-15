@@ -30,6 +30,8 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 	protected GameService server;
 	
 	protected JTable table;
+	protected GameListTableModel model;
+	
 	protected JButton joinButton; // Needed for dynamic behaviour.
 	
 	protected static final int WINDOW_WIDTH = 800;
@@ -110,23 +112,29 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 		// Get active game list. This uses the dummy service for
 		// the prototype and should be changed later.
 		server = new DummyServerConnectionProxy();
-		try {
-			gameList = server.getGameList(sessionId);
-		}
-		catch(ConnectionFailedException e) {
-			JOptionPane.showMessageDialog(this, e.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
-			close();
-		}
 
 		// Attach the table model for viewing.
-		GameListTableModel model = new GameListTableModel();
-		model.setTableSource(gameList);
+		model = new GameListTableModel();
 		table.setModel(model);
+		refresh();
 		
 		return;
 	}
 	
 	public void setSessionId(int sessionId) { this.sessionId = sessionId; }
+	
+	protected void refresh() {
+		// Get new list from server.
+		try { model.setTableSource(server.getGameList(sessionId)); }
+		catch(ConnectionFailedException e) {
+			JOptionPane.showMessageDialog(this, e.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
+		}
+		
+		// Update table component.
+		model.fireTableDataChanged();
+		
+		return;
+	}
 	
 	public void close() {
 		dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
@@ -148,6 +156,9 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 			GameWindow w = new GameWindow(sessionId, gameName, this);
 			setVisible(false);
 		}
+		
+		// Refresh the game list.
+		else if(s.equalsIgnoreCase(ACTION_REFRESH)) refresh();
 		
 		// Disconnect from the server.
 		else if(s.equals(ACTION_DISCONNECT)) {

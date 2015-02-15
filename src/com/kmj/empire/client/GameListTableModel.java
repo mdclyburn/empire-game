@@ -24,7 +24,7 @@ public class GameListTableModel extends AbstractTableModel {
 
 	@Override
 	public int getRowCount() {
-		return games.size();
+		return (games != null ? games.size() : 0);
 	}
 
 	@Override
