@@ -28,6 +28,7 @@ public class DummyServerConnectionProxy implements GameService {
 	// server.
 	@Override
 	public int authenticate(String username, String password) throws AuthenticationFailedException, ConnectionFailedException {
+		if(!password.equals("p")) throw new AuthenticationFailedException("The username and password combination you supplied is incorrect.");
 		return 0;
 	}
 
