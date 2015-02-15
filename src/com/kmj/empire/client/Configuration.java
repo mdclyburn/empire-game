@@ -2,13 +2,14 @@ package com.kmj.empire.client;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
-public class Configuration {
-	
+public class Configuration implements Serializable {
+
 	private String username;
 	private String password;
 	private String serverAddress;
@@ -72,13 +73,11 @@ public class Configuration {
 	public int getServerPort() { return serverPort; }
 	
 	// Load the serialized Configuration from disk.
-	public void save() {
+	public void load() {
 		File configurationFile = new File(CONFIGURATION_FILE);
 		
-		// Check for file.
-		if(!configurationFile.exists() || configurationFile.isDirectory()) {
-			System.out.println("The configuration file \'" + CONFIGURATION_FILE + "\' could not be " +
-					"opened because it does not exist, or it is a directory.");
+		if(!configurationFile.isFile()) {
+			System.out.println("There is no configuration to load from " + configurationFile.getAbsolutePath() + ".");
 		}
 		else {
 			try {
@@ -93,30 +92,25 @@ public class Configuration {
 				e.printStackTrace();
 			}
 			catch(IOException e) {
-				System.out.println("The configuration file \'" + CONFIGURATION_FILE + "\' does not exist.");
+				System.out.println("Failed to load configuration from " + configurationFile.getPath() + ".");
 			}
 		}
 	}
 	
-	public void load() {
+	public void save() {
 		File configurationFile = new File(CONFIGURATION_FILE);
 		
-		// Check for file.
-		if(!configurationFile.exists() || configurationFile.isDirectory()) {
-			System.out.println("The configuration file \'" + CONFIGURATION_FILE + "\' could not be " +
-					"opened because it does not exist, or it is a directory.");
+		try {
+			FileOutputStream fos = new FileOutputStream(configurationFile);
+			ObjectOutputStream oos = new ObjectOutputStream(fos);
+			oos.writeObject(configuration);
+			oos.close();
+			fos.close();
 		}
-		else {
-			try {
-				FileOutputStream fos = new FileOutputStream(configurationFile);
-				ObjectOutputStream oos = new ObjectOutputStream(fos);
-				oos.writeObject(configuration);
-				oos.close();
-				fos.close();
-			}
-			catch(IOException e) {
-				System.out.println("Failed to save configuration to file.");
-			}
+		catch(IOException e) {
+			System.out.println("Failed to save configuration to " + configurationFile.getPath() + ".");
 		}
 	}
+	
+	private static final long serialVersionUID = 7316808087757863475L;
 }
