@@ -37,11 +37,12 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 	
 	protected static final int PADDING = 15;
 	
-	protected static final int TABLE_WIDTH = WINDOW_WIDTH - (2 * PADDING);
-	protected static final int TABLE_HEIGHT = 4 * WINDOW_HEIGHT / 5;
+	protected static final int TABLE_WIDTH = (3 * WINDOW_WIDTH / 4) - (2 * PADDING);
+	protected static final int TABLE_HEIGHT = WINDOW_HEIGHT - (2 * PADDING);
 	
-	protected static final int BUTTON_WIDTH = 100;
+	protected static final int BUTTON_WIDTH = (WINDOW_WIDTH / 4) - (2 * PADDING);
 	protected static final int BUTTON_HEIGHT = 30;
+	protected static final int BUTTON_START = WINDOW_WIDTH + (2 * PADDING);
 
 	protected static final String ACTION_CREATE = "create";
 	protected static final String ACTION_JOIN = "join";
@@ -80,13 +81,13 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 		JButton button;
 		
 		button = new JButton("Create");
-		button.setBounds(PADDING, PADDING + TABLE_HEIGHT + PADDING, BUTTON_WIDTH, BUTTON_HEIGHT);
+		button.setBounds(BUTTON_START, PADDING, BUTTON_WIDTH, BUTTON_HEIGHT);
 		button.setActionCommand(ACTION_CREATE);
 		button.addActionListener(this);
 		add(button);
 		
 		button = new JButton("Join");
-		button.setBounds(PADDING + (BUTTON_WIDTH + PADDING), PADDING + TABLE_HEIGHT + PADDING, BUTTON_WIDTH, BUTTON_HEIGHT);
+		button.setBounds(BUTTON_START, PADDING + BUTTON_HEIGHT + PADDING, BUTTON_WIDTH, BUTTON_HEIGHT);
 		button.setActionCommand(ACTION_JOIN);
 		button.addActionListener(this);
 		button.setEnabled(false); // Only enable when an item is selected.
@@ -94,7 +95,7 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 		joinButton = button;
 		
 		button = new JButton("Disconnect");
-		button.setBounds(PADDING + (2 * (BUTTON_WIDTH + PADDING)), PADDING + TABLE_HEIGHT + PADDING, BUTTON_WIDTH, BUTTON_HEIGHT);
+		button.setBounds(BUTTON_START, PADDING + (2 * BUTTON_HEIGHT) + (2 * PADDING), BUTTON_WIDTH, BUTTON_HEIGHT);
 		button.setActionCommand(ACTION_DISCONNECT);
 		button.addActionListener(this);
 		add(button);
