@@ -2,11 +2,11 @@ package com.kmj.empire.common;
 
 public class AuthenticationFailedException extends Exception {
 
-	AuthenticationFailedException() {
+	public AuthenticationFailedException() {
 		super();
 	}
 	
-	AuthenticationFailedException(String message) {
+	public AuthenticationFailedException(String message) {
 		super(message);
 	}
 }
