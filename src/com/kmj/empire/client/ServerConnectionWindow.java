@@ -51,7 +51,6 @@ public class ServerConnectionWindow extends JFrame implements ActionListener {
 		setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(null);
-		
 		setResizable(false);
 		
 		// =======================
@@ -86,17 +85,19 @@ public class ServerConnectionWindow extends JFrame implements ActionListener {
 		// Address field:
 		addressField = new JTextField();
 		addressField.setBounds(LINE_START_X + LABEL_WIDTH + PADDING, LINE_START_Y, FIELD_WIDTH, FIELD_HEIGHT);
+		addressField.setText(Configuration.getInstance().getServerAddress());
 		add(addressField);
 		
 		// Port field:
 		portField = new JTextField();
 		portField.setBounds(LINE_START_X + LABEL_WIDTH + PADDING, LINE_START_Y + (LINE_HEIGHT * 1), FIELD_WIDTH / 5, FIELD_HEIGHT);
-		
+		portField.setText(Integer.toString(Configuration.getInstance().getServerPort()));
 		add(portField);
 		
 		// Username field:
 		usernameField = new JTextField();
 		usernameField.setBounds(LINE_START_X + LABEL_WIDTH + PADDING, LINE_START_Y + (LINE_HEIGHT * 2), FIELD_WIDTH, FIELD_HEIGHT);
+		usernameField.setText(Configuration.getInstance().getUsername());
 		add(usernameField);
 		
 		// Password field:
@@ -169,6 +170,7 @@ public class ServerConnectionWindow extends JFrame implements ActionListener {
 		
 		// Close window.
 		else if(s.equals(ACTION_CANCEL)) {
+			Configuration.getInstance().save();
 			setVisible(false);
 			dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 		}
