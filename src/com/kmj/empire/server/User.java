@@ -3,10 +3,10 @@ package com.kmj.empire.server;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import com.kmj.empire.common.AuthenticationFailedException;
 import com.kmj.empire.common.ConnectionFailedException;
+import com.kmj.empire.common.Player;
 
 class User implements Runnable {
 
@@ -19,6 +19,7 @@ class User implements Runnable {
 	private boolean autheniticated = false;
 	private String username, password;
 	private int playerid;
+	private Player player;
 	
 	public User(DataOutputStream out, DataInputStream in, User[] user, Server server, int pid)
 	{

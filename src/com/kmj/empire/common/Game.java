@@ -15,7 +15,7 @@ public class Game {
 	
 	protected int stardate;
 	protected Sector[][] sectorGrid;
-	protected UniverseType universeType;
+	protected UniverseType universe;
 	
 	public Game() {
 		stardate = 2500;
@@ -36,12 +36,16 @@ public class Game {
 	
 	public Game(String name, UniverseType universeType) {
 		this();
-		this.universeType = universeType;
+		this.universe = universe;
 		this.name = name;
 	}
 	
-	public UniverseType getUniverseType() {
-		return universeType;
+	public UniverseType getUniverse() {
+		return universe;
+	}
+	
+	public void setUniverseType(UniverseType universe) {
+		this.universe = universe;
 	}
 	
 	public Sector[][] getSectorGrid() {
