@@ -162,7 +162,10 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 		}
 		
 		// Refresh the game list.
-		else if(s.equalsIgnoreCase(ACTION_REFRESH)) refresh();
+		else if(s.equalsIgnoreCase(ACTION_REFRESH)) {
+			joinButton.setEnabled(false);
+			refresh();
+		}
 		
 		// Disconnect from the server.
 		else if(s.equals(ACTION_DISCONNECT)) {
