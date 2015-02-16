@@ -14,6 +14,7 @@ public class UniverseView extends JPanel implements MouseListener {
 	
 	protected Game game;
 	protected Location selectedSector;
+	protected SectorView sectorView;
 	
 	protected static final int PADDING = 5;
 
@@ -28,6 +29,10 @@ public class UniverseView extends JPanel implements MouseListener {
 		this.game = game;
 		selectedSector = new Location();
 		addMouseListener(this);
+	}
+	
+	public void setSectorView(SectorView sectorView) {
+		this.sectorView = sectorView;
 	}
 	
 	@Override
@@ -85,6 +90,9 @@ public class UniverseView extends JPanel implements MouseListener {
 		selectedSector.x = (e.getX() / (getWidth() / 8)) + 1;
 		selectedSector.y = (e.getY() / (getHeight() / 8)) + 1;
 		repaint();
+		
+		// Notify the sector view of the new sector selection.
+		sectorView.setSector(game.getSector(selectedSector.x, selectedSector.y));
 		
 		return;
 	}

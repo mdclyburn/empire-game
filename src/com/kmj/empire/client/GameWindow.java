@@ -101,6 +101,11 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 		sectorView.setBounds(SECTOR_VIEW_X, SECTOR_VIEW_Y, DISPLAY_WIDTH, DISPLAY_HEIGHT);
 		add(sectorView);
 		
+		// Give the universe view the sector view so that
+		// changes to universe view can be reflected in the
+		// sector view.
+		universeView.setSectorView(sectorView);
+		
 		// Player List
 		playerList = new JTable();
 		playerListModel = new PlayerListTableModel();
