@@ -6,7 +6,10 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 import com.kmj.empire.common.ConnectionFailedException;
 import com.kmj.empire.common.Game;
@@ -27,6 +30,9 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 	
 	protected ServerListWindow serverListWindow;
 	
+	JTable playerList;
+	PlayerListTableModel playerListModel;
+	
 	UniverseView universeView;
 	SectorView sectorView;
 	
@@ -40,6 +46,13 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 	protected static final int UNIVERSE_VIEW_Y = PADDING;
 	protected static final int SECTOR_VIEW_X = DISPLAY_WIDTH + (3 * PADDING);
 	protected static final int SECTOR_VIEW_Y = PADDING;
+	
+	protected static final int PLAYER_LIST_LABEL_X = PADDING;
+	protected static final int PLAYER_LIST_LABEL_Y = PADDING + DISPLAY_HEIGHT + PADDING;
+	protected static final int PLAYER_LIST_WIDTH = 3 * DISPLAY_WIDTH / 4;
+	protected static final int PLAYER_LIST_HEIGHT = WINDOW_HEIGHT - (4 * PADDING) - DISPLAY_HEIGHT;
+	protected static final int PLAYER_LIST_X = PADDING;
+	protected static final int PLAYER_LIST_Y = PADDING + DISPLAY_HEIGHT + PADDING;
 
 	public GameWindow() {
 		super();
@@ -80,6 +93,16 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 		sectorView = new SectorView();
 		sectorView.setBounds(SECTOR_VIEW_X, SECTOR_VIEW_Y, DISPLAY_WIDTH, DISPLAY_HEIGHT);
 		add(sectorView);
+		
+		// Player List
+		playerList = new JTable();
+		playerListModel = new PlayerListTableModel();
+		playerListModel.setTableSource(gameState.getActivePlayers());
+		playerList.setModel(playerListModel);
+		playerList.setBounds(PLAYER_LIST_X, PLAYER_LIST_Y, PLAYER_LIST_WIDTH, PLAYER_LIST_HEIGHT);
+		JScrollPane jsp = new JScrollPane(playerList);
+		jsp.setBounds(playerList.getBounds());
+		add(jsp);
 		
 		setVisible(true);
 	}
