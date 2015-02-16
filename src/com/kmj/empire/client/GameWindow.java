@@ -23,8 +23,8 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 	UniverseView universeView;
 	SectorView sectorView;
 	
-	protected static final int WINDOW_WIDTH = 800;
-	protected static final int WINDOW_HEIGHT = 600;
+	protected static final int WINDOW_WIDTH = 1000;
+	protected static final int WINDOW_HEIGHT = 800;
 	protected static final int PADDING = 15;
 	
 	protected static final int DISPLAY_WIDTH = (WINDOW_WIDTH / 2) - (2 * PADDING);

@@ -18,5 +18,12 @@ public class UniverseView extends JPanel {
 		// Black background.
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, getWidth(), getHeight());
+		
+		// Draw grid.
+		g.setColor(Color.WHITE);
+		for(int i = 1; i < 8; i++) {
+			g.drawLine(i * getWidth() / 8, 0, i * getWidth() / 8, getHeight());
+			g.drawLine(0, i * getHeight() / 8, getWidth(), i * getHeight() / 8);
+		}
 	}
 }
