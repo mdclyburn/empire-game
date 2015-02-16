@@ -35,6 +35,7 @@ public class UniverseView extends JPanel implements MouseListener {
 	
 	public void setSectorView(SectorView sectorView) {
 		this.sectorView = sectorView;
+		sectorView.setSector(game.getSector(0, 0));
 	}
 	
 	@Override

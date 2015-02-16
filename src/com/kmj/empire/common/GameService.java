@@ -22,5 +22,8 @@ public interface GameService {
 	
 	/* Join an existing game on this server */
 	public void joinGame(int sessionId, String name) throws ConnectionFailedException;
+	
+	/* Notifies the server of a disconnecting user. */
+	public void disconnect(int sessionId) throws ConnectionFailedException;
 
 }

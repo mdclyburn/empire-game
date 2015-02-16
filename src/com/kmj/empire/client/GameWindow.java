@@ -160,6 +160,12 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 
 	@Override
 	public void windowClosing(WindowEvent e) {
+		try {
+			server.disconnect(sessionId);
+		} catch (ConnectionFailedException c) {
+			JOptionPane.showMessageDialog(this, c.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
+		}
+		
 		// Show the server connection window.
 		serverListWindow.setVisible(true);
 		

@@ -179,6 +179,11 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 		return;
 	}
 	
+	@Override public void setVisible(boolean b) {
+		super.setVisible(b);
+		if(b && (model != null)) refresh();
+	}
+	
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		joinButton.setEnabled(true);

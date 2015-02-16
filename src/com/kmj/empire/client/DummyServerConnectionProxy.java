@@ -90,6 +90,12 @@ public class DummyServerConnectionProxy implements GameService {
 		}
 	}
 	
+	@Override
+	public void disconnect(int sessionId) throws ConnectionFailedException {
+		Game game = sessions.get(sessionId);
+		game.getActivePlayers().remove(users.get(sessionId));
+	}
+	
 	private void addSampleData() {
 		Planet planet = new Planet();
 		planet.setSectorLocation(3, 2);

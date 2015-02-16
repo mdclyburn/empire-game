@@ -58,10 +58,16 @@ public class Game {
 	public ArrayList<String> getLog() { return log; }
 	
 	public void addPlayer(String username, Ship ship) {
-		possessionMapping.put(username, ship);
-		propertyMapping.put(ship, username);
+		// Check if the user has been in the game already.
+		System.out.println("Adding " + username + " to game.");
+		if(!possessionMapping.containsKey(username)) {
+			System.out.println("New user.");
+			possessionMapping.put(username, ship);
+			propertyMapping.put(ship, username);
+			sectorGrid[0][0].getShips().add(ship);
+		}
+		else System.out.println("User has logged in before.");
 		players.add(username);
-		sectorGrid[0][0].getShips().add(ship);
 	}
 	
 	public void addShip(Ship ship) {
@@ -88,6 +94,10 @@ public class Game {
 	
 	public String getOwner(Ship ship) {
 		return propertyMapping.get(ship);
+	}
+	
+	public void removePlayer(String username) {
+		players.remove(username);
 	}
 
 }

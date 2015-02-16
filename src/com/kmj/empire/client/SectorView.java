@@ -101,7 +101,6 @@ public class SectorView extends JPanel implements MouseListener {
 		
 		// Look for a ship in that sector.
 		for(Ship s : sector.getShips()) {
-			System.out.println(s.getType().getName() + ": " + s.getSectorLocation().x + "-" + s.getUniverseLocation().y + ".");
 			if(s.getSectorLocation().x == x && s.getSectorLocation().y == y) {
 				model.setTableSource(s);
 			}
