@@ -10,6 +10,11 @@ public class Game {
 	
 	public Game() {
 		this.sectorGrid = new Sector[8][8];
+		for(int y = 0; y < 8; y++) {
+			for(int x = 0; x < 8; x++) {
+				sectorGrid[x][y] = new Sector();
+			}
+		}
 		name = "Empire Session";
 	}
 	

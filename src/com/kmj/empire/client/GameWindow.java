@@ -2,11 +2,15 @@ package com.kmj.empire.client;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
+import com.kmj.empire.common.ConnectionFailedException;
+import com.kmj.empire.common.Game;
+import com.kmj.empire.common.GameService;
 
 // The GameWindow is where the user will spend most of their time
 // during gameplay. It will consist of a canvas handled by a custom
@@ -17,6 +21,9 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 	
 	protected int sessionId;
 	protected String name;
+	
+	protected Game gameState;
+	protected GameService server;
 	
 	protected ServerListWindow serverListWindow;
 	
@@ -41,11 +48,12 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 				"session ID was given. Correct this.");
 	}
 	
-	public GameWindow(int sessionId, String name, ServerListWindow serverListWindow) {
+	public GameWindow(int sessionId, String name, ServerListWindow serverListWindow, GameService server) {
 		super(name);
 		setSessionId(sessionId);
 		setName(name);
 		this.serverListWindow = serverListWindow;
+		this.server = server;
 		launch();
 	}
 	
@@ -55,8 +63,17 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setLayout(null);
 		addWindowListener(this);
+
+		// Retrieve information from server.
+		try {
+			gameState = server.getGameState(sessionId);
+		} catch (ConnectionFailedException e) {
+			JOptionPane.showMessageDialog(this, e.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
+			System.exit(-1);
+		}
 		
-		universeView = new UniverseView();
+		// Update views.
+		universeView = new UniverseView(gameState);
 		universeView.setBounds(UNIVERSE_VIEW_X, UNIVERSE_VIEW_Y, DISPLAY_WIDTH, DISPLAY_HEIGHT);
 		add(universeView);
 		
