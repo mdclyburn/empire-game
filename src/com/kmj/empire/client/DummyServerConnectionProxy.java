@@ -7,6 +7,7 @@ import com.kmj.empire.common.AuthenticationFailedException;
 import com.kmj.empire.common.ConnectionFailedException;
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.GameService;
+import com.kmj.empire.common.Player;
 import com.kmj.empire.common.UniverseType;
 
 // A dummy connection service to get the client-side prototype
@@ -17,7 +18,8 @@ import com.kmj.empire.common.UniverseType;
 public class DummyServerConnectionProxy implements GameService {
 	
 	ArrayList<Game> gameList;
-	static HashMap<Integer, Game> sessions;
+	HashMap<Integer, String> users;
+	HashMap<Integer, Game> sessions;
 
 	public DummyServerConnectionProxy() {
 		gameList = new ArrayList<Game>();
@@ -25,6 +27,7 @@ public class DummyServerConnectionProxy implements GameService {
 		gameList.add(new Game("World War III", new UniverseType()));
 		gameList.add(new Game("The Battle of Gettysburg", new UniverseType()));
 		
+		users = new HashMap<Integer, String>();
 		sessions = new HashMap<Integer, Game>();
 	}
 
@@ -34,7 +37,10 @@ public class DummyServerConnectionProxy implements GameService {
 	@Override
 	public int authenticate(String username, String password) throws AuthenticationFailedException, ConnectionFailedException {
 		if(!password.equals("p")) throw new AuthenticationFailedException("The username and password combination you supplied is incorrect.");
-		return 0;
+		int id = users.size();
+		users.put(id, username);
+		System.out.println(username + " logging in. Assigning ID " + id);
+		return id;
 	}
 
 	@Override
@@ -69,6 +75,9 @@ public class DummyServerConnectionProxy implements GameService {
 			if(g.getName().equals(name)) {
 				System.out.println("Session " + sessionId + " joining " + name + ".");
 				sessions.put(sessionId, g);
+				String username = users.get(sessionId);
+				Player player = new Player(username);
+				g.getActivePlayers().add(player);
 				break;
 			}
 		}

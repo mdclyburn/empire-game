@@ -57,9 +57,10 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 		sessionId = -1;
 	}
 	
-	public ServerListWindow(int sessionId) {
+	public ServerListWindow(int sessionId, GameService server) {
 		super();
 		this.sessionId = sessionId;
+		this.server = server;
 		launch();
 	}
 	
@@ -109,10 +110,6 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 		button.setActionCommand(ACTION_DISCONNECT);
 		button.addActionListener(this);
 		add(button);
-		
-		// Get active game list. This uses the dummy service for
-		// the prototype and should be changed later.
-		server = new DummyServerConnectionProxy();
 
 		// Attach the table model for viewing.
 		model = new GameListTableModel();
@@ -190,7 +187,7 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 	@Override
 	public void windowClosing(WindowEvent e) {
 		// Reopen the server connection window.
-		ServerConnectionWindow w = new ServerConnectionWindow();
+		ServerConnectionWindow w = new ServerConnectionWindow(server);
 		
 		// Close this window.
 		dispose();

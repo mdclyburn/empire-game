@@ -1,20 +1,25 @@
 package com.kmj.empire.common;
 
+import java.util.ArrayList;
+
 public class Game {
 
 	protected String name;
-	protected int activePlayers;
+	protected ArrayList<Player> players;
 	
-	private Sector[][] sectorGrid;
-	private UniverseType universeType;
+	protected int stardate;
+	protected Sector[][] sectorGrid;
+	protected UniverseType universeType;
 	
 	public Game() {
+		stardate = 2500;
 		this.sectorGrid = new Sector[8][8];
 		for(int y = 0; y < 8; y++) {
 			for(int x = 0; x < 8; x++) {
 				sectorGrid[x][y] = new Sector();
 			}
 		}
+		players = new ArrayList<Player>();
 		name = "Empire Session";
 	}
 	
@@ -37,6 +42,6 @@ public class Game {
 	}
 	
 	public String getName() { return name; }
-	public int getActivePlayers() { return activePlayers; }
+	public ArrayList<Player> getActivePlayers() { return players; }
 
 }
