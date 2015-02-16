@@ -7,6 +7,7 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JPanel;
 
+import com.kmj.empire.common.Planet;
 import com.kmj.empire.common.Sector;
 
 public class SectorView extends JPanel implements MouseListener {
@@ -19,6 +20,7 @@ public class SectorView extends JPanel implements MouseListener {
 	}
 	
 	public void setSector(Sector sector) {
+		System.out.println("Setting sector view.");
 		this.sector = sector;
 		repaint();
 	}
@@ -41,7 +43,13 @@ public class SectorView extends JPanel implements MouseListener {
 		// Draw sector contents.
 		if(sector == null) return;
 		else {
-			
+			// Draw planets.
+			for(Planet p : sector.getPlanets()) {
+				int x = (p.getLocation().x - 1) * (getWidth() / 8) + (getWidth() / 8 / 2) - (getWidth() / 8 / 3 / 2);
+				int y = (p.getLocation().y - 1) * (getHeight() / 8) + (getHeight() / 8 / 2) - (getHeight() / 8 / 3 / 2);
+				g.fillOval(x, y, getWidth() / 8 / 3, getHeight() / 8 / 3);
+				System.out.println("Drew planet at " + x + "-" + y + ".");
+			}
 		}
 	}
 

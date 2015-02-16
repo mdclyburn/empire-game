@@ -98,7 +98,8 @@ public class UniverseView extends JPanel implements MouseListener {
 		repaint();
 		
 		// Notify the sector view of the new sector selection.
-		sectorView.setSector(game.getSector(selectedSector.x, selectedSector.y));
+		System.out.println("Notifying sector view of selection.");
+		sectorView.setSector(game.getSector(selectedSector.x - 1, selectedSector.y - 1));
 		
 		return;
 	}

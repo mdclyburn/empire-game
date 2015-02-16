@@ -8,6 +8,7 @@ import com.kmj.empire.common.ConnectionFailedException;
 import com.kmj.empire.common.Constitution;
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.GameService;
+import com.kmj.empire.common.Planet;
 import com.kmj.empire.common.Player;
 import com.kmj.empire.common.Ship;
 import com.kmj.empire.common.UniverseType;
@@ -26,6 +27,10 @@ public class DummyServerConnectionProxy implements GameService {
 	public DummyServerConnectionProxy() {
 		gameList = new ArrayList<Game>();
 		gameList.add(new Game("Trekkie's Delight", new UniverseType()));
+		Planet planet = new Planet();
+		planet.getLocation().x = 3;
+		planet.getLocation().y = 2;
+		gameList.get(0).getSector(4, 3).getPlanets().add(planet);
 		gameList.add(new Game("World War III", new UniverseType()));
 		gameList.add(new Game("The Battle of Gettysburg", new UniverseType()));
 		
