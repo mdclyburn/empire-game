@@ -84,9 +84,7 @@ public class DummyServerConnectionProxy implements GameService {
 				sessions.put(sessionId, g);
 				String username = users.get(sessionId);
 				g.addPlayer(username, new Ship(new ShipType("Constitution"), new EmpireType("Federation")));
-				
-				// Log player joining.
-				g.getLog().add(g.getStardate() + ": " + username + " joined.");
+
 				break;
 			}
 		}
