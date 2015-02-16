@@ -74,10 +74,14 @@ public class DummyServerConnectionProxy implements GameService {
 		for(Game g : gameList) {
 			if(g.getName().equals(name)) {
 				System.out.println("Session " + sessionId + " joining " + name + ".");
+				
 				sessions.put(sessionId, g);
 				String username = users.get(sessionId);
 				Player player = new Player(username);
 				g.getActivePlayers().add(player);
+				
+				// Log player joining.
+				g.getLog().add(g.getStardate() + ": " + username + " joined.");
 				break;
 			}
 		}

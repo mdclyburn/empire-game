@@ -31,7 +31,9 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 	protected ServerListWindow serverListWindow;
 	
 	JTable playerList;
+	JTable gameLog;
 	PlayerListTableModel playerListModel;
+	GameLogTableModel gameLogModel;
 	
 	UniverseView universeView;
 	SectorView sectorView;
@@ -53,6 +55,11 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 	protected static final int PLAYER_LIST_HEIGHT = WINDOW_HEIGHT - (4 * PADDING) - DISPLAY_HEIGHT;
 	protected static final int PLAYER_LIST_X = PADDING;
 	protected static final int PLAYER_LIST_Y = PADDING + DISPLAY_HEIGHT + PADDING;
+	
+	protected static final int GAME_LOG_WIDTH = PLAYER_LIST_WIDTH;
+	protected static final int GAME_LOG_HEIGHT = PLAYER_LIST_HEIGHT;
+	protected static final int GAME_LOG_X = PADDING + PLAYER_LIST_WIDTH + PADDING;
+	protected static final int GAME_LOG_Y = PLAYER_LIST_Y;
 
 	public GameWindow() {
 		super();
@@ -102,6 +109,16 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 		playerList.setBounds(PLAYER_LIST_X, PLAYER_LIST_Y, PLAYER_LIST_WIDTH, PLAYER_LIST_HEIGHT);
 		JScrollPane jsp = new JScrollPane(playerList);
 		jsp.setBounds(playerList.getBounds());
+		add(jsp);
+		
+		// Game log
+		gameLog = new JTable();
+		gameLogModel = new GameLogTableModel();
+		gameLogModel.setTableSource(gameState.getLog());
+		gameLog.setModel(gameLogModel);
+		gameLog.setBounds(GAME_LOG_X, GAME_LOG_Y, GAME_LOG_WIDTH, GAME_LOG_HEIGHT);
+		jsp = new JScrollPane(gameLog);
+		jsp.setBounds(gameLog.getBounds());
 		add(jsp);
 		
 		setVisible(true);

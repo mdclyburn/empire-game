@@ -6,6 +6,7 @@ public class Game {
 
 	protected String name;
 	protected ArrayList<Player> players;
+	protected ArrayList<String> log;
 	
 	protected int stardate;
 	protected Sector[][] sectorGrid;
@@ -20,6 +21,7 @@ public class Game {
 			}
 		}
 		players = new ArrayList<Player>();
+		log = new ArrayList<String>();
 		name = "Empire Session";
 	}
 	
@@ -41,7 +43,9 @@ public class Game {
 		return sectorGrid[x][y];
 	}
 	
+	public int getStardate() { return stardate; }
 	public String getName() { return name; }
 	public ArrayList<Player> getActivePlayers() { return players; }
+	public ArrayList<String> getLog() { return log; }
 
 }
