@@ -51,8 +51,7 @@ public class DummyServerConnectionProxy implements GameService {
 	// the purposes of this class and do not represent actual, live
 	// Games.
 	public ArrayList<Game> getGamesList(int sessionId) throws AuthenticationFailedException, ConnectionFailedException {
-		// TODO Auto-generated method stub
-		return null;
+		return gameList;
 	}
 
 	@Override
