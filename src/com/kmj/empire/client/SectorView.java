@@ -7,20 +7,27 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JPanel;
 
+import com.kmj.empire.common.Game;
 import com.kmj.empire.common.Planet;
 import com.kmj.empire.common.Sector;
+import com.kmj.empire.common.Ship;
 
 public class SectorView extends JPanel implements MouseListener {
 	
 	protected Sector sector;
+	protected Game game;
 	
 	public SectorView() {
 		super();
 		addMouseListener(this);
 	}
 	
+	public SectorView(Game game) {
+		this();
+		this.game = game;
+	}
+	
 	public void setSector(Sector sector) {
-		System.out.println("Setting sector view.");
 		this.sector = sector;
 		repaint();
 	}
@@ -48,6 +55,21 @@ public class SectorView extends JPanel implements MouseListener {
 				int x = (p.getLocation().x - 1) * (getWidth() / 8) + (getWidth() / 8 / 2) - (getWidth() / 8 / 3 / 2);
 				int y = (p.getLocation().y - 1) * (getHeight() / 8) + (getHeight() / 8 / 2) - (getHeight() / 8 / 3 / 2);
 				g.fillOval(x, y, getWidth() / 8 / 3, getHeight() / 8 / 3);
+			}
+			
+			// Draw ships.
+			String username = Configuration.getInstance().getUsername();
+			String playerAlliance = game.getPlayerShip(username).getEmpire().getName();
+			for(Ship s : sector.getShips()) {
+				int x = (s.getSectorLocation().x - 1) * (getWidth() / 8) + (getWidth() / 8 / 2) - (getWidth() / 8 / 3 / 2);
+				int y = (s.getSectorLocation().y - 1) * (getHeight() / 8) + (getHeight() / 8 / 2) - (getWidth() / 8 / 3 / 2);
+				if(game.getOwner(s).equals(Configuration.getInstance().getUsername()))
+					g.setColor(Color.YELLOW);
+				else if(s.getEmpire().getName().equals(playerAlliance))
+					g.setColor(Color.GREEN);
+				else
+					g.setColor(Color.RED);
+				g.fillRect(x, y, getWidth() / 8 / 3, getHeight() / 8 / 3);
 			}
 		}
 	}

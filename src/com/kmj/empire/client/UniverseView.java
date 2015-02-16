@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.Location;
+import com.kmj.empire.common.Ship;
 
 public class UniverseView extends JPanel implements MouseListener {
 	
@@ -81,6 +82,9 @@ public class UniverseView extends JPanel implements MouseListener {
 				// Calculate figures.
 				int planets = game.getSector(x, y).getPlanets().size();
 				int enemies = 0;
+				for(Ship s : game.getSector(selectedSector.x - 1, selectedSector.y - 1).getShips())
+					if(!s.getEmpire().getName().equals(game.getPlayerShip(Configuration.getInstance().getUsername()).getEmpire().getName()))
+							enemies++;
 				int friendlies = 0;
 
 				// Draw information to screen.
@@ -98,7 +102,6 @@ public class UniverseView extends JPanel implements MouseListener {
 		repaint();
 		
 		// Notify the sector view of the new sector selection.
-		System.out.println("Notifying sector view of selection.");
 		sectorView.setSector(game.getSector(selectedSector.x - 1, selectedSector.y - 1));
 		
 		return;

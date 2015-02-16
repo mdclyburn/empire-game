@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import com.kmj.empire.common.AuthenticationFailedException;
 import com.kmj.empire.common.ConnectionFailedException;
+import com.kmj.empire.common.EmpireType;
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.GameService;
 import com.kmj.empire.common.Planet;
@@ -86,8 +87,7 @@ public class DummyServerConnectionProxy implements GameService {
 				// is using a Constitution-class vessel.
 				sessions.put(sessionId, g);
 				String username = users.get(sessionId);
-				Player player = new Player(username);
-				g.addPlayer(player, new Ship(new ShipType("Constitution")));
+				g.addPlayer(username, new Ship(new ShipType("Constitution"), new EmpireType("Federation")));
 				
 				// Log player joining.
 				g.getLog().add(g.getStardate() + ": " + username + " joined.");

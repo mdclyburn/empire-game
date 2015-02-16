@@ -97,7 +97,7 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 		universeView.setBounds(UNIVERSE_VIEW_X, UNIVERSE_VIEW_Y, DISPLAY_WIDTH, DISPLAY_HEIGHT);
 		add(universeView);
 		
-		sectorView = new SectorView();
+		sectorView = new SectorView(gameState);
 		sectorView.setBounds(SECTOR_VIEW_X, SECTOR_VIEW_Y, DISPLAY_WIDTH, DISPLAY_HEIGHT);
 		add(sectorView);
 		

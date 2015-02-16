@@ -6,10 +6,11 @@ import java.util.HashMap;
 public class Game {
 
 	protected String name;
-	protected ArrayList<Player> players;
+	protected ArrayList<String> players;
 	protected ArrayList<String> log;
 	protected ArrayList<Ship> ships;
-	protected HashMap<Player, Ship> possessionMapping;
+	protected HashMap<String, Ship> possessionMapping;
+	protected HashMap<Ship, String> propertyMapping;
 	
 	protected int stardate;
 	protected Sector[][] sectorGrid;
@@ -23,10 +24,11 @@ public class Game {
 				sectorGrid[x][y] = new Sector();
 			}
 		}
-		players = new ArrayList<Player>();
+		players = new ArrayList<String>();
 		log = new ArrayList<String>();
 		ships = new ArrayList<Ship>();
-		possessionMapping = new HashMap<Player, Ship>();
+		possessionMapping = new HashMap<String, Ship>();
+		propertyMapping = new HashMap<Ship, String>();
 		name = "Empire Session";
 	}
 	
@@ -50,16 +52,22 @@ public class Game {
 	
 	public int getStardate() { return stardate; }
 	public String getName() { return name; }
-	public ArrayList<Player> getActivePlayers() { return players; }
+	public ArrayList<String> getActivePlayers() { return players; }
 	public ArrayList<String> getLog() { return log; }
 	
-	public void addPlayer(Player player, Ship ship) {
-		possessionMapping.put(player, ship);
-		players.add(player);
+	public void addPlayer(String username, Ship ship) {
+		possessionMapping.put(username, ship);
+		propertyMapping.put(ship, username);
+		players.add(username);
+		sectorGrid[0][0].getShips().add(ship);
 	}
 	
-	public Ship getPlayerShip(Player player) {
+	public Ship getPlayerShip(String player) {
 		return possessionMapping.get(player);
+	}
+	
+	public String getOwner(Ship ship) {
+		return propertyMapping.get(ship);
 	}
 
 }
