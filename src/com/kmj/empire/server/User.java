@@ -10,18 +10,12 @@ class User implements Runnable {
 	DataOutputStream out;
 	DataInputStream in;
 	User user[] = new User[Server.MAX_USERS];
-	ArrayList<User> userQueue = new ArrayList<User>();
-	ArrayList<User> removeQueue = new ArrayList<User>();
-	ArrayList<String> chatQueue = new ArrayList<String>();
 	Server server;
-	int outputMode = 0;
-	boolean newUser = false;
 	
 	private boolean disconnected = false;
+	private boolean autheniticated = false;
 	private String username, password;
 	private int playerid;
-	private int x, y;
-	private int hp, maxhp;
 	
 	public User(DataOutputStream out, DataInputStream in, User[] user, Server server, int pid)
 	{
@@ -30,8 +24,6 @@ class User implements Runnable {
 		this.user = user;
 		this.server = server;
 		this.playerid = pid;
-		this.x = this.y = 200;
-		this.hp = this.maxhp = 100;
 	}
 	
 	public void run()
@@ -61,108 +53,18 @@ class User implements Runnable {
 			}
 		}
 		/* output codes */
-		/* pa - player add */
-		/* pu - player update */
-		/* pr - player remove */
-		/* pm - player message */
-		/* dc - disconnect */
+		/* 1 - restoreGame() */
+		/* 2 - getGameState() */
+		/* 3 - getGamesList */
+		/* 4 - authenticate */
+		/* 5 - createGame */
+		/* 6 - joinGame */
 		
 		//server loop
 		while (!Thread.interrupted()) {
-			
-			if (disconnected)
-			{
-				try {
-					out.writeUTF("dc");
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				Thread.currentThread().interrupt();
-			}
-			else if (removeQueue.size() > 0)
-			{
-				try {
-					removeUser(removeQueue.get(0));
-				} catch (Exception e) {
-					System.out.println("Failed to Remove User");
-					e.printStackTrace();
-				}
-			}
-			
-			else if (userQueue.size() > 0)
-			{
-				try {
-					setupUser(userQueue.get(0));
-				} catch (Exception e) {
-					System.out.println("Failed to Setup User");
-					e.printStackTrace();
-				}
-			}
-			
-			else {
-
-				try {
-					String message = in.readUTF();
-					if (message.equals("pa"))
-					{
-						int x = in.readInt();
-						int y = in.readInt();
-						this.x = x;
-						this.y = y;
-					}
-					else if (message.equals("pm"))
-					{
-						String s = in.readUTF();
-						server.printMessage(s);
-						for (int i = 0; i < Server.MAX_USERS; i++)
-						{
-							if (user[i] != null && user[i].playerid != getPlayerID()) {
-								user[i].chatQueue.add(s);
-							}
-						}
-					}
-					else if (message.equals("ma"))
-					{
-						double mx = in.readDouble();
-						double my = in.readDouble();
-						double dir = in.readDouble();
-						for (int i = 0; i < Server.MAX_USERS; i++) {
-							if (user[i] != null && user[i].playerid != getPlayerID()) {
-								out.writeUTF("ma");
-								out.writeDouble(mx);
-								out.writeDouble(my);
-								out.writeDouble(dir);
-							}
-						}
-					}
-					for (int i = 0; i < Server.MAX_USERS; i++) {
-						if (user[i] != null && user[i].playerid != getPlayerID()) {
-							out.writeUTF("pu");
-							out.writeInt(user[i].getPlayerID());
-							out.writeInt(user[i].getX());
-							out.writeInt(user[i].getY());
-							out.writeInt(user[i].getHP());
-						}
-					}
-					while (chatQueue.size() > 0)
-					{
-						out.writeUTF("pm");
-						out.writeUTF(chatQueue.get(0));
-						chatQueue.remove(0);
-					}
-				} catch (IOException e) {
-					server.printMessage(username + " has disconnected");
-					for (int i = 0; i < Server.MAX_USERS; i++)
-					{
-						if (user[i] != null)
-						{
-							user[i].removeQueue.add(user[playerid]);
-						}
-					}
-					this.user[playerid] = null;
-					
-					Thread.currentThread().interrupt();
-				}
+			String code = in.readInt();
+			switch(code) {
+				case 1: restoreGame();
 			}
 		}
 	}

@@ -41,7 +41,8 @@ public class Server extends JFrame implements GameService {
 
 	public static Random random = new Random();
 	
-	public ArrayList<Game> gameList;
+	private ArrayList<Game> gameList;
+	private GameService gameService;
 	
 	private ServerSocket serverSocket;
 	private Socket socket;
@@ -152,6 +153,7 @@ public class Server extends JFrame implements GameService {
 	
 	/* initialize server logic */
 	private void initServer() {
+		Game 
 		gameList = new ArrayList<Game>();
 	}
 
@@ -245,45 +247,12 @@ public class Server extends JFrame implements GameService {
 		}
 	}
 
-	
-	@Override
-	public int restoreGame(Game game) {
-		gameList.add(game);
-		
-		return 0;
+	public GameService getGameService() {
+		return gameService;
 	}
-
 	
-	@Override
-	public Game getGameState(int gameId) {
-		return gameList.get(gameId);
+	public GameService getGamesList() {
+		return gameService;
 	}
-
 	
-	@Override
-	public List<Game> getGamesList() {
-		return gameList;
-	}
-
-	
-	@Override
-	public int authenticate(String user, String password) {
-		//check username and password and return 0 if successful
-		if (password.equals("p")) return 0;
-		
-		//return -1 if authentication unsuccessful
-		return -1;
-	}
-
-	
-	@Override
-	public int createGame() {
-		gameList.add(new Game());
-		return 1;
-	}
-
-	
-	@Override
-	public void joinGame() {
-	}
 }
