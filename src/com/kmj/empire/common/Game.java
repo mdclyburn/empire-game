@@ -62,6 +62,13 @@ public class Game {
 		sectorGrid[0][0].getShips().add(ship);
 	}
 	
+	public void addShip(Ship ship) {
+		int x = ship.getUniverseLocation().x;
+		int y = ship.getUniverseLocation().y;
+		System.out.println("Adding " + ship.getEmpire().getName() + " to " + x + "-" + y + ".");
+		sectorGrid[ship.getUniverseLocation().x - 1][ship.getUniverseLocation().y - 1].getShips().add(ship);
+	}
+	
 	public Ship getPlayerShip(String player) {
 		return possessionMapping.get(player);
 	}

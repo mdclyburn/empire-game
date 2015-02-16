@@ -28,12 +28,7 @@ public class DummyServerConnectionProxy implements GameService {
 	public DummyServerConnectionProxy() {
 		gameList = new ArrayList<Game>();
 		gameList.add(new Game("Trekkie's Delight", new UniverseType()));
-		Planet planet = new Planet();
-		planet.getLocation().x = 3;
-		planet.getLocation().y = 2;
-		gameList.get(0).getSector(4, 3).getPlanets().add(planet);
-		gameList.add(new Game("World War III", new UniverseType()));
-		gameList.add(new Game("The Battle of Gettysburg", new UniverseType()));
+		addSampleData();
 		
 		users = new HashMap<Integer, String>();
 		sessions = new HashMap<Integer, Game>();
@@ -94,5 +89,19 @@ public class DummyServerConnectionProxy implements GameService {
 				break;
 			}
 		}
+	}
+	
+	private void addSampleData() {
+		Planet planet = new Planet();
+		planet.getLocation().x = 3;
+		planet.getLocation().y = 2;
+		gameList.get(0).getSector(4, 3).getPlanets().add(planet);
+		
+		Ship ship = new Ship(new ShipType("Bird of Prey"), new EmpireType("Klingon"));
+		ship.getUniverseLocation().x = 2;
+		ship.getUniverseLocation().y = 2;
+		ship.getSectorLocation().x = 4;
+		ship.getSectorLocation().y = 7;
+		gameList.get(0).addShip(ship);
 	}
 }

@@ -63,7 +63,9 @@ public class SectorView extends JPanel implements MouseListener {
 			for(Ship s : sector.getShips()) {
 				int x = (s.getSectorLocation().x - 1) * (getWidth() / 8) + (getWidth() / 8 / 2) - (getWidth() / 8 / 3 / 2);
 				int y = (s.getSectorLocation().y - 1) * (getHeight() / 8) + (getHeight() / 8 / 2) - (getWidth() / 8 / 3 / 2);
-				if(game.getOwner(s).equals(Configuration.getInstance().getUsername()))
+				
+				// A null owner means that the ship is AI-controlled.
+				if(game.getOwner(s) != null && game.getOwner(s).equals(Configuration.getInstance().getUsername()))
 					g.setColor(Color.YELLOW);
 				else if(s.getEmpire().getName().equals(playerAlliance))
 					g.setColor(Color.GREEN);
