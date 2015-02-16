@@ -1,6 +1,6 @@
-package com.kmj.empire.server;
+package com.kmj.empire.common;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public interface GameService {
 	
@@ -15,7 +15,7 @@ public interface GameService {
 	public ArrayList<Game> getGamesList(int sessionId) throws AuthenticationFailedException, ConnectionFailedException;
 	
 	/* Authenticate username and password, returns playerID */
-	public int authenticate(String user, String password) throws ConnectionFailedException;
+	public int authenticate(String user, String password) throws AuthenticationFailedException, ConnectionFailedException;
 	
 	/* Creates a game on this server */
 	public int createGame() throws ConnectionFailedException;

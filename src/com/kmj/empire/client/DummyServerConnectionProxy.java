@@ -6,6 +6,7 @@ import com.kmj.empire.common.AuthenticationFailedException;
 import com.kmj.empire.common.ConnectionFailedException;
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.GameService;
+import com.kmj.empire.common.UniverseType;
 
 // A dummy connection service to get the client-side prototype
 // to proceed to show off functionality. All instances of its use
@@ -18,9 +19,9 @@ public class DummyServerConnectionProxy implements GameService {
 
 	public DummyServerConnectionProxy() {
 		gameList = new ArrayList<Game>();
-		gameList.add(new Game("Trekkie's Delight"));
-		gameList.add(new Game("World War III"));
-		gameList.add(new Game("The Battle of Gettysburg"));
+		gameList.add(new Game("Trekkie's Delight", new UniverseType()));
+		gameList.add(new Game("World War III", new UniverseType()));
+		gameList.add(new Game("The Battle of Gettysburg", new UniverseType()));
 	}
 
 	// This function will always proceed to feed the client
@@ -32,12 +33,38 @@ public class DummyServerConnectionProxy implements GameService {
 		return 0;
 	}
 
+	@Override
+	public int restoreGame(Game game) throws ConnectionFailedException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public Game getGameState(int gameId) throws ConnectionFailedException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+
 	// Hand over the list of active Games. The list is prefabricated for
 	// the purposes of this class and do not represent actual, live
 	// Games.
+	public ArrayList<Game> getGamesList(int sessionId) throws AuthenticationFailedException, ConnectionFailedException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	@Override
-	public ArrayList<Game> getGameList(int sessionId) throws ConnectionFailedException {
-		return gameList;
+	public int createGame() throws ConnectionFailedException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void joinGame() throws ConnectionFailedException {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

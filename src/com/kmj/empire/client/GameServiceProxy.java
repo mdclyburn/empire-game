@@ -5,11 +5,14 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.Gson;
-import com.kmj.empire.server.Game;
-import com.kmj.empire.server.GameService;
+import com.kmj.empire.common.AuthenticationFailedException;
+import com.kmj.empire.common.ConnectionFailedException;
+import com.kmj.empire.common.Game;
+import com.kmj.empire.common.GameService;
 
 public class GameServiceProxy implements GameService {
 
@@ -54,12 +57,6 @@ public class GameServiceProxy implements GameService {
 	}
 
 	@Override
-	public List<Game> getGamesList() {
-		
-		return null;
-	}
-
-	@Override
 	public int authenticate(String user, String password) {
 		
 		return 0;
@@ -73,6 +70,12 @@ public class GameServiceProxy implements GameService {
 
 	@Override
 	public void joinGame() {
+	}
+
+	@Override
+	public ArrayList<Game> getGamesList(int sessionId)
+			throws AuthenticationFailedException, ConnectionFailedException {
+		return null;
 	}
 
 }

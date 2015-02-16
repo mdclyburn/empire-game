@@ -32,6 +32,11 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 
+import com.kmj.empire.common.AuthenticationFailedException;
+import com.kmj.empire.common.ConnectionFailedException;
+import com.kmj.empire.common.Game;
+import com.kmj.empire.common.GameService;
+
 
 public class Server extends JFrame implements GameService {
 
@@ -261,12 +266,6 @@ public class Server extends JFrame implements GameService {
 
 	
 	@Override
-	public List<Game> getGamesList() {
-		return gameList;
-	}
-
-	
-	@Override
 	public int authenticate(String user, String password) {
 		//check username and password and return 0 if successful
 		if (password.equals("p")) return 0;
@@ -285,5 +284,12 @@ public class Server extends JFrame implements GameService {
 	
 	@Override
 	public void joinGame() {
+	}
+
+	@Override
+	public ArrayList<Game> getGamesList(int sessionId)
+			throws AuthenticationFailedException, ConnectionFailedException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

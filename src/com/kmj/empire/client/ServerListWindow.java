@@ -14,6 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import com.kmj.empire.common.AuthenticationFailedException;
 import com.kmj.empire.common.ConnectionFailedException;
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.GameService;
@@ -125,7 +126,10 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 	
 	protected void refresh() {
 		// Get new list from server.
-		try { model.setTableSource(server.getGameList(sessionId)); }
+		try { model.setTableSource(server.getGamesList(sessionId)); }
+		catch(AuthenticationFailedException e) {
+			JOptionPane.showMessageDialog(this, e.getMessage(), "Authentication Error", JOptionPane.ERROR_MESSAGE);
+		}
 		catch(ConnectionFailedException e) {
 			JOptionPane.showMessageDialog(this, e.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
 		}
