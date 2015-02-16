@@ -34,7 +34,7 @@ public class Game {
 		name = "Empire Session";
 	}
 	
-	public Game(String name, UniverseType universeType) {
+	public Game(String name, UniverseType universe) {
 		this();
 		this.universe = universe;
 		this.name = name;

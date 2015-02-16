@@ -11,7 +11,7 @@ import com.kmj.empire.common.GameService;
 public class GameServiceImpl implements GameService {
 
 	@Override
-	public int restoreGame(Game game) {
+	public int restoreGame(String gameData) {
 		
 		return 0;
 	}

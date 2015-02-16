@@ -32,7 +32,7 @@ public class GameServiceProxy implements GameService {
 	}
 	
 	@Override
-	public int restoreGame(Game game) {
+	public int restoreGame(String game) {
 		int gameId = -1; 
 		//package game to send to server
 		

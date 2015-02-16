@@ -74,11 +74,9 @@ public class Server extends JFrame {
 			for (int i = 0; i < MAX_USERS; i++)
 			{
 				printMessage("Connection from: "+ socket.getInetAddress());
-				out = new DataOutputStream(socket.getOutputStream());
-				in = new DataInputStream(socket.getInputStream());
 				if (user[i] == null)
 				{
-					user[i] = new User(out, in, user, this, i);
+					user[i] = new User(socket, user, this, i);
 					Thread thread = new Thread(user[i]);
 					thread.start();
 					break;
@@ -199,7 +197,7 @@ public class Server extends JFrame {
 			for (int i = 0; i < MAX_USERS; i++)
 			{
 				if (user[i] != null)
-				printMessage(user[i].getPlayerID() + ". "+user[i].getUsername());
+				printMessage(user[i].getSessionId() + ". "+user[i].getUsername());
 			}
 		}
 		else if (action.equals("kick"))
@@ -228,7 +226,7 @@ public class Server extends JFrame {
 				}
 				for (int i = 0; i < Server.MAX_USERS; i++)
 				{
-					if (user[i] != null && user[i].getPlayerID() != kickID)
+					if (user[i] != null && user[i].getSessionId() != kickID)
 					{
 						//user[i].removeQueue.add(user[kickID]);
 					}

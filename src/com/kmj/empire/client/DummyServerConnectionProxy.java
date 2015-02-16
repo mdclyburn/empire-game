@@ -49,8 +49,7 @@ public class DummyServerConnectionProxy implements GameService {
 	}
 
 	@Override
-	public int restoreGame(Game game) throws ConnectionFailedException {
-		// TODO Auto-generated method stub
+	public int restoreGame(String gameData) throws ConnectionFailedException {
 		return 0;
 	}
 

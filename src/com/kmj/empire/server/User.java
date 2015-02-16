@@ -3,31 +3,40 @@ package com.kmj.empire.server;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.Socket;
 
 import com.kmj.empire.common.AuthenticationFailedException;
 import com.kmj.empire.common.ConnectionFailedException;
+import com.kmj.empire.common.GameService;
 import com.kmj.empire.common.Player;
 
 class User implements Runnable {
 
-	DataOutputStream out;
-	DataInputStream in;
-	User user[] = new User[Server.MAX_USERS];
-	Server server;
+	private Socket socket;
+	private DataInputStream in;
+	private DataOutputStream out;
+	private User user[] = new User[Server.MAX_USERS];
+	private Server server;
+	private GameService gameService;
 	
 	private boolean disconnected = false;
 	private boolean autheniticated = false;
 	private String username, password;
-	private int playerid;
+	private int sessionId;
 	private Player player;
 	
-	public User(DataOutputStream out, DataInputStream in, User[] user, Server server, int pid)
+	public User(Socket socket, User[] user, Server server, int pid)
 	{
-		this.out = out;
-		this.in = in;
+		this.socket = socket;
+		try {
+			in = new DataInputStream(socket.getInputStream());
+			out = new DataOutputStream(socket.getOutputStream()); 
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
 		this.user = user;
 		this.server = server;
-		this.playerid = pid;
+		this.sessionId = pid;
 	}
 	
 	public void run()
@@ -43,12 +52,21 @@ class User implements Runnable {
 		
 		//server loop
 		while (!Thread.interrupted()) {
+			
+			//read code from the client
 			int code = -1;
 			try {
 				code = in.readInt();
 			} catch (IOException e3) {
 				e3.printStackTrace();
 			}
+			
+			//if unauthenticated user attempts prohibited action
+			if (!autheniticated && code != 4) {
+				disconnected = true;
+				break;
+			}
+			
 			switch(code) {
 				case -1: 
 					System.err.println("Failed to read code"); 
@@ -56,7 +74,7 @@ class User implements Runnable {
 					
 				case 1: try {
 					String gameData = in.readUTF();
-					server.getGameService().restoreGame(null);
+					server.getGameService().restoreGame(gameData);
 				} catch (ConnectionFailedException e2) {
 					e2.printStackTrace();
 				} catch (IOException e) {
@@ -77,10 +95,15 @@ class User implements Runnable {
 				} break;
 				
 				case 4: try {
-					server.getGameService().authenticate(null, null);
+					username = in.readUTF();
+					password = in.readUTF();
+					server.getGameService().authenticate(username, password);
 				} catch (AuthenticationFailedException
 						| ConnectionFailedException e) {
 					e.printStackTrace();
+				} catch (IOException e) {
+					System.err.println("Failed to read username and password.");
+					System.exit(1);
 				} break;
 				
 				case 5: try {
@@ -108,25 +131,7 @@ class User implements Runnable {
 		return username;
 	}
 	
-	public int getPlayerID() {
-		return playerid;
+	public int getSessionId() {
+		return sessionId;
 	}
-
-	public void setupUser(User user) throws Exception {
-		out.writeUTF("pa");
-		out.writeInt(user.getPlayerID());
-		out.writeUTF(user.getUsername());
-		
-	}
-	
-	public void removeUser(User user) throws Exception {
-		
-		int pid = user.getPlayerID();
-		out.writeUTF("pr");
-		out.writeInt(pid);
-		
-		this.user[pid] = null;
-		
-	}
-	
 }
