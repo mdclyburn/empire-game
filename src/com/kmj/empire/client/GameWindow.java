@@ -32,8 +32,10 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 	
 	JTable playerList;
 	JTable gameLog;
+	JTable shipAttributes;
 	PlayerListTableModel playerListModel;
 	GameLogTableModel gameLogModel;
+	ShipAttributeTableModel shipAttributeModel;
 	
 	UniverseView universeView;
 	SectorView sectorView;
@@ -60,6 +62,11 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 	protected static final int GAME_LOG_HEIGHT = PLAYER_LIST_HEIGHT;
 	protected static final int GAME_LOG_X = PADDING + PLAYER_LIST_WIDTH + PADDING;
 	protected static final int GAME_LOG_Y = PLAYER_LIST_Y;
+	
+	protected static final int SHIP_ATTR_WIDTH = 2 * DISPLAY_WIDTH / 5;
+	protected static final int SHIP_ATTR_HEIGHT = PLAYER_LIST_HEIGHT;
+	protected static final int SHIP_ATTR_X = GAME_LOG_X + GAME_LOG_WIDTH + PADDING;
+	protected static final int SHIP_ATTR_Y = GAME_LOG_Y;
 
 	public GameWindow() {
 		super();
@@ -124,6 +131,16 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 		gameLog.setBounds(GAME_LOG_X, GAME_LOG_Y, GAME_LOG_WIDTH, GAME_LOG_HEIGHT);
 		jsp = new JScrollPane(gameLog);
 		jsp.setBounds(gameLog.getBounds());
+		add(jsp);
+		
+		// Ship Attributes
+		shipAttributes = new JTable();
+		shipAttributeModel = new ShipAttributeTableModel();
+		shipAttributeModel.setTableSource(gameState.getPlayerShip(Configuration.getInstance().getUsername()));
+		shipAttributes.setBounds(SHIP_ATTR_X, SHIP_ATTR_Y, SHIP_ATTR_WIDTH, SHIP_ATTR_HEIGHT);
+		shipAttributes.setModel(shipAttributeModel);
+		jsp = new JScrollPane(shipAttributes);
+		jsp.setBounds(shipAttributes.getBounds());
 		add(jsp);
 		
 		setVisible(true);
