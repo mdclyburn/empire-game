@@ -4,9 +4,13 @@ public class ShipType {
 
 	protected String name;
 	
-	ShipType() {
+	public ShipType() {
 		name = "null";
 	}
 	
-	String getShipType() { return name; }
+	public ShipType(String name) {
+		this.name = name;
+	}
+	
+	public String getName() { return name; }
 }

@@ -48,7 +48,6 @@ public class SectorView extends JPanel implements MouseListener {
 				int x = (p.getLocation().x - 1) * (getWidth() / 8) + (getWidth() / 8 / 2) - (getWidth() / 8 / 3 / 2);
 				int y = (p.getLocation().y - 1) * (getHeight() / 8) + (getHeight() / 8 / 2) - (getHeight() / 8 / 3 / 2);
 				g.fillOval(x, y, getWidth() / 8 / 3, getHeight() / 8 / 3);
-				System.out.println("Drew planet at " + x + "-" + y + ".");
 			}
 		}
 	}
