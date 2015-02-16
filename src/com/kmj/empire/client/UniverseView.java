@@ -38,7 +38,7 @@ public class UniverseView extends JPanel implements MouseListener {
 	
 	public void setSectorView(SectorView sectorView) {
 		this.sectorView = sectorView;
-		sectorView.setSector(game.getSector(0, 0));
+		sectorView.setSector(game.getSector(1, 1));
 	}
 	
 	@Override
@@ -85,15 +85,15 @@ public class UniverseView extends JPanel implements MouseListener {
 		for(int y = 0; y < 8; y++) {
 			for(int x = 0; x < 8; x++) {
 				// Calculate figures.
-				int planets = game.getSector(x, y).getPlanets().size();
+				int planets = game.getSector(x + 1, y + 1).getPlanets().size();
 				
 				int enemies = 0;
-				for(Ship s : game.getSector(x, y).getShips())
+				for(Ship s : game.getSector(x + 1, y + 1).getShips())
 					if(!s.getEmpire().getName().equals(game.getPlayerShip(Configuration.getInstance().getUsername()).getEmpire().getName()))
 							enemies++;
 				
 				int friendlies = 0;
-				for(Base b : game.getSector(x, y).getBases()) {
+				for(Base b : game.getSector(x + 1, y + 1).getBases()) {
 					if(b.getEmpire().getName().equals(game.getPlayerShip(Configuration.getInstance().getUsername()).getEmpire().getName()))
 						friendlies++;
 					else
@@ -115,7 +115,7 @@ public class UniverseView extends JPanel implements MouseListener {
 		repaint();
 		
 		// Notify the sector view of the new sector selection.
-		sectorView.setSector(game.getSector(selectedSector.getX() - 1, selectedSector.getY() - 1));
+		sectorView.setSector(game.getSector(selectedSector.getX(), selectedSector.getY()));
 		
 		return;
 	}

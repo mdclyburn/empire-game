@@ -22,7 +22,7 @@ public class Game {
 		this.sectorGrid = new Sector[8][8];
 		for(int y = 0; y < 8; y++) {
 			for(int x = 0; x < 8; x++) {
-				sectorGrid[x][y] = new Sector();
+				sectorGrid[x][y] = new Sector(x + 1, y + 1);
 			}
 		}
 		players = new ArrayList<String>();
@@ -53,7 +53,7 @@ public class Game {
 	}
 	
 	public Sector getSector(int x, int y) {
-		return sectorGrid[x][y];
+		return sectorGrid[x - 1][y - 1];
 	}
 	
 	public int getStardate() { return stardate; }
@@ -84,6 +84,7 @@ public class Game {
 		int x = planet.getSector().x;
 		int y = planet.getSector().y;
 		sectorGrid[x - 1][y - 1].getPlanets().add(planet);
+		System.out.println("Added planet to " + x + "-" + y);
 	}
 	
 	public void addBase(Base base) {

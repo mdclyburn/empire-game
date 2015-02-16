@@ -7,8 +7,14 @@ public class MapEntity {
 	protected int x, y;
 	
 	public MapEntity() {
-		sector = game.getSector(0, 1);
 		x = y = 1;
+	}
+	
+	public MapEntity(Game game, Sector sector, int x, int y) {
+		this.game = game;
+		this.sector = sector;
+		this.x = x;
+		this.y = y;
 	}
 
 	public void setSector(int x, int y) {

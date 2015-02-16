@@ -8,7 +8,8 @@ public class Base extends MapEntity {
 		super();
 	}
 	
-	public Base(EmpireType empireType) {
+	public Base(EmpireType empireType, Game game, Sector sector, int x, int y) {
+		super(game, sector, x, y);
 		this.empireType = empireType;
 	}
 

@@ -11,8 +11,8 @@ public class Ship extends MapEntity {
 	protected AlertLevel alert;
 	protected WeaponType energyWeapon, missleWeapon;
 	
-	public Ship(ShipType shipType) {
-		super();
+	public Ship(ShipType shipType, Game game, Sector sector, int x, int y) {
+		super(game, sector, x, y);
 		this.shipType = shipType;
 		empire = shipType.getEmpire();
 		maxEnergy = energy = shipType.getMaxEnergy();

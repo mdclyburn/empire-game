@@ -29,7 +29,18 @@ public class DummyServerConnectionProxy implements GameService {
 
 	public DummyServerConnectionProxy() {
 		gameList = new ArrayList<Game>();
-		gameList.add(new Game("Trekkie's Delight", new UniverseType()));
+		
+		UniverseType startrek = new UniverseType("Star Trek");
+		EmpireType klingon = new EmpireType("KLI", "Klingon", "Aggression");
+		startrek.getEmpireList().add(new EmpireType("FED", "Federation", "Exploration"));
+		startrek.getEmpireList().add(klingon);
+		startrek.getEmpire("Klingon").getWeaponTypes().add(new EnergyWeaponType("PCAN", "Pulse Cannon", 150));
+		startrek.getEmpire("Klingon").getWeaponTypes().add(new MissleWeaponType("GTOR", "Gravimetric Torpedo", 800));
+		startrek.getEmpire("Klingon").getShipTypes().add(
+				new ShipType("BOP", "Bird of Prey", "D-12", startrek.getEmpire("Klingon"), 10, 10, 10, 10, 
+				startrek.getEmpire("Klingon").getWeapon("GTOR"), startrek.getEmpire("Klingon").getWeapon("GTOR")));
+		
+		gameList.add(new Game("Trekkie's Delight", startrek));
 		addSampleData();
 		
 		users = new HashMap<Integer, String>();
@@ -69,16 +80,6 @@ public class DummyServerConnectionProxy implements GameService {
 
 	@Override
 	public int createGame() throws ConnectionFailedException {
-
-		UniverseType startrek = new UniverseType("Star Trek");
-		startrek.getEmpireList().add(new EmpireType("FED", "Federation", "Exploration"));
-		startrek.getEmpireList().add(new EmpireType("KLI", "Klingon", "Aggression"));
-		startrek.getEmpire("Klingon").getWeaponTypes().add(new EnergyWeaponType("PCAN", "Pulse Cannon", 150));
-		startrek.getEmpire("Klingon").getWeaponTypes().add(new MissleWeaponType("GTOR", "Gravimetric Torpedo", 800));
-		startrek.getEmpire("Klingon").getShipTypes().add(
-				new ShipType("BOP", "Bird of Prey", "D-12", startrek.getEmpire("Klingon"), 10, 10, 10, 10, 
-				startrek.getEmpire("Klingon").getWeapon("GTOR"), startrek.getEmpire("Klingon").getWeapon("GTOR")));
-		gameList.add(new Game("New Game", startrek));
 		
 		// TODO Auto-generated method stub
 		return 0;
@@ -94,7 +95,7 @@ public class DummyServerConnectionProxy implements GameService {
 				// is using a Constitution-class vessel.
 				sessions.put(sessionId, g);
 				String username = users.get(sessionId);
-				g.addPlayer(username, new Ship(new ShipType("Constitution"), new EmpireType("Federation")));
+				g.addPlayer(username, new Ship(g.getUniverse().getEmpire("Klingon").getShip("Bird of Prey"), g, g.getSector(1, 1), 1, 1));
 
 				break;
 			}
@@ -109,25 +110,16 @@ public class DummyServerConnectionProxy implements GameService {
 	
 	private void addSampleData() {
 		
-		Planet planet = new Planet();
-		planet.setSector(3, 2);
-		planet.setLocation(4, 8);
+		Planet planet = new Planet(gameList.get(0), gameList.get(0).getSector(4, 4), 3, 2);
 		gameList.get(0).addPlanet(planet);
 		
-		Base base = new Base(gameList.get(0).getUniverse().getEmpire("Klingon"));
-		base.setSector(6, 1);
-		base.setLocation(7, 4);
+		Base base = new Base(gameList.get(0).getUniverse().getEmpire("Klingon"), gameList.get(0), gameList.get(0).getSector(6, 1), 7, 4);
 		gameList.get(0).addBase(base);
 		
-		base = new Base(gameList.get(0).getUniverse().getEmpire("Federation"));
-		base.setSector(6, 2);
-		base.setLocation(7, 4);
+		base = new Base(gameList.get(0).getUniverse().getEmpire("Federation"), gameList.get(0), gameList.get(0).getSector(6, 1), 7, 5);
 		gameList.get(0).addBase(base);
 		
-		Ship ship = new Ship(new ShipType("Bird of Prey"));
-		ship.setX(2);
-		ship.setY(2);
-		ship.setSector(4,7);
+		Ship ship = new Ship(gameList.get(0).getUniverse().getEmpire("Klingon").getShip("Bird of Prey"), gameList.get(0), gameList.get(0).getSector(6, 1), 7, 4);
 		gameList.get(0).addShip(ship);
 	}
 }

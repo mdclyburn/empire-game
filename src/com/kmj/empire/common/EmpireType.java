@@ -12,9 +12,12 @@ public class EmpireType {
 	
 	public EmpireType() {
 		this.missionType = "Exploration";
+		shipTypes = new ArrayList<ShipType>();
+		weaponTypes = new ArrayList<WeaponType>();
 	}
 	
 	public EmpireType(String id, String name, String mission) {
+		this();
 		this.id = id;
 		this.name = name;
 		this.missionType = mission;

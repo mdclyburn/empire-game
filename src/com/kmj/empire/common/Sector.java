@@ -15,6 +15,12 @@ public class Sector {
 		bases = new ArrayList<Base>();
 	}
 	
+	public Sector(int x, int y) {
+		this();
+		this.x = x;
+		this.y = y;
+	}
+	
 	public ArrayList<Planet> getPlanets() { return planets; }
 	public ArrayList<Ship> getShips() { return ships; }
 	public ArrayList<Base> getBases() { return bases; }
