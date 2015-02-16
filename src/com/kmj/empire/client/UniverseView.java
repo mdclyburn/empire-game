@@ -40,7 +40,9 @@ public class UniverseView extends JPanel {
 		// Display information.
 		for(int y = 0; y < 8; y++) {
 			for(int x = 0; x < 8; x++) {
-				g.drawString(Integer.toString(game.getSector(x, y).getEnemyEntities()), (x * getWidth() / 8) + PADDING, (y * getHeight() / 8) + (3 * PADDING));
+				g.drawString(Integer.toString(game.getSector(x, y).getPlanets()), (x * getWidth() / 8) + PADDING, (y * getHeight() / 8) + (3 * PADDING));
+				g.drawString(Integer.toString(game.getSector(x,  y).getEnemyEntities()), (x * getWidth() / 8) + PADDING, (y * getHeight() / 8) + (6 * PADDING));
+				g.drawString(Integer.toString(game.getSector(x, y).getFriendlyEntities()), (x * getWidth() / 8) + PADDING, (y * getHeight() / 8) + (9 * PADDING));
 			}
 		}
 	}
