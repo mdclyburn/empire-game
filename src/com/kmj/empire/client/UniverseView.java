@@ -78,9 +78,15 @@ public class UniverseView extends JPanel implements MouseListener {
 		g.setColor(Color.WHITE);
 		for(int y = 0; y < 8; y++) {
 			for(int x = 0; x < 8; x++) {
-				g.drawString(Integer.toString(game.getSector(x, y).getPlanets()), (x * getWidth() / 8) + PADDING, (y * getHeight() / 8) + (3 * PADDING));
-				g.drawString(Integer.toString(game.getSector(x,  y).getEnemyEntities()), (x * getWidth() / 8) + PADDING, (y * getHeight() / 8) + (6 * PADDING));
-				g.drawString(Integer.toString(game.getSector(x, y).getFriendlyEntities()), (x * getWidth() / 8) + PADDING, (y * getHeight() / 8) + (9 * PADDING));
+				// Calculate figures.
+				int planets = game.getSector(x, y).getPlanets().size();
+				int enemies = 0;
+				int friendlies = 0;
+
+				// Draw information to screen.
+				g.drawString(Integer.toString(planets), (x * getWidth() / 8) + PADDING, (y * getHeight() / 8) + (3 * PADDING));
+				g.drawString(Integer.toString(enemies), (x * getWidth() / 8) + PADDING, (y * getHeight() / 8) + (6 * PADDING));
+				g.drawString(Integer.toString(friendlies), (x * getWidth() / 8) + PADDING, (y * getHeight() / 8) + (9 * PADDING));
 			}
 		}
 	}

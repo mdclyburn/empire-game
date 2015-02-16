@@ -1,21 +1,18 @@
 package com.kmj.empire.common;
 
+import java.util.ArrayList;
+
 public class Sector {
 	
-	protected int planets;
-	protected int enemyEntities;
-	protected int friendlyEntities;
+	protected ArrayList<Planet> planets;
+	protected ArrayList<Ship> ships;
 	
 	public Sector() {
-		planets = enemyEntities = friendlyEntities = 0;
+		planets = new ArrayList<Planet>();
+		ships = new ArrayList<Ship>();
 	}
 	
-	public void setPlanets(int planets) { this.planets = planets; }
-	public void setEnemyEntities(int enemyEntites) { this.enemyEntities = enemyEntites; }
-	public void setFriendlyEntities(int friendlyEntities) { this.friendlyEntities = friendlyEntities; }
-	
-	public int getPlanets() { return planets; }
-	public int getEnemyEntities() { return enemyEntities; }
-	public int getFriendlyEntities() { return friendlyEntities; }
+	public ArrayList<Planet> getPlanets() { return planets; }
+	public ArrayList<Ship> getShips() { return ships; }
 
 }
