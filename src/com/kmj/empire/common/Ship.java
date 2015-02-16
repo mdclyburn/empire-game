@@ -1,15 +1,12 @@
 package com.kmj.empire.common;
 
-public class Ship {
+public class Ship extends MapEntity {
 
 	protected ShipType shipType;
 	protected EmpireType empireType;
 	protected int energy;
 	protected AlertLevel alert;
 	protected int shield;
-
-	protected Location sectorLocation;
-	protected Location universeLocation;
 	
 	public Ship() {
 		shipType = null;
@@ -37,7 +34,4 @@ public class Ship {
 	public int getEnergy() { return energy; }
 	public AlertLevel getAlertLevel() { return alert; }
 	public int getShieldLevel() { return shield; }
-	
-	public Location getSectorLocation() { return sectorLocation; }
-	public Location getUniverseLocation() { return universeLocation; }
 }

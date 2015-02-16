@@ -7,8 +7,9 @@ public class Game {
 
 	protected String name;
 	protected ArrayList<String> players;
-	protected ArrayList<String> log;
 	protected ArrayList<Ship> ships;
+	protected ArrayList<Base> bases;
+	protected ArrayList<String> log;
 	protected HashMap<String, Ship> possessionMapping;
 	protected HashMap<Ship, String> propertyMapping;
 	
@@ -25,8 +26,9 @@ public class Game {
 			}
 		}
 		players = new ArrayList<String>();
-		log = new ArrayList<String>();
 		ships = new ArrayList<Ship>();
+		bases = new ArrayList<Base>();
+		log = new ArrayList<String>();
 		possessionMapping = new HashMap<String, Ship>();
 		propertyMapping = new HashMap<Ship, String>();
 		name = "Empire Session";
@@ -65,8 +67,13 @@ public class Game {
 	public void addShip(Ship ship) {
 		int x = ship.getUniverseLocation().x;
 		int y = ship.getUniverseLocation().y;
-		System.out.println("Adding " + ship.getEmpire().getName() + " to " + x + "-" + y + ".");
-		sectorGrid[ship.getUniverseLocation().x - 1][ship.getUniverseLocation().y - 1].getShips().add(ship);
+		sectorGrid[x - 1][y - 1].getShips().add(ship);
+	}
+	
+	public void addPlanet(Planet planet) {
+		int x = planet.getUniverseLocation().x;
+		int y = planet.getUniverseLocation().y;
+		sectorGrid[x - 1][y - 1].getPlanets().add(planet);
 	}
 	
 	public Ship getPlayerShip(String player) {

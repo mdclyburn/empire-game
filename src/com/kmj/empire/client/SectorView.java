@@ -52,8 +52,8 @@ public class SectorView extends JPanel implements MouseListener {
 		else {
 			// Draw planets.
 			for(Planet p : sector.getPlanets()) {
-				int x = (p.getLocation().x - 1) * (getWidth() / 8) + (getWidth() / 8 / 2) - (getWidth() / 8 / 3 / 2);
-				int y = (p.getLocation().y - 1) * (getHeight() / 8) + (getHeight() / 8 / 2) - (getHeight() / 8 / 3 / 2);
+				int x = (p.getSectorLocation().x - 1) * (getWidth() / 8) + (getWidth() / 8 / 2) - (getWidth() / 8 / 3 / 2);
+				int y = (p.getSectorLocation().y - 1) * (getHeight() / 8) + (getHeight() / 8 / 2) - (getHeight() / 8 / 3 / 2);
 				g.fillOval(x, y, getWidth() / 8 / 3, getHeight() / 8 / 3);
 			}
 			
