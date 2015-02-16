@@ -17,6 +17,7 @@ public class SectorView extends JPanel implements MouseListener {
 	
 	protected Sector sector;
 	protected Game game;
+	protected ShipAttributeTableModel model;
 	
 	public SectorView() {
 		super();
@@ -31,6 +32,10 @@ public class SectorView extends JPanel implements MouseListener {
 	public void setSector(Sector sector) {
 		this.sector = sector;
 		repaint();
+	}
+	
+	public void setTableModel(ShipAttributeTableModel model) {
+		this.model = model;
 	}
 	
 	@Override
@@ -90,7 +95,18 @@ public class SectorView extends JPanel implements MouseListener {
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {}
+	public void mouseClicked(MouseEvent e) {
+		int x = (e.getX() / (getWidth() / 8)) + 1;
+		int y = (e.getY() / (getHeight() / 8)) + 1;
+		
+		// Look for a ship in that sector.
+		for(Ship s : sector.getShips()) {
+			System.out.println(s.getType().getName() + ": " + s.getSectorLocation().x + "-" + s.getUniverseLocation().y + ".");
+			if(s.getSectorLocation().x == x && s.getSectorLocation().y == y) {
+				model.setTableSource(s);
+			}
+		}
+	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {}

@@ -143,6 +143,8 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 		jsp.setBounds(shipAttributes.getBounds());
 		add(jsp);
 		
+		sectorView.setTableModel(shipAttributeModel);
+		
 		setVisible(true);
 	}
 	
