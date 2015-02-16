@@ -20,9 +20,19 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 	
 	protected ServerListWindow serverListWindow;
 	
+	UniverseView universeView;
+	SectorView sectorView;
+	
 	protected static final int WINDOW_WIDTH = 800;
 	protected static final int WINDOW_HEIGHT = 600;
 	protected static final int PADDING = 15;
+	
+	protected static final int DISPLAY_WIDTH = (WINDOW_WIDTH / 2) - (2 * PADDING);
+	protected static final int DISPLAY_HEIGHT = DISPLAY_WIDTH;
+	protected static final int UNIVERSE_VIEW_X = PADDING;
+	protected static final int UNIVERSE_VIEW_Y = PADDING;
+	protected static final int SECTOR_VIEW_X = DISPLAY_WIDTH + (3 * PADDING);
+	protected static final int SECTOR_VIEW_Y = PADDING;
 
 	public GameWindow() {
 		super();
@@ -43,7 +53,17 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 		setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setLayout(null);
 		addWindowListener(this);
+		
+		universeView = new UniverseView();
+		universeView.setBounds(UNIVERSE_VIEW_X, UNIVERSE_VIEW_Y, DISPLAY_WIDTH, DISPLAY_HEIGHT);
+		add(universeView);
+		
+		sectorView = new SectorView();
+		sectorView.setBounds(SECTOR_VIEW_X, SECTOR_VIEW_Y, DISPLAY_WIDTH, DISPLAY_HEIGHT);
+		add(sectorView);
+		
 		setVisible(true);
 	}
 	
