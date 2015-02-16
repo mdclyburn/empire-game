@@ -5,6 +5,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import com.kmj.empire.common.AuthenticationFailedException;
+import com.kmj.empire.common.ConnectionFailedException;
+
 class User implements Runnable {
 
 	DataOutputStream out;
@@ -28,30 +31,7 @@ class User implements Runnable {
 	
 	public void run()
 	{
-		//connect and authenticate
-		try {
-			username = in.readUTF();
-			password = in.readUTF();
-			//if authentication successful, send player session ID
-			if (server.authenticate(username, password) != -1)
-				out.writeInt(playerid);
-			//else send -1 to indicate failed authentication
-			else {
-				out.writeInt(-1);
-				disconnected = true;
-			}
-		} catch (IOException e1) {
-			server.printMessage("Authentication attempt failed: "+playerid);
-		}
-		//add self
-		userQueue.add(this);
-		//get other users and init this for other users
-		for(int i = 0; i < Server.MAX_USERS; i++) {
-			if (user[i] != null && user[i] != this) {	
-				user[i].userQueue.add(this);
-				userQueue.add(user[i]);
-			}
-		}
+
 		/* output codes */
 		/* 1 - restoreGame() */
 		/* 2 - getGameState() */
@@ -62,9 +42,59 @@ class User implements Runnable {
 		
 		//server loop
 		while (!Thread.interrupted()) {
-			String code = in.readInt();
+			int code = -1;
+			try {
+				code = in.readInt();
+			} catch (IOException e3) {
+				e3.printStackTrace();
+			}
 			switch(code) {
-				case 1: restoreGame();
+				case -1: 
+					System.err.println("Failed to read code"); 
+					System.exit(1); 
+					
+				case 1: try {
+					String gameData = in.readUTF();
+					server.getGameService().restoreGame(null);
+				} catch (ConnectionFailedException e2) {
+					e2.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				} break;
+				
+				case 2: try {
+					server.getGameService().getGameState(code);
+				} catch (ConnectionFailedException e1) {
+					e1.printStackTrace();
+				} break;
+				
+				case 3: try {
+					server.getGameService().getGamesList(code);
+				} catch (AuthenticationFailedException
+						| ConnectionFailedException e) {
+					e.printStackTrace();
+				} break;
+				
+				case 4: try {
+					server.getGameService().authenticate(null, null);
+				} catch (AuthenticationFailedException
+						| ConnectionFailedException e) {
+					e.printStackTrace();
+				} break;
+				
+				case 5: try {
+					server.getGameService().createGame();
+				} catch (ConnectionFailedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} break;
+				
+				case 6: try {
+					server.getGameService().joinGame(code, null);
+				} catch (ConnectionFailedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} break;
 			}
 		}
 	}
@@ -80,35 +110,12 @@ class User implements Runnable {
 	public int getPlayerID() {
 		return playerid;
 	}
-	
-	public int getX() {
-		return x;
-	}
-	
-	public int getY() {
-		return y;
-	}
-	
-	public int getHP() {
-		return hp;
-	}
-	
-	public int getMaxHP() {
-		return maxhp;
-	}
-	
-	public void setHP(int hp) {
-		this.hp = hp;
-	}
-	
+
 	public void setupUser(User user) throws Exception {
 		out.writeUTF("pa");
 		out.writeInt(user.getPlayerID());
-		out.writeInt(user.getX());
-		out.writeInt(user.getY());
 		out.writeUTF(user.getUsername());
 		
-		userQueue.remove(user);
 	}
 	
 	public void removeUser(User user) throws Exception {
@@ -117,7 +124,6 @@ class User implements Runnable {
 		out.writeUTF("pr");
 		out.writeInt(pid);
 		
-		removeQueue.remove(user);
 		this.user[pid] = null;
 		
 	}

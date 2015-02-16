@@ -1,4 +1,4 @@
-package com.kmj.empire.server;
+package com.kmj.empire.common;
 
 import java.util.ArrayList;
 
