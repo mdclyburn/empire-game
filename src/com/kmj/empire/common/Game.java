@@ -76,6 +76,12 @@ public class Game {
 		sectorGrid[x - 1][y - 1].getPlanets().add(planet);
 	}
 	
+	public void addBase(Base base) {
+		int x = base.getUniverseLocation().x;
+		int y = base.getUniverseLocation().y;
+		sectorGrid[x - 1][y - 1].getBases().add(base);
+	}
+	
 	public Ship getPlayerShip(String player) {
 		return possessionMapping.get(player);
 	}

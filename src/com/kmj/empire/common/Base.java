@@ -12,4 +12,5 @@ public class Base extends MapEntity {
 		this.empireType = empireType;
 	}
 
+	public EmpireType getEmpire() { return empireType; }
 }
