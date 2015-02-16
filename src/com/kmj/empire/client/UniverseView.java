@@ -7,6 +7,7 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JPanel;
 
+import com.kmj.empire.common.Base;
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.Location;
 import com.kmj.empire.common.Ship;
@@ -81,11 +82,19 @@ public class UniverseView extends JPanel implements MouseListener {
 			for(int x = 0; x < 8; x++) {
 				// Calculate figures.
 				int planets = game.getSector(x, y).getPlanets().size();
+				
 				int enemies = 0;
 				for(Ship s : game.getSector(x, y).getShips())
 					if(!s.getEmpire().getName().equals(game.getPlayerShip(Configuration.getInstance().getUsername()).getEmpire().getName()))
 							enemies++;
+				
 				int friendlies = 0;
+				for(Base b : game.getSector(x, y).getBases()) {
+					if(b.getEmpire().getName().equals(game.getPlayerShip(Configuration.getInstance().getUsername()).getEmpire().getName()))
+						friendlies++;
+					else
+						enemies++;
+				}
 
 				// Draw information to screen.
 				g.drawString(Integer.toString(planets), (x * getWidth() / 8) + PADDING, (y * getHeight() / 8) + (3 * PADDING));

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.kmj.empire.common.AuthenticationFailedException;
+import com.kmj.empire.common.Base;
 import com.kmj.empire.common.ConnectionFailedException;
 import com.kmj.empire.common.EmpireType;
 import com.kmj.empire.common.Game;
@@ -96,6 +97,16 @@ public class DummyServerConnectionProxy implements GameService {
 		planet.setSectorLocation(3, 2);
 		planet.setUniverseLocation(4, 8);
 		gameList.get(0).addPlanet(planet);
+		
+		Base base = new Base(new EmpireType("Federation"));
+		base.setSectorLocation(6, 1);
+		base.setUniverseLocation(7, 4);
+		gameList.get(0).addBase(base);
+		
+		base = new Base(new EmpireType("Klingon"));
+		base.setSectorLocation(6, 2);
+		base.setUniverseLocation(7, 4);
+		gameList.get(0).addBase(base);
 		
 		Ship ship = new Ship(new ShipType("Bird of Prey"), new EmpireType("Klingon"));
 		ship.getUniverseLocation().x = 2;

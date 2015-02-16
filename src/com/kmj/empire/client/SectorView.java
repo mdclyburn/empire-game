@@ -7,6 +7,7 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JPanel;
 
+import com.kmj.empire.common.Base;
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.Planet;
 import com.kmj.empire.common.Sector;
@@ -68,6 +69,18 @@ public class SectorView extends JPanel implements MouseListener {
 				if(game.getOwner(s) != null && game.getOwner(s).equals(Configuration.getInstance().getUsername()))
 					g.setColor(Color.YELLOW);
 				else if(s.getEmpire().getName().equals(playerAlliance))
+					g.setColor(Color.GREEN);
+				else
+					g.setColor(Color.RED);
+				g.fillRect(x, y, getWidth() / 8 / 3, getHeight() / 8 / 3);
+			}
+			
+			// Draw bases.
+			for(Base b : sector.getBases()) {
+				int x = (b.getSectorLocation().x - 1) * (getWidth() / 8) + (getWidth() / 8 / 2) - (getWidth() / 8 / 3 / 2);
+				int y = (b.getSectorLocation().y - 1) * (getHeight() / 8) + (getHeight() / 8 / 2) - (getHeight() / 8 / 3 / 2);
+				
+				if(b.getEmpire().getName().equals(playerAlliance))
 					g.setColor(Color.GREEN);
 				else
 					g.setColor(Color.RED);
