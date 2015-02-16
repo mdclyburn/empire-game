@@ -53,8 +53,8 @@ public class SectorView extends JPanel implements MouseListener {
 		else {
 			// Draw planets.
 			for(Planet p : sector.getPlanets()) {
-				int x = (p.getSectorLocation().x - 1) * (getWidth() / 8) + (getWidth() / 8 / 2) - (getWidth() / 8 / 3 / 2);
-				int y = (p.getSectorLocation().y - 1) * (getHeight() / 8) + (getHeight() / 8 / 2) - (getHeight() / 8 / 3 / 2);
+				int x = (p.getX() - 1) * (getWidth() / 8) + (getWidth() / 8 / 2) - (getWidth() / 8 / 3 / 2);
+				int y = (p.getY() - 1) * (getHeight() / 8) + (getHeight() / 8 / 2) - (getHeight() / 8 / 3 / 2);
 				g.fillOval(x, y, getWidth() / 8 / 3, getHeight() / 8 / 3);
 			}
 			
@@ -62,8 +62,8 @@ public class SectorView extends JPanel implements MouseListener {
 			String username = Configuration.getInstance().getUsername();
 			String playerAlliance = game.getPlayerShip(username).getEmpire().getName();
 			for(Ship s : sector.getShips()) {
-				int x = (s.getSectorLocation().x - 1) * (getWidth() / 8) + (getWidth() / 8 / 2) - (getWidth() / 8 / 3 / 2);
-				int y = (s.getSectorLocation().y - 1) * (getHeight() / 8) + (getHeight() / 8 / 2) - (getWidth() / 8 / 3 / 2);
+				int x = (s.getX() - 1) * (getWidth() / 8) + (getWidth() / 8 / 2) - (getWidth() / 8 / 3 / 2);
+				int y = (s.getY() - 1) * (getHeight() / 8) + (getHeight() / 8 / 2) - (getWidth() / 8 / 3 / 2);
 				
 				// A null owner means that the ship is AI-controlled.
 				if(game.getOwner(s) != null && game.getOwner(s).equals(Configuration.getInstance().getUsername()))
@@ -77,8 +77,8 @@ public class SectorView extends JPanel implements MouseListener {
 			
 			// Draw bases.
 			for(Base b : sector.getBases()) {
-				int x = (b.getSectorLocation().x - 1) * (getWidth() / 8) + (getWidth() / 8 / 2) - (getWidth() / 8 / 3 / 2);
-				int y = (b.getSectorLocation().y - 1) * (getHeight() / 8) + (getHeight() / 8 / 2) - (getHeight() / 8 / 3 / 2);
+				int x = (b.getX() - 1) * (getWidth() / 8) + (getWidth() / 8 / 2) - (getWidth() / 8 / 3 / 2);
+				int y = (b.getY() - 1) * (getHeight() / 8) + (getHeight() / 8 / 2) - (getHeight() / 8 / 3 / 2);
 				
 				if(b.getEmpire().getName().equals(playerAlliance))
 					g.setColor(Color.GREEN);

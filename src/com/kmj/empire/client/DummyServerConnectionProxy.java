@@ -94,25 +94,24 @@ public class DummyServerConnectionProxy implements GameService {
 	
 	private void addSampleData() {
 		Planet planet = new Planet();
-		planet.setSectorLocation(3, 2);
-		planet.setUniverseLocation(4, 8);
+		planet.setSector(3, 2);
+		planet.setLocation(4, 8);
 		gameList.get(0).addPlanet(planet);
 		
 		Base base = new Base(new EmpireType("Federation"));
-		base.setSectorLocation(6, 1);
-		base.setUniverseLocation(7, 4);
+		base.setSector(6, 1);
+		base.setLocation(7, 4);
 		gameList.get(0).addBase(base);
 		
 		base = new Base(new EmpireType("Klingon"));
-		base.setSectorLocation(6, 2);
-		base.setUniverseLocation(7, 4);
+		base.setSector(6, 2);
+		base.setLocation(7, 4);
 		gameList.get(0).addBase(base);
 		
 		Ship ship = new Ship(new ShipType("Bird of Prey"), new EmpireType("Klingon"));
-		ship.getUniverseLocation().x = 2;
-		ship.getUniverseLocation().y = 2;
-		ship.getSectorLocation().x = 4;
-		ship.getSectorLocation().y = 7;
+		ship.setX(2);
+		ship.setY(2);
+		ship.setSector(4,7);
 		gameList.get(0).addShip(ship);
 	}
 }

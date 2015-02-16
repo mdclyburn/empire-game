@@ -65,20 +65,20 @@ public class Game {
 	}
 	
 	public void addShip(Ship ship) {
-		int x = ship.getUniverseLocation().x;
-		int y = ship.getUniverseLocation().y;
+		int x = ship.getSector().x;
+		int y = ship.getSector().y;
 		sectorGrid[x - 1][y - 1].getShips().add(ship);
 	}
 	
 	public void addPlanet(Planet planet) {
-		int x = planet.getUniverseLocation().x;
-		int y = planet.getUniverseLocation().y;
+		int x = planet.getSector().x;
+		int y = planet.getSector().y;
 		sectorGrid[x - 1][y - 1].getPlanets().add(planet);
 	}
 	
 	public void addBase(Base base) {
-		int x = base.getUniverseLocation().x;
-		int y = base.getUniverseLocation().y;
+		int x = base.getSector().x;
+		int y = base.getSector().y;
 		sectorGrid[x - 1][y - 1].getBases().add(base);
 	}
 	

@@ -1,35 +1,38 @@
 package com.kmj.empire.client;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.JPanel;
 
+import sun.reflect.annotation.TypeAnnotation.LocationInfo.Location;
+
 import com.kmj.empire.common.Base;
 import com.kmj.empire.common.Game;
-import com.kmj.empire.common.Location;
+import com.kmj.empire.common.Sector;
 import com.kmj.empire.common.Ship;
 
 public class UniverseView extends JPanel implements MouseListener {
 	
 	protected Game game;
-	protected Location selectedSector;
+	protected Sector selectedSector;
 	protected SectorView sectorView;
 	
 	protected static final int PADDING = 5;
 
 	public UniverseView() {
 		super();
-		selectedSector = new Location();
+		selectedSector = game.getSector(1, 1);
 		addMouseListener(this);
 	}
 	
 	public UniverseView(Game game) {
 		super();
 		this.game = game;
-		selectedSector = new Location();
+		selectedSector = game.getSector(1, 1);
 		addMouseListener(this);
 	}
 	
@@ -54,27 +57,27 @@ public class UniverseView extends JPanel implements MouseListener {
 		
 		// Draw box around selected sector
 		g.setColor(Color.RED);
-		Location topLeft = new Location();
-		Location topRight = new Location();
-		Location bottomLeft = new Location();
-		Location bottomRight = new Location();
+		Dimension topLeft = new Dimension();
+		Dimension topRight = new Dimension();
+		Dimension bottomLeft = new Dimension();
+		Dimension bottomRight = new Dimension();
 		
-		topLeft.x = (selectedSector.x - 1) * getWidth() / 8;
-		topLeft.y = (selectedSector.y - 1) * getHeight() / 8;
+		topLeft.width = (selectedSector.getX() - 1) * getWidth() / 8;
+		topLeft.height = (selectedSector.getY() - 1) * getHeight() / 8;
 		
-		topRight.x = selectedSector.x * getWidth() / 8;
-		topRight.y = topLeft.y;
+		topRight.width = selectedSector.getX() * getWidth() / 8;
+		topRight.height = topLeft.height;
 		
-		bottomLeft.x = topLeft.x;
-		bottomLeft.y = selectedSector.y * getHeight() / 8;
+		bottomLeft.width = topLeft.width;
+		bottomLeft.height = selectedSector.getY() * getHeight() / 8;
 		
-		bottomRight.x = topRight.x;
-		bottomRight.y = bottomLeft.y;
+		bottomRight.width = topRight.width;
+		bottomRight.height = bottomLeft.height;
 		
-		g.drawLine(topLeft.x, topLeft.y, topRight.x, topRight.y);
-		g.drawLine(topLeft.x, topLeft.y, bottomLeft.x, bottomLeft.y);
-		g.drawLine(bottomLeft.x, bottomLeft.y, bottomRight.x, bottomRight.y);
-		g.drawLine(bottomRight.x, bottomRight.y, topRight.x, topRight.y);
+		g.drawLine(topLeft.width, topLeft.height, topRight.width, topRight.height);
+		g.drawLine(topLeft.width, topLeft.height, bottomLeft.width, bottomLeft.height);
+		g.drawLine(bottomLeft.width, bottomLeft.height, bottomRight.width, bottomRight.height);
+		g.drawLine(bottomRight.width, bottomRight.height, topRight.width, topRight.height);
 		
 		// Display information.
 		g.setColor(Color.WHITE);
@@ -106,12 +109,12 @@ public class UniverseView extends JPanel implements MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		selectedSector.x = (e.getX() / (getWidth() / 8)) + 1;
-		selectedSector.y = (e.getY() / (getHeight() / 8)) + 1;
+		selectedSector.setX((e.getX() / (getWidth() / 8)) + 1);
+		selectedSector.setY((e.getY() / (getHeight() / 8)) + 1);
 		repaint();
 		
 		// Notify the sector view of the new sector selection.
-		sectorView.setSector(game.getSector(selectedSector.x - 1, selectedSector.y - 1));
+		sectorView.setSector(game.getSector(selectedSector.getX() - 1, selectedSector.getY() - 1));
 		
 		return;
 	}

@@ -9,18 +9,12 @@ public class Ship extends MapEntity {
 	protected int shield;
 	
 	public Ship() {
+		super();
 		shipType = null;
 		empireType = null;
 		energy = 2800;
 		alert = AlertLevel.GREEN;
 		shield = 100;
-		
-		sectorLocation = new Location();
-		sectorLocation.x = 1;
-		sectorLocation.y = 1;
-		universeLocation = new Location();
-		universeLocation.x = 1;
-		universeLocation.y = 1;
 	}
 	
 	public Ship(ShipType shipType, EmpireType empireType) {
