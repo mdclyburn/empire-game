@@ -51,7 +51,7 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 	
 	protected static final int PLAYER_LIST_LABEL_X = PADDING;
 	protected static final int PLAYER_LIST_LABEL_Y = PADDING + DISPLAY_HEIGHT + PADDING;
-	protected static final int PLAYER_LIST_WIDTH = 3 * DISPLAY_WIDTH / 4;
+	protected static final int PLAYER_LIST_WIDTH = DISPLAY_WIDTH / 2;
 	protected static final int PLAYER_LIST_HEIGHT = WINDOW_HEIGHT - (4 * PADDING) - DISPLAY_HEIGHT;
 	protected static final int PLAYER_LIST_X = PADDING;
 	protected static final int PLAYER_LIST_Y = PADDING + DISPLAY_HEIGHT + PADDING;
