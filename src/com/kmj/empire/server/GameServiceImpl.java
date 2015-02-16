@@ -11,7 +11,7 @@ import com.kmj.empire.common.GameService;
 public class GameServiceImpl implements GameService {
 
 	@Override
-	public int restoreGame(Game game) {
+	public int restoreGame(String gameData) {
 		
 		return 0;
 	}
@@ -35,9 +35,10 @@ public class GameServiceImpl implements GameService {
 	}
 
 	@Override
-	public void joinGame() {
+	public void joinGame(int sessionId, String name)
+			throws ConnectionFailedException {
 	}
-
+	
 	@Override
 	public ArrayList<Game> getGamesList(int sessionId)
 			throws AuthenticationFailedException, ConnectionFailedException {

@@ -32,7 +32,7 @@ public class GameServiceProxy implements GameService {
 	}
 	
 	@Override
-	public int restoreGame(Game game) {
+	public int restoreGame(String game) {
 		int gameId = -1; 
 		//package game to send to server
 		
@@ -69,13 +69,14 @@ public class GameServiceProxy implements GameService {
 	}
 
 	@Override
-	public void joinGame() {
-	}
-
-	@Override
 	public ArrayList<Game> getGamesList(int sessionId)
 			throws AuthenticationFailedException, ConnectionFailedException {
 		return null;
+	}
+
+	@Override
+	public void joinGame(int sessionId, String name)
+			throws ConnectionFailedException {
 	}
 
 }

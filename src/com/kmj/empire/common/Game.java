@@ -15,7 +15,7 @@ public class Game {
 	
 	protected int stardate;
 	protected Sector[][] sectorGrid;
-	protected UniverseType universeType;
+	protected UniverseType universe;
 	
 	public Game() {
 		stardate = 2500;
@@ -34,14 +34,18 @@ public class Game {
 		name = "Empire Session";
 	}
 	
-	public Game(String name, UniverseType universeType) {
+	public Game(String name, UniverseType universe) {
 		this();
-		this.universeType = universeType;
+		this.universe = universe;
 		this.name = name;
 	}
 	
-	public UniverseType getUniverseType() {
-		return universeType;
+	public UniverseType getUniverse() {
+		return universe;
+	}
+	
+	public void setUniverseType(UniverseType universe) {
+		this.universe = universe;
 	}
 	
 	public Sector[][] getSectorGrid() {
@@ -71,20 +75,20 @@ public class Game {
 	}
 	
 	public void addShip(Ship ship) {
-		int x = ship.getUniverseLocation().x;
-		int y = ship.getUniverseLocation().y;
+		int x = ship.getSector().x;
+		int y = ship.getSector().y;
 		sectorGrid[x - 1][y - 1].getShips().add(ship);
 	}
 	
 	public void addPlanet(Planet planet) {
-		int x = planet.getUniverseLocation().x;
-		int y = planet.getUniverseLocation().y;
+		int x = planet.getSector().x;
+		int y = planet.getSector().y;
 		sectorGrid[x - 1][y - 1].getPlanets().add(planet);
 	}
 	
 	public void addBase(Base base) {
-		int x = base.getUniverseLocation().x;
-		int y = base.getUniverseLocation().y;
+		int x = base.getSector().x;
+		int y = base.getSector().y;
 		sectorGrid[x - 1][y - 1].getBases().add(base);
 	}
 	

@@ -7,10 +7,11 @@ import com.kmj.empire.common.AuthenticationFailedException;
 import com.kmj.empire.common.Base;
 import com.kmj.empire.common.ConnectionFailedException;
 import com.kmj.empire.common.EmpireType;
+import com.kmj.empire.common.EnergyWeaponType;
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.GameService;
+import com.kmj.empire.common.MissleWeaponType;
 import com.kmj.empire.common.Planet;
-import com.kmj.empire.common.Player;
 import com.kmj.empire.common.Ship;
 import com.kmj.empire.common.ShipType;
 import com.kmj.empire.common.UniverseType;
@@ -48,8 +49,7 @@ public class DummyServerConnectionProxy implements GameService {
 	}
 
 	@Override
-	public int restoreGame(Game game) throws ConnectionFailedException {
-		// TODO Auto-generated method stub
+	public int restoreGame(String gameData) throws ConnectionFailedException {
 		return 0;
 	}
 
@@ -69,6 +69,17 @@ public class DummyServerConnectionProxy implements GameService {
 
 	@Override
 	public int createGame() throws ConnectionFailedException {
+
+		UniverseType startrek = new UniverseType("Star Trek");
+		startrek.getEmpireList().add(new EmpireType("FED", "Federation", "Exploration"));
+		startrek.getEmpireList().add(new EmpireType("KLI", "Klingon", "Aggression"));
+		startrek.getEmpire("Klingon").getWeaponTypes().add(new EnergyWeaponType("PCAN", "Pulse Cannon", 150));
+		startrek.getEmpire("Klingon").getWeaponTypes().add(new MissleWeaponType("GTOR", "Gravimetric Torpedo", 800));
+		startrek.getEmpire("Klingon").getShipTypes().add(
+				new ShipType("BOP", "Bird of Prey", "D-12", startrek.getEmpire("Klingon"), 10, 10, 10, 10, 
+				startrek.getEmpire("Klingon").getWeapon("GTOR"), startrek.getEmpire("Klingon").getWeapon("GTOR")));
+		gameList.add(new Game("New Game", startrek));
+		
 		// TODO Auto-generated method stub
 		return 0;
 	}
@@ -97,26 +108,26 @@ public class DummyServerConnectionProxy implements GameService {
 	}
 	
 	private void addSampleData() {
+		
 		Planet planet = new Planet();
-		planet.setSectorLocation(3, 2);
-		planet.setUniverseLocation(4, 8);
+		planet.setSector(3, 2);
+		planet.setLocation(4, 8);
 		gameList.get(0).addPlanet(planet);
 		
-		Base base = new Base(new EmpireType("Federation"));
-		base.setSectorLocation(6, 1);
-		base.setUniverseLocation(7, 4);
+		Base base = new Base(gameList.get(0).getUniverse().getEmpire("Klingon"));
+		base.setSector(6, 1);
+		base.setLocation(7, 4);
 		gameList.get(0).addBase(base);
 		
-		base = new Base(new EmpireType("Klingon"));
-		base.setSectorLocation(6, 2);
-		base.setUniverseLocation(7, 4);
+		base = new Base(gameList.get(0).getUniverse().getEmpire("Federation"));
+		base.setSector(6, 2);
+		base.setLocation(7, 4);
 		gameList.get(0).addBase(base);
 		
-		Ship ship = new Ship(new ShipType("Bird of Prey"), new EmpireType("Klingon"));
-		ship.getUniverseLocation().x = 2;
-		ship.getUniverseLocation().y = 2;
-		ship.getSectorLocation().x = 4;
-		ship.getSectorLocation().y = 7;
+		Ship ship = new Ship(new ShipType("Bird of Prey"));
+		ship.setX(2);
+		ship.setY(2);
+		ship.setSector(4,7);
 		gameList.get(0).addShip(ship);
 	}
 }

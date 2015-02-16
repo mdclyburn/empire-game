@@ -3,34 +3,29 @@ package com.kmj.empire.common;
 public class Ship extends MapEntity {
 
 	protected ShipType shipType;
-	protected EmpireType empireType;
-	protected int energy;
+	protected EmpireType empire;
+	protected int energy, maxEnergy;
+	protected int shield, maxShield;
+	protected int missles, maxMissle;
+	protected int maxSpeed;
 	protected AlertLevel alert;
-	protected int shield;
+	protected WeaponType energyWeapon, missleWeapon;
 	
-	public Ship() {
-		shipType = null;
-		empireType = null;
-		energy = 2800;
-		alert = AlertLevel.GREEN;
-		shield = 100;
-		
-		sectorLocation = new Location();
-		sectorLocation.x = 1;
-		sectorLocation.y = 1;
-		universeLocation = new Location();
-		universeLocation.x = 1;
-		universeLocation.y = 1;
-	}
-	
-	public Ship(ShipType shipType, EmpireType empireType) {
-		this();
+	public Ship(ShipType shipType) {
+		super();
 		this.shipType = shipType;
-		this.empireType = empireType;
+		empire = shipType.getEmpire();
+		maxEnergy = energy = shipType.getMaxEnergy();
+		maxShield = shield = shipType.getMaxShield();
+		maxMissle = missles = shipType.getMaxMissle();
+		maxSpeed = shipType.getMaxSpeed();
+		alert = AlertLevel.GREEN;
+		energyWeapon = shipType.getEnergyWeapon();
+		missleWeapon = shipType.getMissleWeapon();
 	}
 	
 	public ShipType getType() { return shipType; }
-	public EmpireType getEmpire() { return empireType; }
+	public EmpireType getEmpire() { return empire; }
 	public int getEnergy() { return energy; }
 	public AlertLevel getAlertLevel() { return alert; }
 	public int getShieldLevel() { return shield; }
