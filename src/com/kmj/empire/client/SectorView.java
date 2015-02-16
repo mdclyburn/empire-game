@@ -26,5 +26,4 @@ public class SectorView extends JPanel {
 			g.drawLine(0,  i * getHeight() / 8,  getWidth(), i * getHeight() / 8);
 		}
 	}
-
 }
