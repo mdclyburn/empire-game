@@ -2,6 +2,8 @@ package com.kmj.empire.common;
 
 import java.util.ArrayList;
 
+import com.kmj.empire.client.ActionException;
+
 public interface GameService {
 	
 	
@@ -31,5 +33,8 @@ public interface GameService {
 	
 	/* Move a ship via the warp mechanism. */
 	public void warp(int sessionId, Sector sector) throws BadDestinationException, ConnectionFailedException;
+	
+	/* Fire a torpedo at target. */
+	public void fireTorpedo(int sessionId, Ship target) throws ActionException, ConnectionFailedException;
 
 }

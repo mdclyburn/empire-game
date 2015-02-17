@@ -213,6 +213,9 @@ public class DummyServerConnectionProxy implements GameService {
 		throw new BadDestinationException("The sector is full.");
 	}
 	
+	public void fireTorpedo(int sessionId, Ship target) throws ActionException, ConnectionFailedException {
+	}
+	
 	private void addSampleData() {
 		
 		Planet planet = new Planet(gameList.get(0), gameList.get(0).getSector(1, 1), 3, 2);
