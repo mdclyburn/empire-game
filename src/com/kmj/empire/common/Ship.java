@@ -29,4 +29,8 @@ public class Ship extends MapEntity {
 	public int getEnergy() { return energy; }
 	public AlertLevel getAlertLevel() { return alert; }
 	public int getShieldLevel() { return shield; }
+	
+	public void consumeEnergy(int mvmt) {
+		energy -= (10 * mvmt);
+	}
 }

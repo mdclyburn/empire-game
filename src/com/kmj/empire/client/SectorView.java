@@ -5,10 +5,14 @@ import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import com.kmj.empire.common.BadDestinationException;
 import com.kmj.empire.common.Base;
+import com.kmj.empire.common.ConnectionFailedException;
 import com.kmj.empire.common.Game;
+import com.kmj.empire.common.GameService;
 import com.kmj.empire.common.Planet;
 import com.kmj.empire.common.Sector;
 import com.kmj.empire.common.Ship;
@@ -16,17 +20,30 @@ import com.kmj.empire.common.Ship;
 public class SectorView extends JPanel implements MouseListener {
 	
 	protected Sector sector;
+
+	protected int sessionId;
 	protected Game game;
+	protected GameService server;
+	protected GameWindow parent;
+	
 	protected ShipAttributeTableModel model;
+	
+	protected int mode;
+	
+	public static final int MODE_SCANNER = 0;
+	public static final int MODE_NAVIGATE = 1;
 	
 	public SectorView() {
 		super();
 		addMouseListener(this);
 	}
 	
-	public SectorView(Game game) {
+	public SectorView(GameWindow parent, Game game, GameService server, int sessionId) {
 		this();
+		this.parent = parent;
 		this.game = game;
+		this.server = server;
+		this.sessionId = sessionId;
 	}
 	
 	public void setSector(Sector sector) {
@@ -36,6 +53,10 @@ public class SectorView extends JPanel implements MouseListener {
 	
 	public void setTableModel(ShipAttributeTableModel model) {
 		this.model = model;
+	}
+	
+	public void setMode(int mode) {
+		this.mode = mode;
 	}
 	
 	@Override
@@ -67,8 +88,8 @@ public class SectorView extends JPanel implements MouseListener {
 			String username = Configuration.getInstance().getUsername();
 			String playerAlliance = game.getPlayerShip(username).getEmpire().getName();
 			for(Ship s : sector.getShips()) {
-				int x = (s.getX() - 1) * (getWidth() / 8) + (getWidth() / 8 / 2) - (getWidth() / 8 / 3 / 2);
-				int y = (s.getY() - 1) * (getHeight() / 8) + (getHeight() / 8 / 2) - (getWidth() / 8 / 3 / 2);
+				int x = (s.getX() - 1) * (getWidth() / 8) + (getWidth() / 8 / 2) - (getWidth() / 8 / 6 / 2);
+				int y = (s.getY() - 1) * (getHeight() / 8) + (getHeight() / 8 / 2) - (getWidth() / 8 / 6 / 2);
 				
 				// A null owner means that the ship is AI-controlled.
 				if(game.getOwner(s) != null && game.getOwner(s).equals(Configuration.getInstance().getUsername()))
@@ -77,7 +98,7 @@ public class SectorView extends JPanel implements MouseListener {
 					g.setColor(Color.GREEN);
 				else
 					g.setColor(Color.RED);
-				g.fillRect(x, y, getWidth() / 8 / 3, getHeight() / 8 / 3);
+				g.fillRect(x, y, getWidth() / 8 / 6, getHeight() / 8 / 6);
 			}
 			
 			// Draw bases.
@@ -99,11 +120,29 @@ public class SectorView extends JPanel implements MouseListener {
 		int x = (e.getX() / (getWidth() / 8)) + 1;
 		int y = (e.getY() / (getHeight() / 8)) + 1;
 		
-		// Look for a ship in that sector.
-		for(Ship s : sector.getShips()) {
-			if(s.getX() == x && s.getY() == y) {
-				model.setTableSource(s);
+		// Scanner Mode
+		if(mode == MODE_SCANNER) {
+			// Look for a ship in that sector.
+			for(Ship s : sector.getShips()) {
+				if(s.getX() == x && s.getY() == y) {
+					model.setTableSource(s);
+				}
 			}
+		}
+		// Navigate Mode
+		else if(mode == MODE_NAVIGATE) {
+			// Send message to server.
+			try {
+				server.navigate(sessionId, x, y);
+				parent.refresh();
+			} catch (BadDestinationException b) {
+				JOptionPane.showMessageDialog(this, b.getMessage(), "Navigation Error", JOptionPane.ERROR_MESSAGE);
+			} catch (ConnectionFailedException c) {
+				JOptionPane.showMessageDialog(this, c.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
+			}
+			// Set the mode back to scanner mode.
+			mode = MODE_SCANNER;
+			repaint();
 		}
 	}
 

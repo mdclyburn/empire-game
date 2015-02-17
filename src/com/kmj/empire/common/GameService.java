@@ -25,5 +25,11 @@ public interface GameService {
 	
 	/* Notifies the server of a disconnecting user. */
 	public void disconnect(int sessionId) throws ConnectionFailedException;
+	
+	/* Move a ship via the impulse mechanism. */
+	public void navigate(int sessionId, int x, int y) throws BadDestinationException, ConnectionFailedException;
+	
+	/* Move a ship via the warp mechanism. */
+	public void warp(int sessionId, Sector sector) throws BadDestinationException, ConnectionFailedException;
 
 }
