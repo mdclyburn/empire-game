@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 public class Game {
 
+	private int id;
 	protected String name;
 	protected ArrayList<Player> players;
 	protected ArrayList<Ship> ships;
@@ -38,6 +39,14 @@ public class Game {
 		this();
 		this.universe = universe;
 		this.name = name;
+	}
+	
+	public int getId() {
+		return id;
+	}
+	
+	public void setId(int id) {
+		this.id = id;
 	}
 	
 	public UniverseType getUniverse() {

@@ -6,14 +6,17 @@ import java.io.StringReader;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import com.kmj.empire.client.ActionException;
 import com.kmj.empire.common.AlertLevel;
 import com.kmj.empire.common.AuthenticationFailedException;
+import com.kmj.empire.common.BadDestinationException;
 import com.kmj.empire.common.Base;
 import com.kmj.empire.common.ConnectionFailedException;
 import com.kmj.empire.common.EmpireType;
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.GameService;
 import com.kmj.empire.common.Player;
+import com.kmj.empire.common.Sector;
 import com.kmj.empire.common.Ship;
 import com.kmj.empire.common.ShipType;
 import com.kmj.empire.common.UniverseType;
@@ -22,16 +25,15 @@ import com.kmj.empire.common.WeaponType;
 public class GameServiceImpl implements GameService {
 	
 	private Server server;
-	private Socket socket;
 	
-	public GameServiceImpl(Server server, Socket socket) {
+	public GameServiceImpl(Server server) {
 		this.server = server;
-		this.socket = socket;
 	}
 
 	@Override
 	public int restoreGame(String gameData) {
 		BufferedReader br = new BufferedReader(new StringReader(gameData));
+		System.out.println(gameData);
 		try {
 			br.readLine();
 			String line = br.readLine();
@@ -117,9 +119,7 @@ public class GameServiceImpl implements GameService {
 				int px = Integer.valueOf(line.substring(0, line.indexOf('\t')));
 				line = line.substring(line.indexOf('\t')+1);
 				int py = Integer.valueOf(line.substring(0, line.indexOf('\n')));
-				Base base = new Base(empire);
-				base.setSector(sx, sy);
-				base.setLocation(px, py);
+				Base base = new Base(empire, restoredGame, restoredGame.getSector(sx, sy), py, py);
 				restoredGame.addBase(base);
 				line = br.readLine();
 			}
@@ -150,10 +150,8 @@ public class GameServiceImpl implements GameService {
 				if (alertString.equals("RED")) alert = AlertLevel.RED;
 				line = line.substring(line.indexOf('\t')+1);
 				int shield = Integer.valueOf(line.substring(0, line.indexOf('\n')));
-				Ship ship = new Ship(shipType);
+				Ship ship = new Ship(shipType, restoredGame, restoredGame.getSector(sx, sy), px, py);
 				ship.setId(id);
-				ship.setSector(sx, sy);
-				ship.setLocation(px, py);
 				ship.setEnergy(energy);
 				ship.setMissles(missiles);
 				ship.setAlert(alert);
@@ -177,12 +175,14 @@ public class GameServiceImpl implements GameService {
 			}
 			br.close();
 			
+			restoredGame.setStardate(stardate);
+			
 			server.getGamesList().add(restoredGame);
 		} catch (IOException ioe) {
 			System.err.println("Failed to read .dat file, inproper format.");
 			return -1;
 		}
-		return 0;
+		return -1;
 	}
 
 	@Override
@@ -212,6 +212,25 @@ public class GameServiceImpl implements GameService {
 	public ArrayList<Game> getGamesList(int sessionId)
 			throws AuthenticationFailedException, ConnectionFailedException {
 		return null;
+	}
+
+	@Override
+	public void disconnect(int sessionId) throws ConnectionFailedException {
+	}
+
+	@Override
+	public void navigate(int sessionId, int x, int y)
+			throws BadDestinationException, ConnectionFailedException {
+	}
+
+	@Override
+	public void warp(int sessionId, Sector sector)
+			throws BadDestinationException, ConnectionFailedException {
+	}
+
+	@Override
+	public void fireTorpedo(int sessionId, Ship target) throws ActionException,
+			ConnectionFailedException {
 	}
 
 }

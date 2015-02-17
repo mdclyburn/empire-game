@@ -1,7 +1,10 @@
 package com.kmj.empire.client;
 
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -35,19 +38,17 @@ public class GameServiceProxy implements GameService {
 	}
 	
 	@Override
-	public int restoreGame(String game) {
+	public int restoreGame(String gameData) throws ConnectionFailedException {
 		int gameId = -1; 
-		//package game to send to server
 		
 		//send info to server
 		try {
 			//send game to server
-			out.writeUTF("rg");
-			out.writeUTF(new Gson().toJson(game));
+			out.writeInt(1);
+			out.writeUTF(gameData);
 			gameId = in.readInt();
 		} catch (IOException e) {
-			System.out.println("Something went wrong restoring game.");
-			e.printStackTrace();
+			throw new ConnectionFailedException();
 		}
 		
 		return gameId;

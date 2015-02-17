@@ -40,12 +40,12 @@ class User implements Runnable {
 		this.server = server;
 		this.sessionId = pid;
 
-		gameService = new GameServiceImpl(server, socket);
+		gameService = new GameServiceImpl(server);
 	}
 	
 	public void run()
 	{
-
+		System.out.println("User thread started...");
 		/* output codes */
 		/* 1 - restoreGame() */
 		/* 2 - getGameState() */
