@@ -261,11 +261,27 @@ public class DummyServerConnectionProxy implements GameService {
 		}
 		
 		// Log the event.
-		String entry = game.getStardate() + ": " + playerShip.getType().getName() + " at (" +
+		String source = "";
+		String dest = "";
+		if(game.getOwner(playerShip) == null)
+			source = playerShip.getType().getName();
+		else
+			source = game.getOwner(playerShip);
+		
+		if(game.getOwner(target) == null)
+			dest = target.getType().getName();
+		else
+			dest = game.getOwner(playerShip);
+		
+		String entry = game.getStardate() + ": " + source + " at (" +
 				playerShip.getX() + ", " + playerShip.getY() + ") fired " +
-				playerShip.getType().getMissleWeapon().getName() + " at " + target.getType().getName() +
-				" at (" + target.getX() + ", " + target.getY() + "); target's shields now at " +
-				target.getShield();
+				playerShip.getType().getMissleWeapon().getName() + " at " + dest +
+				" at (" + target.getX() + ", " + target.getY() + "); ";
+		
+		if(target.getShield() > 0)
+			entry += "target's shields now at " + target.getShield();
+		else
+			entry += "target destroyed.";
 		game.getLog().add(0, entry);
 	}
 	
