@@ -153,7 +153,7 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 		shipAttributeModel.setTableSource(gameState.getPlayerShip(Configuration.getInstance().getUsername()));
 		shipAttributes.setBounds(SHIP_ATTR_X, SHIP_ATTR_Y, SHIP_ATTR_WIDTH, SHIP_ATTR_HEIGHT);
 		shipAttributes.setModel(shipAttributeModel);
-		jsp = new JScrollPane(shipAttributes);
+		jsp = new JScrollPane(shipAttributes, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		jsp.setBounds(shipAttributes.getBounds());
 		add(jsp);
 		
@@ -196,8 +196,19 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 		setVisible(true);
 	}
 	
-	// Update tables.
+	// Update statuses.
 	public void refresh() {
+		// Get game state from server.
+		try {
+			gameState = server.getGameState(sessionId);
+		} catch (ConnectionFailedException e) {
+			JOptionPane.showMessageDialog(this, e.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
+		}
+		// See if player is still alive.
+		if(gameState.getPlayerShip(Configuration.getInstance().getUsername()) == null) {
+			JOptionPane.showMessageDialog(this, "Your ship has been destroyed.", "Game Over", JOptionPane.INFORMATION_MESSAGE);
+			dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+		}
 		playerListModel.fireTableDataChanged();
 		gameLogModel.fireTableDataChanged();
 		shipAttributeModel.fireTableDataChanged();
@@ -207,10 +218,19 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 		String s = e.getActionCommand();
 		
 		if(s.equals(ACTION_IMPULSE)) {
+			// Switch view to current sector.
+			sectorView.setSector(gameState.getPlayerShip(Configuration.getInstance().getUsername()).getSector());
+			
 			sectorView.setMode(SectorView.MODE_NAVIGATE);
 		}
 		else if(s.equals(ACTION_WARP)) {
 			universeView.setMode(UniverseView.MODE_WARP);
+		}
+		else if(s.equals(ACTION_MISSILE)) {
+			// Switch view to current sector.
+			sectorView.setSector(gameState.getPlayerShip(Configuration.getInstance().getUsername()).getSector());
+			
+			sectorView.setMode(SectorView.MODE_MISSILE);
 		}
 		return;
 	}

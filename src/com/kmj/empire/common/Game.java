@@ -125,6 +125,8 @@ public class Game {
 	public void destroy(Ship ship) {
 		ship.getSector().getShips().remove(ship);
 		String username = getOwner(ship);
+		if(username == null) return;
+		
 		possessionMapping.remove(username);
 		propertyMapping.remove(ship);
 	}

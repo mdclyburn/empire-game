@@ -262,9 +262,9 @@ public class DummyServerConnectionProxy implements GameService {
 		
 		// Log the event.
 		String entry = game.getStardate() + ": " + playerShip.getType().getName() + " at (" +
-				playerShip.getX() + ", " + playerShip.getY() + " fired " +
+				playerShip.getX() + ", " + playerShip.getY() + ") fired " +
 				playerShip.getType().getMissleWeapon().getName() + " at " + target.getType().getName() +
-				" at (" + target.getX() + ", " + target.getY() + "; target's shields now at " +
+				" at (" + target.getX() + ", " + target.getY() + "); target's shields now at " +
 				target.getShield();
 		game.getLog().add(0, entry);
 	}
@@ -280,7 +280,10 @@ public class DummyServerConnectionProxy implements GameService {
 		base = new Base(gameList.get(0).getUniverse().getEmpire("Federation"), gameList.get(0), gameList.get(0).getSector(1, 1), 2, 5);
 		gameList.get(0).addBase(base);
 		
+		// AI ship
 		Ship ship = new Ship(gameList.get(0).getUniverse().getEmpire("Klingon").getShip("Bird of Prey"), gameList.get(0), gameList.get(0).getSector(1, 1), 7, 4);
+		ship.setAlert(AlertLevel.RED);
+		
 		gameList.get(0).addShip(ship);
 	}
 }
