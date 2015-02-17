@@ -43,10 +43,10 @@ public class ShipAttributeTableModel extends AbstractTableModel {
 	@Override
 	public Object getValueAt(int row, int column) {
 		if(ship == null) return "";
-		if(row == 0) return ship.getType().getName();
-		else if(row == 1) return ship.getEnergy();
-		else if(row == 2) return ship.getAlertLevel();
-		else return ship.getShieldLevel();
+		if(row == 0) return "Class: " + ship.getType().getName();
+		else if(row == 1) return "Energy: " + ship.getEnergy();
+		else if(row == 2) return "Alert: " + ship.getAlertLevel();
+		else return "Shield: " + ship.getShieldLevel();
 	}
 
 }
