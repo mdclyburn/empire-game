@@ -55,25 +55,23 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 	protected static final int SECTOR_VIEW_X = DISPLAY_WIDTH + (3 * PADDING);
 	protected static final int SECTOR_VIEW_Y = PADDING;
 	
-	protected static final int PLAYER_LIST_LABEL_X = PADDING;
-	protected static final int PLAYER_LIST_LABEL_Y = PADDING + DISPLAY_HEIGHT + PADDING;
-	protected static final int PLAYER_LIST_WIDTH = DISPLAY_WIDTH / 4;
-	protected static final int PLAYER_LIST_HEIGHT = WINDOW_HEIGHT - (4 * PADDING) - DISPLAY_HEIGHT;
+	protected static final int GAME_LOG_WIDTH = (4 * WINDOW_WIDTH / 5) - (2 * PADDING);
+	protected static final int GAME_LOG_HEIGHT = (WINDOW_HEIGHT - DISPLAY_HEIGHT - (2 * PADDING)) / 2;
+	protected static final int GAME_LOG_X = PADDING;
+	protected static final int GAME_LOG_Y = UNIVERSE_VIEW_Y + DISPLAY_HEIGHT + PADDING;
+
+	protected static final int PLAYER_LIST_WIDTH = DISPLAY_WIDTH / 3;
+	protected static final int PLAYER_LIST_HEIGHT = GAME_LOG_HEIGHT - (3 * PADDING);
 	protected static final int PLAYER_LIST_X = PADDING;
-	protected static final int PLAYER_LIST_Y = PADDING + DISPLAY_HEIGHT + PADDING;
+	protected static final int PLAYER_LIST_Y = PADDING + DISPLAY_HEIGHT + PADDING + GAME_LOG_HEIGHT + PADDING;
 	
-	protected static final int GAME_LOG_WIDTH = PLAYER_LIST_WIDTH * 4;
-	protected static final int GAME_LOG_HEIGHT = PLAYER_LIST_HEIGHT;
-	protected static final int GAME_LOG_X = PADDING + PLAYER_LIST_WIDTH + PADDING;
-	protected static final int GAME_LOG_Y = PLAYER_LIST_Y;
-	
-	protected static final int SHIP_ATTR_WIDTH = 2 * DISPLAY_WIDTH / 5;
+	protected static final int SHIP_ATTR_WIDTH = DISPLAY_WIDTH / 3;
 	protected static final int SHIP_ATTR_HEIGHT = PLAYER_LIST_HEIGHT;
-	protected static final int SHIP_ATTR_X = GAME_LOG_X + GAME_LOG_WIDTH + PADDING;
-	protected static final int SHIP_ATTR_Y = GAME_LOG_Y;
+	protected static final int SHIP_ATTR_X = PLAYER_LIST_X + PLAYER_LIST_WIDTH + PADDING;
+	protected static final int SHIP_ATTR_Y = PLAYER_LIST_Y;
 	
-	protected static final int ACTION_X = SHIP_ATTR_X + SHIP_ATTR_WIDTH + PADDING;
-	protected static final int ACTION_Y = SHIP_ATTR_Y;
+	protected static final int ACTION_X = GAME_LOG_X + GAME_LOG_WIDTH + PADDING;
+	protected static final int ACTION_Y = GAME_LOG_Y;
 	
 	protected static final String ACTION_IMPULSE = "impulse";
 	protected static final String ACTION_WARP = "warp";
