@@ -57,12 +57,12 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 	
 	protected static final int PLAYER_LIST_LABEL_X = PADDING;
 	protected static final int PLAYER_LIST_LABEL_Y = PADDING + DISPLAY_HEIGHT + PADDING;
-	protected static final int PLAYER_LIST_WIDTH = DISPLAY_WIDTH / 2;
+	protected static final int PLAYER_LIST_WIDTH = DISPLAY_WIDTH / 4;
 	protected static final int PLAYER_LIST_HEIGHT = WINDOW_HEIGHT - (4 * PADDING) - DISPLAY_HEIGHT;
 	protected static final int PLAYER_LIST_X = PADDING;
 	protected static final int PLAYER_LIST_Y = PADDING + DISPLAY_HEIGHT + PADDING;
 	
-	protected static final int GAME_LOG_WIDTH = PLAYER_LIST_WIDTH;
+	protected static final int GAME_LOG_WIDTH = PLAYER_LIST_WIDTH * 4;
 	protected static final int GAME_LOG_HEIGHT = PLAYER_LIST_HEIGHT;
 	protected static final int GAME_LOG_X = PADDING + PLAYER_LIST_WIDTH + PADDING;
 	protected static final int GAME_LOG_Y = PLAYER_LIST_Y;
@@ -77,6 +77,7 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 	
 	protected static final String ACTION_IMPULSE = "impulse";
 	protected static final String ACTION_WARP = "warp";
+	protected static final String ACTION_MISSILE = "missile";
 
 	public GameWindow() {
 		super();
@@ -172,11 +173,25 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 		
 		// Warp button
 		JButton warpButton = new JButton("Warp");
-		warpButton.setBounds(impulseButton.getX() + impulseButton.getWidth(),
-				impulseButton.getY(), impulseButton.getWidth(), impulseButton.getHeight());
+		warpButton.setBounds(impulseButton.getX(), impulseButton.getY() + impulseButton.getHeight() + PADDING,
+				impulseButton.getWidth(), impulseButton.getHeight());
 		warpButton.setActionCommand(ACTION_WARP);
 		warpButton.addActionListener(this);
 		add(warpButton);
+		
+		// Weapon Label
+		label = new JLabel("Weapons");
+		label.setBounds(ACTION_X, ACTION_Y + (4 * PADDING) + warpButton.getHeight() + impulseButton.getHeight(),
+				DISPLAY_WIDTH * 3 / 5, LINE_HEIGHT);
+		add(label);
+		
+		// Missile button
+		JButton missileButton = new JButton("Missile");
+		missileButton.setBounds(ACTION_X, ACTION_Y + (label.getHeight() * 2) + (impulseButton.getHeight() * 2) + (3 * PADDING),
+				(3 * DISPLAY_WIDTH / 5) / 2, LINE_HEIGHT);
+		missileButton.setActionCommand(ACTION_MISSILE);
+		missileButton.addActionListener(this);
+		add(missileButton);
 		
 		setVisible(true);
 	}
