@@ -6,7 +6,7 @@ import java.util.HashMap;
 public class Game {
 
 	protected String name;
-	protected ArrayList<String> players;
+	protected ArrayList<Player> players;
 	protected ArrayList<Ship> ships;
 	protected ArrayList<Base> bases;
 	protected ArrayList<String> log;
@@ -25,7 +25,7 @@ public class Game {
 				sectorGrid[x][y] = new Sector();
 			}
 		}
-		players = new ArrayList<String>();
+		players = new ArrayList<Player>();
 		ships = new ArrayList<Ship>();
 		bases = new ArrayList<Base>();
 		log = new ArrayList<String>();
@@ -57,15 +57,20 @@ public class Game {
 	}
 	
 	public int getStardate() { return stardate; }
+	
+	public void setStardate(int stardate) {
+		this.stardate = stardate;
+	}
+	
 	public String getName() { return name; }
-	public ArrayList<String> getActivePlayers() { return players; }
+	public ArrayList<Player> getActivePlayers() { return players; }
 	public ArrayList<String> getLog() { return log; }
 	
-	public void addPlayer(String username, Ship ship) {
-		possessionMapping.put(username, ship);
-		propertyMapping.put(ship, username);
-		players.add(username);
-		sectorGrid[0][0].getShips().add(ship);
+	public void addPlayer(Player player) {
+		possessionMapping.put(player.getUserame(), player.getShip());
+		propertyMapping.put(player.getShip(), player.getUserame());
+		players.add(player);
+		sectorGrid[0][0].getShips().add(player.getShip());
 	}
 	
 	public void addShip(Ship ship) {
@@ -84,6 +89,14 @@ public class Game {
 		int x = base.getSector().x;
 		int y = base.getSector().y;
 		sectorGrid[x - 1][y - 1].getBases().add(base);
+	}
+	
+	public Ship getIdShip(int id) {
+		for (Ship s : ships) {
+			if (s.getId() == id)
+				return s;
+		}
+		return null;
 	}
 	
 	public Ship getPlayerShip(String player) {

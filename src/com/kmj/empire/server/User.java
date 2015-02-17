@@ -8,6 +8,7 @@ import java.net.Socket;
 import com.kmj.empire.common.AuthenticationFailedException;
 import com.kmj.empire.common.ConnectionFailedException;
 import com.kmj.empire.common.GameService;
+import com.kmj.empire.common.InvalidGameFileException;
 import com.kmj.empire.common.Player;
 
 class User implements Runnable {
@@ -20,7 +21,8 @@ class User implements Runnable {
 	private GameService gameService;
 	
 	private boolean disconnected = false;
-	private boolean autheniticated = false;
+	//will be false what autheniticated is truely implemented
+	private boolean autheniticated = true;
 	private String username, password;
 	private int sessionId;
 	private Player player;
@@ -37,6 +39,8 @@ class User implements Runnable {
 		this.user = user;
 		this.server = server;
 		this.sessionId = pid;
+
+		gameService = new GameServiceImpl(server, socket);
 	}
 	
 	public void run()
@@ -74,21 +78,23 @@ class User implements Runnable {
 					
 				case 1: try {
 					String gameData = in.readUTF();
-					server.getGameService().restoreGame(gameData);
+					getGameService().restoreGame(gameData);
 				} catch (ConnectionFailedException e2) {
 					e2.printStackTrace();
 				} catch (IOException e) {
 					e.printStackTrace();
+				} catch (InvalidGameFileException e) {
+					e.printStackTrace();
 				} break;
 				
 				case 2: try {
-					server.getGameService().getGameState(code);
+					getGameService().getGameState(code);
 				} catch (ConnectionFailedException e1) {
 					e1.printStackTrace();
 				} break;
 				
 				case 3: try {
-					server.getGameService().getGamesList(code);
+					getGameService().getGamesList(code);
 				} catch (AuthenticationFailedException
 						| ConnectionFailedException e) {
 					e.printStackTrace();
@@ -97,7 +103,7 @@ class User implements Runnable {
 				case 4: try {
 					username = in.readUTF();
 					password = in.readUTF();
-					server.getGameService().authenticate(username, password);
+					getGameService().authenticate(username, password);
 				} catch (AuthenticationFailedException
 						| ConnectionFailedException e) {
 					e.printStackTrace();
@@ -107,14 +113,14 @@ class User implements Runnable {
 				} break;
 				
 				case 5: try {
-					server.getGameService().createGame();
+					getGameService().createGame();
 				} catch (ConnectionFailedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} break;
 				
 				case 6: try {
-					server.getGameService().joinGame(code, null);
+					getGameService().joinGame(code, null);
 				} catch (ConnectionFailedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -133,5 +139,9 @@ class User implements Runnable {
 	
 	public int getSessionId() {
 		return sessionId;
+	}
+	
+	public GameService getGameService() {
+		return gameService;
 	}
 }

@@ -88,12 +88,12 @@ public class UniverseView extends JPanel implements MouseListener {
 				
 				int enemies = 0;
 				for(Ship s : game.getSector(x, y).getShips())
-					if(!s.getEmpire().getName().equals(game.getPlayerShip(Configuration.getInstance().getUsername()).getEmpire().getName()))
+					if(!s.getType().getEmpire().getName().equals(game.getPlayerShip(Configuration.getInstance().getUsername()).getType().getEmpire().getName()))
 							enemies++;
 				
 				int friendlies = 0;
 				for(Base b : game.getSector(x, y).getBases()) {
-					if(b.getEmpire().getName().equals(game.getPlayerShip(Configuration.getInstance().getUsername()).getEmpire().getName()))
+					if(b.getEmpire().getName().equals(game.getPlayerShip(Configuration.getInstance().getUsername()).getType().getEmpire().getName()))
 						friendlies++;
 					else
 						enemies++;
