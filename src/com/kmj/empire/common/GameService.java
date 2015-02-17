@@ -8,7 +8,7 @@ public interface GameService {
 	
 	
 	/* Restore a saved game to the server */
-	public int restoreGame(String gameData) throws ConnectionFailedException;
+	public int restoreGame(String gameData) throws InvalidGameFileException, ConnectionFailedException;
 	
 	/* Returns the details/state of the game being played by player identified by sessionId */
 	public Game getGameState(int sessionId) throws ConnectionFailedException;

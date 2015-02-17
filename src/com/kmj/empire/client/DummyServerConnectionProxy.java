@@ -14,6 +14,7 @@ import com.kmj.empire.common.Game;
 import com.kmj.empire.common.GameService;
 import com.kmj.empire.common.MissleWeaponType;
 import com.kmj.empire.common.Planet;
+import com.kmj.empire.common.Player;
 import com.kmj.empire.common.Sector;
 import com.kmj.empire.common.Ship;
 import com.kmj.empire.common.ShipType;
@@ -37,15 +38,15 @@ public class DummyServerConnectionProxy implements GameService {
 		EmpireType klingon = new EmpireType("KLI", "Klingon", "Aggression");
 		startrek.getEmpireList().add(new EmpireType("FED", "Federation", "Exploration"));
 		startrek.getEmpireList().add(klingon);
-		startrek.getEmpire("Klingon").getWeaponTypes().add(new EnergyWeaponType("PCAN", "Pulse Cannon", 150));
-		startrek.getEmpire("Klingon").getWeaponTypes().add(new MissleWeaponType("GTOR", "Gravimetric Torpedo", 800));
+		startrek.getWeaponTypes().add(new EnergyWeaponType("PCAN", "Pulse Cannon", 150));
+		startrek.getWeaponTypes().add(new MissleWeaponType("GTOR", "Gravimetric Torpedo", 800));
 		startrek.getEmpire("Klingon").getShipTypes().add(
 				new ShipType("BOP", "Bird of Prey", "D-12", startrek.getEmpire("Klingon"), 3000, 10, 500, 10, 
-				startrek.getEmpire("Klingon").getWeapon("PCAN"), startrek.getEmpire("Klingon").getWeapon("GTOR")));
-		startrek.getEmpire("Federation").getWeaponTypes().add(new EnergyWeaponType("PHAS", "Phaser", 100));
-		startrek.getEmpire("Federation").getWeaponTypes().add(new MissleWeaponType("PTOR", "Photon Torpedo", 300));
+				startrek.getWeapon("PCAN"), startrek.getWeapon("GTOR")));
+		startrek.getWeaponTypes().add(new EnergyWeaponType("PHAS", "Phaser", 100));
+		startrek.getWeaponTypes().add(new MissleWeaponType("PTOR", "Photon Torpedo", 300));
 		startrek.getEmpire("Federation").getShipTypes().add(new ShipType("STC", "Starship", "Constitution", startrek.getEmpire("Federation"), 2500, 10, 500, 10,
-				startrek.getEmpire("Federation").getWeapon("PHAS"), startrek.getEmpire("Federation").getWeapon("PTOR")));
+				startrek.getWeapon("PHAS"), startrek.getWeapon("PTOR")));
 		
 		gameList.add(new Game("Trekkie's Delight", startrek));
 		addSampleData();
@@ -102,7 +103,9 @@ public class DummyServerConnectionProxy implements GameService {
 				sessions.put(sessionId, g);
 				
 				if(g.hasPlayed(username)) {
-					g.addPlayer(username, null);
+					Ship ship = g.getPlayerShip(username);
+					Player player = new Player(username, ship.getType().getEmpire(), ship);
+					g.addPlayer(player);
 				}
 				else {
 					// Get information from user
@@ -110,7 +113,9 @@ public class DummyServerConnectionProxy implements GameService {
 					d.setVisible(true);
 					if(d.getSelectedEmpire().length() == 0) throw new ConnectionFailedException("");
 					Random r = new Random();
-					g.addPlayer(username, new Ship(g.getUniverse().getEmpire(d.getSelectedEmpire()).getShip(d.getSelectedShip()), g, g.getSector(1, 1), 1, 1));
+					Ship ship = new Ship(g.getUniverse().getShip(d.getSelectedShip()), g, g.getSector(1, 1), 1, 1);
+					Player player = new Player(username, ship.getType().getEmpire(), ship);
+					g.addPlayer(player);
 				}
 
 				break;

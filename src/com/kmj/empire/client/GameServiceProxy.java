@@ -10,9 +10,12 @@ import java.util.List;
 
 import com.google.gson.Gson;
 import com.kmj.empire.common.AuthenticationFailedException;
+import com.kmj.empire.common.BadDestinationException;
 import com.kmj.empire.common.ConnectionFailedException;
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.GameService;
+import com.kmj.empire.common.Sector;
+import com.kmj.empire.common.Ship;
 
 public class GameServiceProxy implements GameService {
 
@@ -77,6 +80,33 @@ public class GameServiceProxy implements GameService {
 	@Override
 	public void joinGame(int sessionId, String name)
 			throws ConnectionFailedException {
+	}
+
+	@Override
+	public void disconnect(int sessionId) throws ConnectionFailedException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void navigate(int sessionId, int x, int y)
+			throws BadDestinationException, ConnectionFailedException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void warp(int sessionId, Sector sector)
+			throws BadDestinationException, ConnectionFailedException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void fireTorpedo(int sessionId, Ship target) throws ActionException,
+			ConnectionFailedException {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
