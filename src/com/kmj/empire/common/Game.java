@@ -121,5 +121,12 @@ public class Game {
 	public boolean hasPlayed(String username) {
 		return possessionMapping.containsKey(username);
 	}
+	
+	public void destroy(Ship ship) {
+		ship.getSector().getShips().remove(ship);
+		String username = getOwner(ship);
+		possessionMapping.remove(username);
+		propertyMapping.remove(ship);
+	}
 
 }

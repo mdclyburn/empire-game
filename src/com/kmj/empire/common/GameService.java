@@ -35,6 +35,6 @@ public interface GameService {
 	public void warp(int sessionId, Sector sector) throws BadDestinationException, ConnectionFailedException;
 	
 	/* Fire a torpedo at target. */
-	public void fireTorpedo(int sessionId, Ship target) throws ActionException, ConnectionFailedException;
+	public void fireTorpedo(int sessionId, Sector sector, int x, int y) throws ActionException, ConnectionFailedException;
 
 }
