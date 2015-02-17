@@ -45,12 +45,9 @@ public class Server extends JFrame {
 	public static Random random = new Random();
 	
 	private ArrayList<Game> gameList;
-	private GameService gameService;
 	
 	private ServerSocket serverSocket;
 	private Socket socket;
-	private DataOutputStream out;
-	private DataInputStream in;
 	private static User user[] = new User[MAX_USERS];
 	
 	private JPanel chatWindow;
@@ -155,7 +152,6 @@ public class Server extends JFrame {
 	/* initialize server logic */
 	private void initServer() {
 		gameList = new ArrayList<Game>();
-		gameService = new GameServiceImpl();
 	}
 
 	
@@ -247,13 +243,9 @@ public class Server extends JFrame {
 			printMessage("Unknown Command: "+action);
 		}
 	}
-
-	public GameService getGameService() {
-		return gameService;
-	}
 	
-	public GameService getGamesList() {
-		return gameService;
+	public ArrayList<Game> getGamesList() {
+		return gameList;
 	}
 
 }

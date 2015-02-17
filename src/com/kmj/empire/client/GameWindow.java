@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -15,6 +16,7 @@ import javax.swing.JTable;
 import com.kmj.empire.common.ConnectionFailedException;
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.GameService;
+import com.kmj.empire.common.Player;
 
 // The GameWindow is where the user will spend most of their time
 // during gameplay. It will consist of a canvas handled by a custom
@@ -124,7 +126,10 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 		// Player List
 		playerList = new JTable();
 		playerListModel = new PlayerListTableModel();
-		playerListModel.setTableSource(gameState.getActivePlayers());
+		ArrayList<String> names = new ArrayList<String>();
+		for (Player p : gameState.getActivePlayers())
+			names.add(p.getUserame());
+		playerListModel.setTableSource(names);
 		playerList.setModel(playerListModel);
 		playerList.setBounds(PLAYER_LIST_X, PLAYER_LIST_Y, PLAYER_LIST_WIDTH, PLAYER_LIST_HEIGHT);
 		JScrollPane jsp = new JScrollPane(playerList);
