@@ -157,12 +157,76 @@ public class DummyServerConnectionProxy implements GameService {
 		
 		// Move player.
 		playerShip.setLocation(x, y);
-		playerShip.consumeEnergy(distance);
+		playerShip.consumeImpulseEnergy(distance);
 	}
 	
 	@Override
 	public void warp(int sessionId, Sector sector) throws BadDestinationException, ConnectionFailedException {
+		String username = users.get(sessionId);
+		Game game = sessions.get(sessionId);
+		Ship playerShip = game.getPlayerShip(username);
+		System.out.println(username + " requesting warp to sector " + sector.getX() + "-" + sector.getY() + ".");
 		
+		// Make sure distance is navigable.
+		int distance = Math.abs(sector.getX() - playerShip.getX()) + Math.abs(sector.getY() - playerShip.getY());
+		System.out.println(username + " wants to move " + distance + " units.");
+		int max = playerShip.getType().getMaxSpeed();
+		if(distance > max)
+			throw new BadDestinationException("The distance is " + (distance - max) + " sectors too far.");
+		
+		// Make sure energy level is sufficient.
+		if((100 * distance) > playerShip.getEnergy())
+			throw new BadDestinationException("There is not enough energy to warp that far.");
+		
+		// Find a place in that sector to warp to.
+		System.out.println("Looking for position for " + username + "...");
+		for(int y = 1; y <= 8; y++) {
+			for(int x = 1; x <= 8; x++) {
+				boolean containsEntity = false;
+				for(Ship s : sector.getShips()) {
+					if(s.getX() == x && s.getY() == y) {
+						System.out.println(x + "-" + y + " contains a ship (" + s.getType().getName() + "). Cannot place here.");
+						containsEntity = true;
+						break;
+					}
+				}
+				if(!containsEntity) {
+					for(Base b : sector.getBases()) {
+						if(b.getX() == x && b.getY() == y) {
+							System.out.println(x + "-" + y + " contains a base. Cannot place here.");
+							containsEntity = true;
+							break;
+						}
+					}
+				}
+				if(!containsEntity) {
+					for(Planet p : sector.getPlanets()) {
+						if(p.getX() == x && p.getY() == y) {
+							System.out.println(x + "-" + y + " contains a planet. Cannot place here.");
+							containsEntity = true;
+							break;
+						}
+					}
+				}
+				
+				// If no other entity is in this position, then the player can be
+				// warped here.
+				if(!containsEntity) {
+					System.out.println("Placing " + username + " at " + x + "-" + y + ".");
+					playerShip.getSector().getShips().remove(playerShip);
+					playerShip.setSector(sector.getX(), sector.getY());
+					sector.getShips().add(playerShip);
+					playerShip.setX(x);
+					playerShip.setY(y);
+					playerShip.consumeWarpEnergy(distance);
+					return;
+				}
+			}
+		}
+		
+		// If this is reached, then the sector is full.
+		System.out.println("The sector is full, cannot place " + username + " in this sector.");
+		throw new BadDestinationException("The sector is full.");
 	}
 	
 	private void addSampleData() {

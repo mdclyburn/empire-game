@@ -6,39 +6,58 @@ import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import sun.reflect.annotation.TypeAnnotation.LocationInfo.Location;
-
+import com.kmj.empire.common.BadDestinationException;
 import com.kmj.empire.common.Base;
+import com.kmj.empire.common.ConnectionFailedException;
 import com.kmj.empire.common.Game;
+import com.kmj.empire.common.GameService;
 import com.kmj.empire.common.Sector;
 import com.kmj.empire.common.Ship;
 
 public class UniverseView extends JPanel implements MouseListener {
 	
 	protected Game game;
-	protected Sector selectedSector;
+	protected GameService server;
+	protected GameWindow parent;
+	protected int sessionId;
+	protected int selectedSectorX;
+	protected int selectedSectorY;
 	protected SectorView sectorView;
 	
+	protected int mode;
+	
 	protected static final int PADDING = 5;
+	
+	protected static final int MODE_SCANNER = 0;
+	protected static final int MODE_WARP = 1;
 
 	public UniverseView() {
 		super();
-		selectedSector = game.getSector(1, 1);
+		selectedSectorX = selectedSectorY = 1;
 		addMouseListener(this);
+		mode = MODE_SCANNER;
 	}
 	
-	public UniverseView(Game game) {
+	public UniverseView(GameWindow parent, Game game, GameService server, int sessionId) {
 		super();
+		this.parent = parent;
 		this.game = game;
-		selectedSector = game.getSector(1, 1);
+		this.server = server;
+		this.sessionId = sessionId;
+		selectedSectorX = selectedSectorY = 1;
 		addMouseListener(this);
 	}
 	
 	public void setSectorView(SectorView sectorView) {
 		this.sectorView = sectorView;
-		sectorView.setSector(game.getSector(1, 1));
+		sectorView.setSector(game.getSector(selectedSectorY, selectedSectorX));
+	}
+	
+	public void setMode(int mode) {
+		this.mode = mode;
 	}
 	
 	@Override
@@ -63,14 +82,14 @@ public class UniverseView extends JPanel implements MouseListener {
 		Dimension bottomLeft = new Dimension();
 		Dimension bottomRight = new Dimension();
 		
-		topLeft.width = (selectedSector.getX() - 1) * getWidth() / 8;
-		topLeft.height = (selectedSector.getY() - 1) * getHeight() / 8;
+		topLeft.width = (selectedSectorX - 1) * getWidth() / 8;
+		topLeft.height = (selectedSectorY - 1) * getHeight() / 8;
 		
-		topRight.width = selectedSector.getX() * getWidth() / 8;
+		topRight.width = selectedSectorX * getWidth() / 8;
 		topRight.height = topLeft.height;
 		
 		bottomLeft.width = topLeft.width;
-		bottomLeft.height = selectedSector.getY() * getHeight() / 8;
+		bottomLeft.height = selectedSectorY * getHeight() / 8;
 		
 		bottomRight.width = topRight.width;
 		bottomRight.height = bottomLeft.height;
@@ -110,12 +129,28 @@ public class UniverseView extends JPanel implements MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		selectedSector.setX((e.getX() / (getWidth() / 8)) + 1);
-		selectedSector.setY((e.getY() / (getHeight() / 8)) + 1);
-		repaint();
+		selectedSectorX = (e.getX() / (getWidth() / 8)) + 1;
+		selectedSectorY = (e.getY() / (getHeight() / 8)) + 1;
 		
 		// Notify the sector view of the new sector selection.
-		sectorView.setSector(game.getSector(selectedSector.getX(), selectedSector.getY()));
+		if(mode == MODE_SCANNER) {
+			sectorView.setSector(game.getSector(selectedSectorX, selectedSectorY));
+		}
+		
+		// Move to a new sector.
+		if(mode == MODE_WARP) {
+			try {
+				server.warp(sessionId, game.getSector(selectedSectorX, selectedSectorY));
+			} catch (BadDestinationException b) {
+				JOptionPane.showMessageDialog(this, b.getMessage(), "Warp Error", JOptionPane.ERROR_MESSAGE);
+			} catch (ConnectionFailedException c) {
+				JOptionPane.showMessageDialog(this, c.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
+			}
+			sectorView.setSector(game.getSector(selectedSectorX, selectedSectorY));
+			mode = MODE_SCANNER;
+		}
+		repaint();
+		parent.refresh();
 		
 		return;
 	}

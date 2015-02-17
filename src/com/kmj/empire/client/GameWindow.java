@@ -74,6 +74,7 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 	protected static final int ACTION_Y = SHIP_ATTR_Y;
 	
 	protected static final String ACTION_IMPULSE = "impulse";
+	protected static final String ACTION_WARP = "warp";
 
 	public GameWindow() {
 		super();
@@ -107,7 +108,7 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 		}
 		
 		// Update views.
-		universeView = new UniverseView(gameState);
+		universeView = new UniverseView(this, gameState, server, sessionId);
 		universeView.setBounds(UNIVERSE_VIEW_X, UNIVERSE_VIEW_Y, DISPLAY_WIDTH, DISPLAY_HEIGHT);
 		add(universeView);
 		
@@ -168,6 +169,8 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 		JButton warpButton = new JButton("Warp");
 		warpButton.setBounds(impulseButton.getX() + impulseButton.getWidth(),
 				impulseButton.getY(), impulseButton.getWidth(), impulseButton.getHeight());
+		warpButton.setActionCommand(ACTION_WARP);
+		warpButton.addActionListener(this);
 		add(warpButton);
 		
 		setVisible(true);
@@ -185,6 +188,9 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 		
 		if(s.equals(ACTION_IMPULSE)) {
 			sectorView.setMode(SectorView.MODE_NAVIGATE);
+		}
+		else if(s.equals(ACTION_WARP)) {
+			universeView.setMode(UniverseView.MODE_WARP);
 		}
 		return;
 	}
