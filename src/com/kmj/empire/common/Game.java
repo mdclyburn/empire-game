@@ -67,8 +67,10 @@ public class Game {
 	public ArrayList<String> getLog() { return log; }
 	
 	public void addPlayer(Player player) {
-		possessionMapping.put(player.getUserame(), player.getShip());
-		propertyMapping.put(player.getShip(), player.getUserame());
+		if(!hasPlayed(player.getUserame())) {
+			possessionMapping.put(player.getUserame(), player.getShip());
+			propertyMapping.put(player.getShip(), player.getUserame());
+		}
 		players.add(player);
 		sectorGrid[0][0].getShips().add(player.getShip());
 	}
@@ -108,7 +110,12 @@ public class Game {
 	}
 	
 	public void removePlayer(String username) {
-		players.remove(username);
+		for(Player p : players) {
+			if(p.getUserame().equals(username)) {
+				players.remove(p);
+				break;
+			}
+		}
 	}
 	
 	public boolean hasPlayed(String username) {
