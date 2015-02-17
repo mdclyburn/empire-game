@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -43,6 +44,7 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 	protected static final int WINDOW_WIDTH = 1000;
 	protected static final int WINDOW_HEIGHT = 800;
 	protected static final int PADDING = 15;
+	protected static final int LINE_HEIGHT = 25;
 	
 	protected static final int DISPLAY_WIDTH = (WINDOW_WIDTH / 2) - (2 * PADDING);
 	protected static final int DISPLAY_HEIGHT = DISPLAY_WIDTH;
@@ -67,6 +69,12 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 	protected static final int SHIP_ATTR_HEIGHT = PLAYER_LIST_HEIGHT;
 	protected static final int SHIP_ATTR_X = GAME_LOG_X + GAME_LOG_WIDTH + PADDING;
 	protected static final int SHIP_ATTR_Y = GAME_LOG_Y;
+	
+	protected static final int ACTION_X = SHIP_ATTR_X + SHIP_ATTR_WIDTH + PADDING;
+	protected static final int ACTION_Y = SHIP_ATTR_Y;
+	
+	protected static final String ACTION_IMPULSE = "impulse";
+	protected static final String ACTION_WARP = "warp";
 
 	public GameWindow() {
 		super();
@@ -100,11 +108,11 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 		}
 		
 		// Update views.
-		universeView = new UniverseView(gameState);
+		universeView = new UniverseView(this, gameState, server, sessionId);
 		universeView.setBounds(UNIVERSE_VIEW_X, UNIVERSE_VIEW_Y, DISPLAY_WIDTH, DISPLAY_HEIGHT);
 		add(universeView);
 		
-		sectorView = new SectorView(gameState);
+		sectorView = new SectorView(this, gameState, server, sessionId);
 		sectorView.setBounds(SECTOR_VIEW_X, SECTOR_VIEW_Y, DISPLAY_WIDTH, DISPLAY_HEIGHT);
 		add(sectorView);
 		
@@ -145,10 +153,45 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 		
 		sectorView.setTableModel(shipAttributeModel);
 		
+		// Navigate Label
+		JLabel label = new JLabel("Navigate");
+		label.setBounds(ACTION_X, ACTION_Y, DISPLAY_WIDTH * 3 / 5, LINE_HEIGHT);
+		add(label);
+		
+		// Impulse button
+		JButton impulseButton = new JButton("Impulse");
+		impulseButton.setBounds(ACTION_X, ACTION_Y + label.getHeight() + PADDING, (3 * DISPLAY_WIDTH / 5) / 2, LINE_HEIGHT);
+		impulseButton.setActionCommand(ACTION_IMPULSE);
+		impulseButton.addActionListener(this);
+		add(impulseButton);
+		
+		// Warp button
+		JButton warpButton = new JButton("Warp");
+		warpButton.setBounds(impulseButton.getX() + impulseButton.getWidth(),
+				impulseButton.getY(), impulseButton.getWidth(), impulseButton.getHeight());
+		warpButton.setActionCommand(ACTION_WARP);
+		warpButton.addActionListener(this);
+		add(warpButton);
+		
 		setVisible(true);
 	}
 	
+	// Update tables.
+	public void refresh() {
+		playerListModel.fireTableDataChanged();
+		gameLogModel.fireTableDataChanged();
+		shipAttributeModel.fireTableDataChanged();
+	}
+	
 	public void actionPerformed(ActionEvent e) {
+		String s = e.getActionCommand();
+		
+		if(s.equals(ACTION_IMPULSE)) {
+			sectorView.setMode(SectorView.MODE_NAVIGATE);
+		}
+		else if(s.equals(ACTION_WARP)) {
+			universeView.setMode(UniverseView.MODE_WARP);
+		}
 		return;
 	}
 	

@@ -65,12 +65,11 @@ public class Game {
 		// Check if the user has been in the game already.
 		System.out.println("Adding " + username + " to game.");
 		if(!possessionMapping.containsKey(username)) {
-			System.out.println("New user.");
+			System.out.println("Creating " + ship.getType().getName() + " for " + username);
 			possessionMapping.put(username, ship);
 			propertyMapping.put(ship, username);
 			sectorGrid[0][0].getShips().add(ship);
 		}
-		else System.out.println("User has logged in before.");
 		players.add(username);
 	}
 	
@@ -84,7 +83,6 @@ public class Game {
 		int x = planet.getSector().x;
 		int y = planet.getSector().y;
 		sectorGrid[x - 1][y - 1].getPlanets().add(planet);
-		System.out.println("Added planet to " + x + "-" + y);
 	}
 	
 	public void addBase(Base base) {
@@ -103,6 +101,10 @@ public class Game {
 	
 	public void removePlayer(String username) {
 		players.remove(username);
+	}
+	
+	public boolean hasPlayed(String username) {
+		return possessionMapping.containsKey(username);
 	}
 
 }

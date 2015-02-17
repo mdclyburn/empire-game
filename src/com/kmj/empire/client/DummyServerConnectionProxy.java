@@ -2,8 +2,10 @@ package com.kmj.empire.client;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 import com.kmj.empire.common.AuthenticationFailedException;
+import com.kmj.empire.common.BadDestinationException;
 import com.kmj.empire.common.Base;
 import com.kmj.empire.common.ConnectionFailedException;
 import com.kmj.empire.common.EmpireType;
@@ -12,6 +14,7 @@ import com.kmj.empire.common.Game;
 import com.kmj.empire.common.GameService;
 import com.kmj.empire.common.MissleWeaponType;
 import com.kmj.empire.common.Planet;
+import com.kmj.empire.common.Sector;
 import com.kmj.empire.common.Ship;
 import com.kmj.empire.common.ShipType;
 import com.kmj.empire.common.UniverseType;
@@ -37,8 +40,12 @@ public class DummyServerConnectionProxy implements GameService {
 		startrek.getEmpire("Klingon").getWeaponTypes().add(new EnergyWeaponType("PCAN", "Pulse Cannon", 150));
 		startrek.getEmpire("Klingon").getWeaponTypes().add(new MissleWeaponType("GTOR", "Gravimetric Torpedo", 800));
 		startrek.getEmpire("Klingon").getShipTypes().add(
-				new ShipType("BOP", "Bird of Prey", "D-12", startrek.getEmpire("Klingon"), 10, 10, 10, 10, 
-				startrek.getEmpire("Klingon").getWeapon("GTOR"), startrek.getEmpire("Klingon").getWeapon("GTOR")));
+				new ShipType("BOP", "Bird of Prey", "D-12", startrek.getEmpire("Klingon"), 3000, 10, 500, 10, 
+				startrek.getEmpire("Klingon").getWeapon("PCAN"), startrek.getEmpire("Klingon").getWeapon("GTOR")));
+		startrek.getEmpire("Federation").getWeaponTypes().add(new EnergyWeaponType("PHAS", "Phaser", 100));
+		startrek.getEmpire("Federation").getWeaponTypes().add(new MissleWeaponType("PTOR", "Photon Torpedo", 300));
+		startrek.getEmpire("Federation").getShipTypes().add(new ShipType("STC", "Starship", "Constitution", startrek.getEmpire("Federation"), 2500, 10, 500, 10,
+				startrek.getEmpire("Federation").getWeapon("PHAS"), startrek.getEmpire("Federation").getWeapon("PTOR")));
 		
 		gameList.add(new Game("Trekkie's Delight", startrek));
 		addSampleData();
@@ -91,11 +98,20 @@ public class DummyServerConnectionProxy implements GameService {
 			if(g.getName().equals(name)) {
 				System.out.println("Session " + sessionId + " joining " + name + ".");
 				
-				// Procedure to add a new player. In this case, the player
-				// is using a Constitution-class vessel.
-				sessions.put(sessionId, g);
 				String username = users.get(sessionId);
-				g.addPlayer(username, new Ship(g.getUniverse().getEmpire("Klingon").getShip("Bird of Prey"), g, g.getSector(1, 1), 1, 1));
+				sessions.put(sessionId, g);
+				
+				if(g.hasPlayed(username)) {
+					g.addPlayer(username, null);
+				}
+				else {
+					// Get information from user
+					NewPlayerDialog d = new NewPlayerDialog(null, "New Player", g);
+					d.setVisible(true);
+					if(d.getSelectedEmpire().length() == 0) throw new ConnectionFailedException("");
+					Random r = new Random();
+					g.addPlayer(username, new Ship(g.getUniverse().getEmpire(d.getSelectedEmpire()).getShip(d.getSelectedShip()), g, g.getSector(1, 1), 1, 1));
+				}
 
 				break;
 			}
@@ -108,18 +124,110 @@ public class DummyServerConnectionProxy implements GameService {
 		game.getActivePlayers().remove(users.get(sessionId));
 	}
 	
+	@Override
+	public void navigate(int sessionId, int x, int y) throws BadDestinationException, ConnectionFailedException {
+		String username = users.get(sessionId);
+		Game game = sessions.get(sessionId);
+		Ship playerShip = game.getPlayerShip(username);
+		
+		// Make sure the distance is navigable.
+		int distance = Math.abs(playerShip.getX() - x) + Math.abs(playerShip.getY() - y);
+		
+		// Make sure energy level is sufficient.
+		if((10 * distance) > playerShip.getEnergy())
+			throw new BadDestinationException("There is not enough energy to go there.");
+		
+		// Check if there is something at the destination.
+		Sector currentSector = playerShip.getSector();
+		for(Base b : currentSector.getBases())
+			if(b.getX() == x && b.getY() == y) throw new BadDestinationException("A base is located here.");
+		for(Ship s : currentSector.getShips())
+			if(s.getX() == x && s.getY() == y) throw new BadDestinationException("A ship is located here.");
+		for(Planet p : currentSector.getPlanets())
+			if(p.getX() == x && p.getY() == y) throw new BadDestinationException("A planet is located here.");
+		
+		// Move player.
+		playerShip.setLocation(x, y);
+		playerShip.consumeImpulseEnergy(distance);
+	}
+	
+	@Override
+	public void warp(int sessionId, Sector sector) throws BadDestinationException, ConnectionFailedException {
+		String username = users.get(sessionId);
+		Game game = sessions.get(sessionId);
+		Ship playerShip = game.getPlayerShip(username);
+		
+		// Make sure distance is navigable.
+		int distance = Math.abs(sector.getX() - playerShip.getX()) + Math.abs(sector.getY() - playerShip.getY());
+		int max = playerShip.getType().getMaxSpeed();
+		if(distance > max)
+			throw new BadDestinationException("The distance is " + (distance - max) + " sectors too far.");
+		
+		// Make sure energy level is sufficient.
+		if((100 * distance) > playerShip.getEnergy())
+			throw new BadDestinationException("There is not enough energy to warp that far.");
+		
+		// Find a place in that sector to warp to.
+		System.out.println("Looking for position for " + username + "...");
+		for(int y = 1; y <= 8; y++) {
+			for(int x = 1; x <= 8; x++) {
+				boolean containsEntity = false;
+				for(Ship s : sector.getShips()) {
+					if(s.getX() == x && s.getY() == y) {
+						containsEntity = true;
+						break;
+					}
+				}
+				if(!containsEntity) {
+					for(Base b : sector.getBases()) {
+						if(b.getX() == x && b.getY() == y) {
+							containsEntity = true;
+							break;
+						}
+					}
+				}
+				if(!containsEntity) {
+					for(Planet p : sector.getPlanets()) {
+						if(p.getX() == x && p.getY() == y) {
+							containsEntity = true;
+							break;
+						}
+					}
+				}
+				
+				// If no other entity is in this position, then the player can be
+				// warped here.
+				if(!containsEntity) {
+					playerShip.getSector().getShips().remove(playerShip);
+					playerShip.setSector(sector.getX(), sector.getY());
+					sector.getShips().add(playerShip);
+					playerShip.setX(x);
+					playerShip.setY(y);
+					playerShip.consumeWarpEnergy(distance);
+					return;
+				}
+			}
+		}
+		
+		// If this is reached, then the sector is full.
+		throw new BadDestinationException("The sector is full.");
+	}
+	
+	public void fireTorpedo(int sessionId, Ship target) throws ActionException, ConnectionFailedException {
+	}
+	
 	private void addSampleData() {
 		
-		Planet planet = new Planet(gameList.get(0), gameList.get(0).getSector(4, 4), 3, 2);
+		Planet planet = new Planet(gameList.get(0), gameList.get(0).getSector(1, 1), 3, 2);
 		gameList.get(0).addPlanet(planet);
 		
-		Base base = new Base(gameList.get(0).getUniverse().getEmpire("Klingon"), gameList.get(0), gameList.get(0).getSector(6, 1), 7, 4);
+		Base base = new Base(gameList.get(0).getUniverse().getEmpire("Klingon"), gameList.get(0), gameList.get(0).getSector(1, 1), 3, 4);
 		gameList.get(0).addBase(base);
 		
-		base = new Base(gameList.get(0).getUniverse().getEmpire("Federation"), gameList.get(0), gameList.get(0).getSector(6, 1), 7, 5);
+		base = new Base(gameList.get(0).getUniverse().getEmpire("Federation"), gameList.get(0), gameList.get(0).getSector(1, 1), 2, 5);
 		gameList.get(0).addBase(base);
 		
-		Ship ship = new Ship(gameList.get(0).getUniverse().getEmpire("Klingon").getShip("Bird of Prey"), gameList.get(0), gameList.get(0).getSector(6, 1), 7, 4);
+		Ship ship = new Ship(gameList.get(0).getUniverse().getEmpire("Klingon").getShip("Bird of Prey"), gameList.get(0), gameList.get(0).getSector(1, 1), 7, 4);
 		gameList.get(0).addShip(ship);
 	}
 }
