@@ -75,8 +75,9 @@ public class DummyServerConnectionProxy implements GameService {
 
 	@Override
 	public Game getGameState(int sessionId) throws ConnectionFailedException {
-		System.out.println("Getting game state for session " + sessionId);
-		return sessions.get(sessionId);
+		Game game = sessions.get(sessionId);
+		game.setStardate(game.getStardate() + 1);
+		return game;
 	}
 
 	// Hand over the list of active Games. The list is prefabricated for
