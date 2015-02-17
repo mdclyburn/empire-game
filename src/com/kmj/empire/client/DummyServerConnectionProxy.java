@@ -243,6 +243,10 @@ public class DummyServerConnectionProxy implements GameService {
 		if(target == null)
 			throw new ActionException("There is no ship at the specified location.");
 		
+		// Disallow self-destruction.
+		if(playerShip == target)
+			throw new ActionException("Don't blow yourself up.");
+		
 		// At this time, a torpedo never misses.
 		if(target.getAlert() == AlertLevel.GREEN) {
 			// The ship is immediately destroyed.
