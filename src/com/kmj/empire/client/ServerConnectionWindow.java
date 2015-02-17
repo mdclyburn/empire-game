@@ -13,8 +13,11 @@ import javax.swing.JTextField;
 
 import com.kmj.empire.common.AuthenticationFailedException;
 import com.kmj.empire.common.ConnectionFailedException;
+import com.kmj.empire.common.GameService;
 
 public class ServerConnectionWindow extends JFrame implements ActionListener {
+	
+	GameService server;
 	
 	// =======================
 	// ===== TEXT FIELDS =====
@@ -52,6 +55,8 @@ public class ServerConnectionWindow extends JFrame implements ActionListener {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(null);
 		setResizable(false);
+		
+		server = new DummyServerConnectionProxy();
 		
 		// =======================
 		// ===== LABEL SETUP =====
@@ -130,6 +135,11 @@ public class ServerConnectionWindow extends JFrame implements ActionListener {
 		setVisible(true);
 	}
 	
+	public ServerConnectionWindow(GameService server) {
+		this();
+		this.server = server;
+	}
+	
 	public void actionPerformed(ActionEvent e) {
 		String s = e.getActionCommand();
 		
@@ -153,10 +163,9 @@ public class ServerConnectionWindow extends JFrame implements ActionListener {
 			}
 			
 			try {
-				DummyServerConnectionProxy server = new DummyServerConnectionProxy();
 				int id = server.authenticate(Configuration.getInstance().getUsername(),
 						Configuration.getInstance().getPassword());
-				ServerListWindow serverListWindow = new ServerListWindow(id);
+				ServerListWindow serverListWindow = new ServerListWindow(id, server);
 				dispose();
 			}
 			catch(AuthenticationFailedException a) {

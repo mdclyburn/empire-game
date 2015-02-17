@@ -14,6 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import com.kmj.empire.common.AuthenticationFailedException;
 import com.kmj.empire.common.ConnectionFailedException;
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.GameService;
@@ -56,9 +57,10 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 		sessionId = -1;
 	}
 	
-	public ServerListWindow(int sessionId) {
+	public ServerListWindow(int sessionId, GameService server) {
 		super();
 		this.sessionId = sessionId;
+		this.server = server;
 		launch();
 	}
 	
@@ -108,10 +110,6 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 		button.setActionCommand(ACTION_DISCONNECT);
 		button.addActionListener(this);
 		add(button);
-		
-		// Get active game list. This uses the dummy service for
-		// the prototype and should be changed later.
-		server = new DummyServerConnectionProxy();
 
 		// Attach the table model for viewing.
 		model = new GameListTableModel();
@@ -125,7 +123,10 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 	
 	protected void refresh() {
 		// Get new list from server.
-		try { model.setTableSource(server.getGameList(sessionId)); }
+		try { model.setTableSource(server.getGamesList(sessionId)); }
+		catch(AuthenticationFailedException e) {
+			JOptionPane.showMessageDialog(this, e.getMessage(), "Authentication Error", JOptionPane.ERROR_MESSAGE);
+		}
 		catch(ConnectionFailedException e) {
 			JOptionPane.showMessageDialog(this, e.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
 		}
@@ -153,12 +154,24 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 		// Join the selected game.
 		else if(s.equals(ACTION_JOIN)) {
 			String gameName = ((String) table.getValueAt(table.getSelectedRow(), 0));
-			GameWindow w = new GameWindow(sessionId, gameName, this);
+			if(gameName == null) return;
+			try {
+				server.joinGame(sessionId, gameName);
+			} catch (ConnectionFailedException c) {
+				if(c.getMessage().length() != 0)
+					JOptionPane.showMessageDialog(this, c.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			
+			GameWindow w = new GameWindow(sessionId, gameName, this, server);
 			setVisible(false);
 		}
 		
 		// Refresh the game list.
-		else if(s.equalsIgnoreCase(ACTION_REFRESH)) refresh();
+		else if(s.equalsIgnoreCase(ACTION_REFRESH)) {
+			joinButton.setEnabled(false);
+			refresh();
+		}
 		
 		// Disconnect from the server.
 		else if(s.equals(ACTION_DISCONNECT)) {
@@ -166,6 +179,11 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 		}
 		
 		return;
+	}
+	
+	@Override public void setVisible(boolean b) {
+		super.setVisible(b);
+		if(b && (model != null)) refresh();
 	}
 	
 	@Override
@@ -176,7 +194,7 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 	@Override
 	public void windowClosing(WindowEvent e) {
 		// Reopen the server connection window.
-		ServerConnectionWindow w = new ServerConnectionWindow();
+		ServerConnectionWindow w = new ServerConnectionWindow(server);
 		
 		// Close this window.
 		dispose();

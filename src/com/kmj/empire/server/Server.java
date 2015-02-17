@@ -19,7 +19,6 @@ import java.io.DataOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import javax.swing.JFrame;
@@ -32,8 +31,12 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 
+import com.kmj.empire.common.Game;
+import com.kmj.empire.common.GameService;
+import com.kmj.empire.server.GameServiceImpl;
 
-public class Server extends JFrame implements GameService {
+
+public class Server extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
@@ -41,12 +44,10 @@ public class Server extends JFrame implements GameService {
 
 	public static Random random = new Random();
 	
-	public ArrayList<Game> gameList;
+	private ArrayList<Game> gameList;
 	
 	private ServerSocket serverSocket;
 	private Socket socket;
-	private DataOutputStream out;
-	private DataInputStream in;
 	private static User user[] = new User[MAX_USERS];
 	
 	private JPanel chatWindow;
@@ -70,11 +71,9 @@ public class Server extends JFrame implements GameService {
 			for (int i = 0; i < MAX_USERS; i++)
 			{
 				printMessage("Connection from: "+ socket.getInetAddress());
-				out = new DataOutputStream(socket.getOutputStream());
-				in = new DataInputStream(socket.getInputStream());
 				if (user[i] == null)
 				{
-					user[i] = new User(out, in, user, this, i);
+					user[i] = new User(socket, user, this, i);
 					Thread thread = new Thread(user[i]);
 					thread.start();
 					break;
@@ -127,7 +126,7 @@ public class Server extends JFrame implements GameService {
 						printMessage("Server", message);
 						for (int i = 0; i < MAX_USERS; i++) {
 							if (user[i] != null) {
-								user[i].chatQueue.add(new String("Server: "+message));
+								//user[i].chatQueue.add(new String("Server: "+message));
 							}
 						}
 					}
@@ -194,7 +193,7 @@ public class Server extends JFrame implements GameService {
 			for (int i = 0; i < MAX_USERS; i++)
 			{
 				if (user[i] != null)
-				printMessage(user[i].getPlayerID() + ". "+user[i].getUsername());
+				printMessage(user[i].getSessionId() + ". "+user[i].getUsername());
 			}
 		}
 		else if (action.equals("kick"))
@@ -218,14 +217,14 @@ public class Server extends JFrame implements GameService {
 				printMessage(user[kickID].getUsername()+" has been kicked");
 				for (int i = 0; i < MAX_USERS; i++) {
 					if (user[i] != null) {
-						user[i].chatQueue.add(new String(user[kickID].getUsername()+" has been kicked"));
+						//user[i].chatQueue.add(new String(user[kickID].getUsername()+" has been kicked"));
 					}
 				}
 				for (int i = 0; i < Server.MAX_USERS; i++)
 				{
-					if (user[i] != null && user[i].getPlayerID() != kickID)
+					if (user[i] != null && user[i].getSessionId() != kickID)
 					{
-						user[i].removeQueue.add(user[kickID]);
+						//user[i].removeQueue.add(user[kickID]);
 					}
 					user[kickID].disconnect();
 					user[kickID] = null;
@@ -244,46 +243,9 @@ public class Server extends JFrame implements GameService {
 			printMessage("Unknown Command: "+action);
 		}
 	}
-
 	
-	@Override
-	public int restoreGame(Game game) {
-		gameList.add(game);
-		
-		return 0;
-	}
-
-	
-	@Override
-	public Game getGameState(int gameId) {
-		return gameList.get(gameId);
-	}
-
-	
-	@Override
-	public List<Game> getGamesList() {
+	public ArrayList<Game> getGamesList() {
 		return gameList;
 	}
 
-	
-	@Override
-	public int authenticate(String user, String password) {
-		//check username and password and return 0 if successful
-		if (password.equals("p")) return 0;
-		
-		//return -1 if authentication unsuccessful
-		return -1;
-	}
-
-	
-	@Override
-	public int createGame() {
-		gameList.add(new Game());
-		return 1;
-	}
-
-	
-	@Override
-	public void joinGame() {
-	}
 }
