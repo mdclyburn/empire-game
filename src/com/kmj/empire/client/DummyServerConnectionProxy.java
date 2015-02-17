@@ -127,22 +127,13 @@ public class DummyServerConnectionProxy implements GameService {
 	@Override
 	public void navigate(int sessionId, int x, int y) throws BadDestinationException, ConnectionFailedException {
 		String username = users.get(sessionId);
-		System.out.println(username + " requesting move to " + x + "-" + y + ".");
 		Game game = sessions.get(sessionId);
 		Ship playerShip = game.getPlayerShip(username);
 		
 		// Make sure the distance is navigable.
 		int distance = Math.abs(playerShip.getX() - x) + Math.abs(playerShip.getY() - y);
-		System.out.println(username + " would have to move " + distance + " units.");
-		int max = playerShip.getType().getMaxSpeed();
-		System.out.println(username + " can move " + max + " units max.");
-		if(distance > max) {
-			int diff = distance - max;
-			throw new BadDestinationException("The destination is " + diff + " units too far.");
-		}
 		
 		// Make sure energy level is sufficient.
-		System.out.println(username + " needs " + (10 * distance) + " energy to move.");
 		if((10 * distance) > playerShip.getEnergy())
 			throw new BadDestinationException("There is not enough energy to go there.");
 		
@@ -165,11 +156,9 @@ public class DummyServerConnectionProxy implements GameService {
 		String username = users.get(sessionId);
 		Game game = sessions.get(sessionId);
 		Ship playerShip = game.getPlayerShip(username);
-		System.out.println(username + " requesting warp to sector " + sector.getX() + "-" + sector.getY() + ".");
 		
 		// Make sure distance is navigable.
 		int distance = Math.abs(sector.getX() - playerShip.getX()) + Math.abs(sector.getY() - playerShip.getY());
-		System.out.println(username + " wants to move " + distance + " units.");
 		int max = playerShip.getType().getMaxSpeed();
 		if(distance > max)
 			throw new BadDestinationException("The distance is " + (distance - max) + " sectors too far.");
@@ -185,7 +174,6 @@ public class DummyServerConnectionProxy implements GameService {
 				boolean containsEntity = false;
 				for(Ship s : sector.getShips()) {
 					if(s.getX() == x && s.getY() == y) {
-						System.out.println(x + "-" + y + " contains a ship (" + s.getType().getName() + "). Cannot place here.");
 						containsEntity = true;
 						break;
 					}
@@ -193,7 +181,6 @@ public class DummyServerConnectionProxy implements GameService {
 				if(!containsEntity) {
 					for(Base b : sector.getBases()) {
 						if(b.getX() == x && b.getY() == y) {
-							System.out.println(x + "-" + y + " contains a base. Cannot place here.");
 							containsEntity = true;
 							break;
 						}
@@ -202,7 +189,6 @@ public class DummyServerConnectionProxy implements GameService {
 				if(!containsEntity) {
 					for(Planet p : sector.getPlanets()) {
 						if(p.getX() == x && p.getY() == y) {
-							System.out.println(x + "-" + y + " contains a planet. Cannot place here.");
 							containsEntity = true;
 							break;
 						}
@@ -212,7 +198,6 @@ public class DummyServerConnectionProxy implements GameService {
 				// If no other entity is in this position, then the player can be
 				// warped here.
 				if(!containsEntity) {
-					System.out.println("Placing " + username + " at " + x + "-" + y + ".");
 					playerShip.getSector().getShips().remove(playerShip);
 					playerShip.setSector(sector.getX(), sector.getY());
 					sector.getShips().add(playerShip);
@@ -225,7 +210,6 @@ public class DummyServerConnectionProxy implements GameService {
 		}
 		
 		// If this is reached, then the sector is full.
-		System.out.println("The sector is full, cannot place " + username + " in this sector.");
 		throw new BadDestinationException("The sector is full.");
 	}
 	
