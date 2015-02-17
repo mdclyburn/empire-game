@@ -9,6 +9,7 @@ import java.awt.event.WindowListener;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -49,6 +50,7 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 
 	protected static final String ACTION_CREATE = "create";
 	protected static final String ACTION_JOIN = "join";
+	protected static final String ACTION_RESTORE = "restore";
 	protected static final String ACTION_REFRESH = "refresh";
 	protected static final String ACTION_DISCONNECT = "disconnect";
 
@@ -99,14 +101,20 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 		add(button);
 		joinButton = button;
 		
-		button = new JButton("Refresh");
+		button = new JButton("Restore");
 		button.setBounds(BUTTON_START, PADDING + (2 * BUTTON_HEIGHT) + (2 * PADDING), BUTTON_WIDTH, BUTTON_HEIGHT);
+		button.setActionCommand(ACTION_RESTORE);
+		button.addActionListener(this);
+		add(button);
+		
+		button = new JButton("Refresh");
+		button.setBounds(BUTTON_START, PADDING + (3 * BUTTON_HEIGHT) + (3 * PADDING), BUTTON_WIDTH, BUTTON_HEIGHT);
 		button.setActionCommand(ACTION_REFRESH);
 		button.addActionListener(this);
 		add(button);
 		
 		button = new JButton("Disconnect");
-		button.setBounds(BUTTON_START, PADDING + (3 * BUTTON_HEIGHT) + (3 * PADDING), BUTTON_WIDTH, BUTTON_HEIGHT);
+		button.setBounds(BUTTON_START, PADDING + (4 * BUTTON_HEIGHT) + (4 * PADDING), BUTTON_WIDTH, BUTTON_HEIGHT);
 		button.setActionCommand(ACTION_DISCONNECT);
 		button.addActionListener(this);
 		add(button);
@@ -165,6 +173,12 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 			
 			GameWindow w = new GameWindow(sessionId, gameName, this, server);
 			setVisible(false);
+		}
+		
+		// Pick file to restore.
+		else if(s.equals(ACTION_RESTORE)) {
+			JFileChooser fc = new JFileChooser();
+			int result = fc.showOpenDialog(this);
 		}
 		
 		// Refresh the game list.
