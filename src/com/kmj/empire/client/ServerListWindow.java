@@ -6,6 +6,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.File;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -179,6 +180,9 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 		else if(s.equals(ACTION_RESTORE)) {
 			JFileChooser fc = new JFileChooser();
 			int result = fc.showOpenDialog(this);
+			if(result == JFileChooser.APPROVE_OPTION) {
+				File file = fc.getSelectedFile();
+			}
 		}
 		
 		// Refresh the game list.
