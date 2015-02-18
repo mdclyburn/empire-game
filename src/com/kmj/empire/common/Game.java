@@ -70,12 +70,30 @@ public class Game {
 	public void setStardate(int stardate) {
 		this.stardate = stardate;
 	}
+	public String getName() {
+		return name;
+	}
 	
-	public String getName() { return name; }
-	public ArrayList<Player> getActivePlayers() { return players; }
-	public ArrayList<Ship> getShips() { return ships; }
-	public ArrayList<Base> getBases() { return bases; }
-	public ArrayList<String> getLog() { return log; }
+	public ArrayList<Player> getActivePlayers() {
+		return players;
+	}
+	
+	public ArrayList<Ship> getShips() {
+		return ships;
+	}
+	
+	public ArrayList<Base> getBases() {
+		return bases;
+	}
+	
+	public ArrayList<String> getLog() {
+		return log;
+	}
+	
+	public void map(String username, Ship ship) {
+		possessionMapping.put(username, ship);
+		propertyMapping.put(ship, username);
+	}
 	
 	public void addPlayer(Player player) {
 		if(!hasPlayed(player.getUserame())) {
@@ -137,10 +155,14 @@ public class Game {
 	}
 	
 	public void destroy(Ship ship) {
+		ships.remove(ship);
 		ship.getSector().getShips().remove(ship);
 		String username = getOwner(ship);
 		if(username == null) return;
-		
+
+		for(Player p : players)
+			if(p.getUserame().equals(username))
+				players.remove(p);
 		possessionMapping.remove(username);
 		propertyMapping.remove(ship);
 	}
@@ -148,8 +170,18 @@ public class Game {
 	public void nextStardate() {
 		stardate++;
 		
+		// AI action
+		aiAction();
+		
 		// Deplete the energy of anyone on red or yellow alert.
 		for(Ship s : ships) s.consumeEnergy();
+	}
+	
+	public void aiAction() {
+		for(Ship s : ships) {
+			if(propertyMapping.get(s) == null) {
+			}
+		}
 	}
 	
 }

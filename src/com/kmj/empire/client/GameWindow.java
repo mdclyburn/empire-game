@@ -236,6 +236,13 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 			JOptionPane.showMessageDialog(this, "Your ship has been destroyed.", "Game Over", JOptionPane.INFORMATION_MESSAGE);
 			dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 		}
+		
+		// Update player list.
+		ArrayList<String> names = new ArrayList<String>();
+		for (Player p : gameState.getActivePlayers())
+			names.add(p.getUserame());
+		playerListModel.setTableSource(names);
+
 		playerListModel.fireTableDataChanged();
 		gameLogModel.fireTableDataChanged();
 		shipAttributeModel.fireTableDataChanged();

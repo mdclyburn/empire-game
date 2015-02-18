@@ -190,6 +190,7 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 			if(result == JFileChooser.APPROVE_OPTION) {
 				file = fc.getSelectedFile();
 			}
+			else return;
 			
 			try {
 				BufferedReader br = new BufferedReader(new FileReader(file));
@@ -202,15 +203,13 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 				br.close();
 				server.restoreGame(gameData);
 			} catch (InvalidGameFileException igfe) {
-				// TODO bad game file exception handling
-				igfe.printStackTrace();
-			} catch (ConnectionFailedException e1) {
-				// TODO conection failed execption handling
-				e1.printStackTrace();
-			} catch (IOException e1) {
-				// TODO could not read file (file did not exist?)
-				e1.printStackTrace();
+				JOptionPane.showMessageDialog(this, igfe.getMessage(), "Restoration Error", JOptionPane.ERROR_MESSAGE);
+			} catch (ConnectionFailedException c) {
+				JOptionPane.showMessageDialog(this, c.getMessage(), "Restoration Error", JOptionPane.ERROR_MESSAGE);
+			} catch (IOException i) {
+				JOptionPane.showMessageDialog(this, i.getMessage(), "Restoration Error", JOptionPane.ERROR_MESSAGE);
 			}
+			refresh();
 		}
 		
 		// Refresh the game list.

@@ -39,22 +39,22 @@ public class DummyServerConnectionProxy implements GameService {
 	public DummyServerConnectionProxy() {
 		gameList = new ArrayList<Game>();
 		
-		UniverseType startrek = new UniverseType("Star Trek");
-		EmpireType klingon = new EmpireType("KLI", "Klingon", "Aggression");
-		startrek.getEmpireList().add(new EmpireType("FED", "Federation", "Exploration"));
-		startrek.getEmpireList().add(klingon);
-		startrek.getWeaponTypes().add(new EnergyWeaponType("PCAN", "Pulse Cannon", 150));
-		startrek.getWeaponTypes().add(new MissileWeaponType("GTOR", "Gravimetric Torpedo", 800));
-		startrek.getEmpire("Klingon").getShipTypes().add(
-				new ShipType("BOP", "Bird of Prey", "D-12", startrek.getEmpire("Klingon"), 3000, 10, 500, 10, 
-				startrek.getWeapon("PCAN"), startrek.getWeapon("GTOR")));
-		startrek.getWeaponTypes().add(new EnergyWeaponType("PHAS", "Phaser", 100));
-		startrek.getWeaponTypes().add(new MissileWeaponType("PTOR", "Photon Torpedo", 300));
-		startrek.getEmpire("Federation").getShipTypes().add(new ShipType("STC", "Starship", "Constitution", startrek.getEmpire("Federation"), 2500, 10, 500, 10,
-				startrek.getWeapon("PHAS"), startrek.getWeapon("PTOR")));
-		
-		gameList.add(new Game("Trekkie's Delight", startrek));
-		addSampleData();
+//		UniverseType startrek = new UniverseType("Star Trek");
+//		EmpireType klingon = new EmpireType("KLI", "Klingon", "Aggression");
+//		startrek.getEmpireList().add(new EmpireType("FED", "Federation", "Exploration"));
+//		startrek.getEmpireList().add(klingon);
+//		startrek.getWeaponTypes().add(new EnergyWeaponType("PCAN", "Pulse Cannon", 150));
+//		startrek.getWeaponTypes().add(new MissleWeaponType("GTOR", "Gravimetric Torpedo", 800));
+//		startrek.getEmpire("Klingon").getShipTypes().add(
+//				new ShipType("BOP", "Bird of Prey", "D-12", startrek.getEmpire("Klingon"), 3000, 10, 500, 10, 
+//				startrek.getWeapon("PCAN"), startrek.getWeapon("GTOR")));
+//		startrek.getWeaponTypes().add(new EnergyWeaponType("PHAS", "Phaser", 100));
+//		startrek.getWeaponTypes().add(new MissleWeaponType("PTOR", "Photon Torpedo", 300));
+//		startrek.getEmpire("Federation").getShipTypes().add(new ShipType("STC", "Starship", "Constitution", startrek.getEmpire("Federation"), 2500, 10, 500, 10,
+//				startrek.getWeapon("PHAS"), startrek.getWeapon("PTOR")));
+//		
+//		gameList.add(new Game("Trekkie's Delight", startrek));
+//		addSampleData();
 		
 		users = new HashMap<Integer, String>();
 		sessions = new HashMap<Integer, Game>();
@@ -211,7 +211,9 @@ public class DummyServerConnectionProxy implements GameService {
 				EmpireType empire = universe.getEmpire(line.substring(0, line.indexOf('\t')));
 				line = line.substring(line.indexOf('\t')+1);
 				int shipId = Integer.valueOf(line.substring(0, line.length()));
+				Ship playerShip = restoredGame.getIdShip(shipId);
 				Player player = new Player(playerid, empire, restoredGame.getIdShip(shipId));
+				restoredGame.map(player.getUserame(), playerShip);
 				restoredGame.addPlayer(player);
 				line = br.readLine();
 			}
@@ -230,7 +232,6 @@ public class DummyServerConnectionProxy implements GameService {
 
 	@Override
 	public Game getGameState(int sessionId) throws ConnectionFailedException {
-		System.out.println("Getting game state for session " + sessionId);
 		return sessions.get(sessionId);
 	}
 
@@ -391,19 +392,15 @@ public class DummyServerConnectionProxy implements GameService {
 		Game game = sessions.get(sessionId);
 		Ship playerShip = game.getPlayerShip(username);
 		
-		System.out.println(username + " firing 1 of " + playerShip.getMissles() + " at " + x + "-" + y + ".");
-		
 		// Make sure that the player has torpedoes left.
 		if(playerShip.getMissles() == 0)
 			throw new ActionException("There are no missiles left.");
 		
 		// Make sure that a ship is at that location.
-		System.out.println("Seeing if a ship is at location...");
 		Ship target = null;
 		for(Ship s : sector.getShips()) {
 			if(s.getX() == x && s.getY() == y) {
 				target = s;
-				System.out.println("Found the ship " + username + " is firing at.");
 				break;
 			}
 		}
@@ -413,6 +410,19 @@ public class DummyServerConnectionProxy implements GameService {
 		// Disallow self-destruction.
 		if(playerShip == target)
 			throw new ActionException("Don't blow yourself up.");
+		
+		// Get source and destination names.
+		String source = "";
+		String dest = "";
+		if(game.getOwner(playerShip) == null)
+			source = playerShip.getType().getName();
+		else
+			source = game.getOwner(playerShip);
+		
+		if(game.getOwner(target) == null)
+			dest = target.getType().getName();
+		else
+			dest = game.getOwner(target);
 		
 		// At this time, a torpedo never misses.
 		if(target.getAlert() == AlertLevel.GREEN) {
@@ -431,19 +441,10 @@ public class DummyServerConnectionProxy implements GameService {
 			if(target.getShield() < 0) game.destroy(target);
 		}
 		
+		// Remove a missile.
+		playerShip.setMissles(playerShip.getMissles() - 1);
+		
 		// Log the event.
-		String source = "";
-		String dest = "";
-		if(game.getOwner(playerShip) == null)
-			source = playerShip.getType().getName();
-		else
-			source = game.getOwner(playerShip);
-		
-		if(game.getOwner(target) == null)
-			dest = target.getType().getName();
-		else
-			dest = game.getOwner(playerShip);
-		
 		String entry = game.getStardate() + ": " + source + " at (" +
 				playerShip.getX() + ", " + playerShip.getY() + ") fired " +
 				playerShip.getType().getMissileWeapon().getName() + " at " + dest +
