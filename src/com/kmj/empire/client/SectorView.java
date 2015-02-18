@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
@@ -25,6 +26,7 @@ public class SectorView extends JPanel implements MouseListener {
 	protected Game game;
 	protected GameService server;
 	protected GameWindow parent;
+	protected JLabel status;
 	
 	protected ShipAttributeTableModel model;
 	
@@ -45,6 +47,7 @@ public class SectorView extends JPanel implements MouseListener {
 		this.game = game;
 		this.server = server;
 		this.sessionId = sessionId;
+		this.status = status;
 	}
 	
 	public void setSector(Sector sector) {
@@ -58,6 +61,10 @@ public class SectorView extends JPanel implements MouseListener {
 	
 	public void setMode(int mode) {
 		this.mode = mode;
+	}
+	
+	public void setStatus(JLabel status) {
+		this.status = status;
 	}
 	
 	@Override
@@ -143,6 +150,7 @@ public class SectorView extends JPanel implements MouseListener {
 			}
 			// Set the mode back to scanner mode.
 			mode = MODE_SCANNER;
+			status.setText("Idling");
 			repaint();
 		}
 		// Missile Mode
@@ -160,6 +168,7 @@ public class SectorView extends JPanel implements MouseListener {
 				JOptionPane.showMessageDialog(this, c.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
 			}
 			mode = MODE_SCANNER;
+			status.setText("Idling");
 			repaint();
 		}
 	}

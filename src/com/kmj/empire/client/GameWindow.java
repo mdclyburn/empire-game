@@ -34,6 +34,8 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 	
 	protected ServerListWindow serverListWindow;
 	
+	JLabel stardate;
+	JLabel actionStatus;
 	JTable playerList;
 	JTable gameLog;
 	JTable shipAttributes;
@@ -157,6 +159,18 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 		jsp.setBounds(gameLog.getBounds());
 		add(jsp);
 		
+		// Stardate display
+		stardate = new JLabel("Stardate " + Integer.toString(gameState.getStardate()));
+		stardate.setBounds(gameLog.getX() + gameLog.getWidth() + PADDING, GAME_LOG_Y, WINDOW_WIDTH - GAME_LOG_WIDTH - (3 * PADDING), stardate.getPreferredSize().height);
+		add(stardate);
+		
+		// Action status
+		actionStatus = new JLabel("Idling");
+		actionStatus.setBounds(gameLog.getX() + gameLog.getWidth() + PADDING, stardate.getY() + stardate.getHeight() + 5, WINDOW_WIDTH - GAME_LOG_WIDTH - (3 * PADDING), actionStatus.getPreferredSize().height);
+		universeView.setStatus(actionStatus);
+		sectorView.setStatus(actionStatus);
+		add(actionStatus);
+		
 		// Ship Attributes
 		shipAttributes = new JTable();
 		shipAttributeModel = new ShipAttributeTableModel();
@@ -222,6 +236,9 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 			dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 		}
 		
+		// Set stardate
+		stardate.setText("Stardate " + Integer.toString(gameState.getStardate()));
+		
 		// Update player list.
 		ArrayList<String> names = new ArrayList<String>();
 		for (Player p : gameState.getActivePlayers())
@@ -237,21 +254,25 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 		String s = e.getActionCommand();
 		
 		if(s.equals(ACTION_IMPULSE)) {
+			actionStatus.setText("Impulse Movement");
 			// Switch view to current sector.
 			sectorView.setSector(gameState.getPlayerShip(Configuration.getInstance().getUsername()).getSector());
 			
 			sectorView.setMode(SectorView.MODE_NAVIGATE);
 		}
 		else if(s.equals(ACTION_WARP)) {
+			actionStatus.setText("Warping...");
 			universeView.setMode(UniverseView.MODE_WARP);
 		}
 		else if(s.equals(ACTION_MISSILE)) {
+			actionStatus.setText("Readying Missile...");
 			// Switch view to current sector.
 			sectorView.setSector(gameState.getPlayerShip(Configuration.getInstance().getUsername()).getSector());
 			
 			sectorView.setMode(SectorView.MODE_MISSILE);
 		}
 		else if(s.equals(ACTION_ALERT)) {
+			actionStatus.setText("Going on Alert...");
 			SetAlertDialog sad = new SetAlertDialog(this, "Set Alert Level", gameState.getPlayerShip(Configuration.getInstance().getUsername()));
 			sad.setVisible(true);
 			AlertLevel level;
@@ -269,11 +290,14 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 			} catch (ConnectionFailedException c) {
 				JOptionPane.showMessageDialog(this, c.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
 			}
+			actionStatus.setText("Idling");
 			
 			refresh();
 		}
 		else if(s.equals(ACTION_REFRESH)) {
+			actionStatus.setText("Refreshing...");
 			refresh();
+			actionStatus.setText("Idling");
 		}
 
 		return;
