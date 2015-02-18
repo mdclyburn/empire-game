@@ -71,9 +71,17 @@ public class Game {
 		this.stardate = stardate;
 	}
 	
-	public String getName() { return name; }
-	public ArrayList<Player> getActivePlayers() { return players; }
-	public ArrayList<String> getLog() { return log; }
+	public String getName() {
+		return name;
+	}
+	
+	public ArrayList<Player> getActivePlayers() {
+		return players;
+	}
+	
+	public ArrayList<String> getLog() {
+		return log;
+	}
 	
 	public void addPlayer(Player player) {
 		if(!hasPlayed(player.getUserame())) {
