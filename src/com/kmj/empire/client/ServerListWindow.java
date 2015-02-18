@@ -188,6 +188,7 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 			if(result == JFileChooser.APPROVE_OPTION) {
 				file = fc.getSelectedFile();
 			}
+			else return;
 			
 			try {
 				BufferedReader br = new BufferedReader(new FileReader(file));
