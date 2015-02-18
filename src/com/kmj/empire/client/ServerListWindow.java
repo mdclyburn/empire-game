@@ -209,6 +209,7 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 				// TODO could not read file (file did not exist?)
 				e1.printStackTrace();
 			}
+			refresh();
 		}
 		
 		// Refresh the game list.
