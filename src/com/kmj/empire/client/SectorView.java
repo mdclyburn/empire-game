@@ -71,6 +71,8 @@ public class SectorView extends JPanel implements MouseListener {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		
+		System.out.println("Drawing " + sector.getX() + "-" + sector.getY());
+		
 		// Black background.
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, getWidth(), getHeight());

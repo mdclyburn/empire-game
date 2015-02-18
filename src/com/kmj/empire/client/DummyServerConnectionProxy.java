@@ -273,8 +273,32 @@ public class DummyServerConnectionProxy implements GameService {
 					NewPlayerDialog d = new NewPlayerDialog(null, "New Player", g);
 					d.setVisible(true);
 					if(d.getSelectedEmpire().length() == 0) throw new ConnectionFailedException("");
+					
+					// Find a random spot.
 					Random r = new Random();
-					Ship ship = new Ship(g.getUniverse().getShip(d.getSelectedShip()), g, g.getSector(1, 1), 1, 1);
+					Sector sector = null;
+					int sx, sy, x, y;
+					sx = sy = x = y = 1;
+					while(true) {
+						sx = r.nextInt(8) + 1;
+						sy = r.nextInt(8) + 1;
+						x = r.nextInt(8) + 1;
+						y = r.nextInt(8) + 1;
+						sector = g.getSector(sx, sy);
+						for(Ship s : sector.getShips()) {
+							if(s.getX() == x && s.getY() == y) continue;
+						}
+						for(Base b : sector.getBases()) {
+							if(b.getX() == x && b.getY() == y) continue;
+						}
+						for(Planet p : sector.getPlanets()) {
+							if(p.getX() == x && p.getY() == y) continue;
+						}
+						
+						break;
+					}
+					System.out.println("Placing ship in " + sx + "-" + sy + ", " + x + "-" + y);
+					Ship ship = new Ship(g.getUniverse().getShip(d.getSelectedShip()), g, sector, x, y);
 					Player player = new Player(username, ship.getType().getEmpire(), ship);
 					g.addPlayer(player);
 				}
@@ -437,8 +461,8 @@ public class DummyServerConnectionProxy implements GameService {
 		// At this time, a torpedo never misses.
 		if(target.getAlert() == AlertLevel.GREEN) {
 			// The ship is immediately destroyed.
+			target.setShield(-1);
 			game.destroy(target);
-			System.out.println(target.getType().getName() + " was on green alert. It is destroyed.");
 		}
 		else if(target.getAlert() == AlertLevel.YELLOW) {
 			// Damaged by 50% of the missile's yield.
@@ -509,6 +533,7 @@ public class DummyServerConnectionProxy implements GameService {
 					else dest = game.getOwner(closest);
 					if(closest.getAlert() == AlertLevel.GREEN) {
 						// The ship is immediately destroyed.
+						closest.setShield(-1);
 						game.destroy(closest);
 					}
 					else if(closest.getAlert() == AlertLevel.YELLOW) {

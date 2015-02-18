@@ -104,7 +104,7 @@ public class Game {
 		if(!hasPlayed(player.getUserame())) {
 			possessionMapping.put(player.getUserame(), player.getShip());
 			propertyMapping.put(player.getShip(), player.getUserame());
-			sectorGrid[0][0].getShips().add(player.getShip());
+			sectorGrid[player.getShip().getSector().getX() - 1][player.getShip().getSector().getY() - 1].getShips().add(player.getShip());
 			ships.add(player.getShip());
 		}
 		players.add(player);

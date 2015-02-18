@@ -50,11 +50,16 @@ public class UniverseView extends JPanel implements MouseListener {
 		this.sessionId = sessionId;
 		selectedSectorX = selectedSectorY = 1;
 		addMouseListener(this);
+		
+		// Focus on sector player is in.
+		Ship ship = game.getPlayerShip(Configuration.getInstance().getUsername());
+		selectedSectorX = ship.getSector().getX();
+		selectedSectorY = ship.getSector().getY();
 	}
 	
 	public void setSectorView(SectorView sectorView) {
 		this.sectorView = sectorView;
-		sectorView.setSector(game.getSector(selectedSectorY, selectedSectorX));
+		sectorView.setSector(game.getSector(selectedSectorX, selectedSectorY));
 	}
 	
 	public void setMode(int mode) {
