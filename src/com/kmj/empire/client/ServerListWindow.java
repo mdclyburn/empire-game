@@ -1,8 +1,5 @@
 package com.kmj.empire.client;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.fail;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -34,6 +31,8 @@ import com.kmj.empire.common.InvalidGameFileException;
 
 public class ServerListWindow extends JFrame implements ActionListener, MouseListener, WindowListener {
 
+	private static final long serialVersionUID = -4600426107845201411L;
+	
 	protected int sessionId;
 	protected ArrayList<Game> gameList;
 	
