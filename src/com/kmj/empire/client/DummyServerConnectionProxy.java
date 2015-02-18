@@ -431,6 +431,9 @@ public class DummyServerConnectionProxy implements GameService {
 			if(target.getShield() < 0) game.destroy(target);
 		}
 		
+		// Remove a missile.
+		playerShip.setMissles(playerShip.getMissles() - 1);
+		
 		// Log the event.
 		String source = "";
 		String dest = "";
