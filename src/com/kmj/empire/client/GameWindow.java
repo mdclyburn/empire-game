@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import com.kmj.empire.common.AlertLevel;
 import com.kmj.empire.common.ConnectionFailedException;
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.GameService;
@@ -70,12 +71,23 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 	protected static final int SHIP_ATTR_X = PLAYER_LIST_X + PLAYER_LIST_WIDTH + PADDING;
 	protected static final int SHIP_ATTR_Y = PLAYER_LIST_Y;
 	
-	protected static final int ACTION_X = GAME_LOG_X + GAME_LOG_WIDTH + PADDING;
-	protected static final int ACTION_Y = GAME_LOG_Y;
+	protected static final int NAVIGATE_ACTION_X = SHIP_ATTR_X + SHIP_ATTR_WIDTH + PADDING;
+	protected static final int NAVIGATE_ACTION_Y = SHIP_ATTR_Y;
+	protected static final int NAVIGATE_ACTION_WIDTH = DISPLAY_WIDTH / 3;
+	
+	protected static final int WEAPON_ACTION_X = NAVIGATE_ACTION_X + NAVIGATE_ACTION_WIDTH + PADDING;
+	protected static final int WEAPON_ACTION_Y = SHIP_ATTR_Y;
+	protected static final int WEAPON_ACTION_WIDTH = DISPLAY_WIDTH / 3;
+	
+	protected static final int OTHER_ACTION_X = WEAPON_ACTION_X + WEAPON_ACTION_WIDTH + PADDING;
+	protected static final int OTHER_ACTION_Y = SHIP_ATTR_Y;
+	protected static final int OTHER_ACTION_WIDTH = DISPLAY_WIDTH / 3;
 	
 	protected static final String ACTION_IMPULSE = "impulse";
 	protected static final String ACTION_WARP = "warp";
 	protected static final String ACTION_MISSILE = "missile";
+	protected static final String ACTION_ALERT = "alert";
+	protected static final String ACTION_REFRESH = "refresh";
 
 	public GameWindow() {
 		super();
@@ -159,12 +171,12 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 		
 		// Navigate Label
 		JLabel label = new JLabel("Navigate");
-		label.setBounds(ACTION_X, ACTION_Y, DISPLAY_WIDTH * 3 / 5, LINE_HEIGHT);
+		label.setBounds(NAVIGATE_ACTION_X, NAVIGATE_ACTION_Y, DISPLAY_WIDTH * 3 / 5, LINE_HEIGHT);
 		add(label);
 		
 		// Impulse button
 		JButton impulseButton = new JButton("Impulse");
-		impulseButton.setBounds(ACTION_X, ACTION_Y + label.getHeight() + PADDING, (3 * DISPLAY_WIDTH / 5) / 2, LINE_HEIGHT);
+		impulseButton.setBounds(NAVIGATE_ACTION_X, NAVIGATE_ACTION_Y + label.getHeight() + PADDING, (3 * DISPLAY_WIDTH / 5) / 2, LINE_HEIGHT);
 		impulseButton.setActionCommand(ACTION_IMPULSE);
 		impulseButton.addActionListener(this);
 		add(impulseButton);
@@ -179,17 +191,34 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 		
 		// Weapon Label
 		label = new JLabel("Weapons");
-		label.setBounds(ACTION_X, ACTION_Y + (4 * PADDING) + warpButton.getHeight() + impulseButton.getHeight(),
-				DISPLAY_WIDTH * 3 / 5, LINE_HEIGHT);
+		label.setBounds(WEAPON_ACTION_X, WEAPON_ACTION_Y, WEAPON_ACTION_WIDTH, LINE_HEIGHT);
 		add(label);
 		
 		// Missile button
 		JButton missileButton = new JButton("Missile");
-		missileButton.setBounds(ACTION_X, ACTION_Y + (label.getHeight() * 2) + (impulseButton.getHeight() * 2) + (3 * PADDING),
-				(3 * DISPLAY_WIDTH / 5) / 2, LINE_HEIGHT);
+		missileButton.setBounds(WEAPON_ACTION_X, WEAPON_ACTION_Y + label.getHeight() + PADDING, WEAPON_ACTION_WIDTH, LINE_HEIGHT);
 		missileButton.setActionCommand(ACTION_MISSILE);
 		missileButton.addActionListener(this);
 		add(missileButton);
+		
+		// Other Label
+		label = new JLabel("Other Actions");
+		label.setBounds(OTHER_ACTION_X, OTHER_ACTION_Y, OTHER_ACTION_WIDTH, LINE_HEIGHT);
+		add(label);
+		
+		// Set Alert button
+		JButton alertButton = new JButton("Alert...");
+		alertButton.setBounds(OTHER_ACTION_X, OTHER_ACTION_Y + label.getHeight() + PADDING, OTHER_ACTION_WIDTH, LINE_HEIGHT);
+		alertButton.setActionCommand(ACTION_ALERT);
+		alertButton.addActionListener(this);
+		add(alertButton);
+		
+		// Refresh button
+		JButton refreshButton = new JButton("Refresh");
+		refreshButton.setBounds(OTHER_ACTION_X, alertButton.getY() + LINE_HEIGHT + PADDING, OTHER_ACTION_WIDTH, LINE_HEIGHT);
+		refreshButton.setActionCommand(ACTION_REFRESH);
+		refreshButton.addActionListener(this);
+		add(refreshButton);
 		
 		setVisible(true);
 	}
@@ -229,6 +258,28 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 			sectorView.setSector(gameState.getPlayerShip(Configuration.getInstance().getUsername()).getSector());
 			
 			sectorView.setMode(SectorView.MODE_MISSILE);
+		}
+		else if(s.equals(ACTION_ALERT)) {
+			SetAlertDialog sad = new SetAlertDialog(this, "Set Alert Level", gameState.getPlayerShip(Configuration.getInstance().getUsername()));
+			sad.setVisible(true);
+			AlertLevel level;
+			String result = sad.getChoice();
+			System.out.println("need to go on " + result);
+			if(result.equals("Green"))
+				level = AlertLevel.GREEN;
+			else if(result.equals("Yellow"))
+				level = AlertLevel.YELLOW;
+			else if(result.equals("Red"))
+				level = AlertLevel.RED;
+			else return;
+			
+			try {
+				server.setAlertLevel(sessionId, level);
+			} catch (ConnectionFailedException c) {
+				JOptionPane.showMessageDialog(this, c.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
+			}
+			
+			refresh();
 		}
 		return;
 	}

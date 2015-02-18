@@ -75,9 +75,8 @@ public class DummyServerConnectionProxy implements GameService {
 
 	@Override
 	public Game getGameState(int sessionId) throws ConnectionFailedException {
-		Game game = sessions.get(sessionId);
-		game.setStardate(game.getStardate() + 1);
-		return game;
+		System.out.println("Getting game state for session " + sessionId);
+		return sessions.get(sessionId);
 	}
 
 	// Hand over the list of active Games. The list is prefabricated for
@@ -132,6 +131,17 @@ public class DummyServerConnectionProxy implements GameService {
 	}
 	
 	@Override
+	public void setAlertLevel(int sessionId, AlertLevel level) throws ConnectionFailedException {
+		System.out.println(users.get(sessionId) + " requesting " + level + " alert.");
+		sessions.get(sessionId).getPlayerShip(users.get(sessionId)).setAlert(level);
+		
+		// Log entry.
+		sessions.get(sessionId).getLog().add(0, sessions.get(sessionId).getStardate() + ": " + users.get(sessionId) +
+				" is on " + level.toString().toLowerCase() + " alert.");
+		sessions.get(sessionId).nextStardate();
+	}
+	
+	@Override
 	public void navigate(int sessionId, int x, int y) throws BadDestinationException, ConnectionFailedException {
 		String username = users.get(sessionId);
 		Game game = sessions.get(sessionId);
@@ -156,6 +166,7 @@ public class DummyServerConnectionProxy implements GameService {
 		// Move player.
 		playerShip.setLocation(x, y);
 		playerShip.consumeImpulseEnergy(distance);
+		game.nextStardate();
 	}
 	
 	@Override
@@ -211,6 +222,7 @@ public class DummyServerConnectionProxy implements GameService {
 					playerShip.setX(x);
 					playerShip.setY(y);
 					playerShip.consumeWarpEnergy(distance);
+					game.nextStardate();
 					return;
 				}
 			}
@@ -288,6 +300,7 @@ public class DummyServerConnectionProxy implements GameService {
 		else
 			entry += "target destroyed.";
 		game.getLog().add(0, entry);
+		game.nextStardate();
 	}
 	
 	private void addSampleData() {

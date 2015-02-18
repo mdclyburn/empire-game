@@ -130,5 +130,7 @@ public class Game {
 		possessionMapping.remove(username);
 		propertyMapping.remove(ship);
 	}
+	
+	public void nextStardate() { stardate++; }
 
 }
