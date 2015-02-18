@@ -445,7 +445,7 @@ public class DummyServerConnectionProxy implements GameService {
 		if(game.getOwner(target) == null)
 			dest = target.getType().getName();
 		else
-			dest = game.getOwner(playerShip);
+			dest = game.getOwner(target);
 		
 		String entry = game.getStardate() + ": " + source + " at (" +
 				playerShip.getX() + ", " + playerShip.getY() + ") fired " +
