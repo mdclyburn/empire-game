@@ -44,12 +44,7 @@ public class GameServiceImpl implements GameService {
 			//read empires
 			line = br.readLine();
 			while (!line.equals("")) {
-				String id = line.substring(0, line.indexOf('\t'));
-				line = line.substring(line.indexOf('\t')+1);
-				String name = line.substring(0, line.indexOf('\t'));
-				line = line.substring(line.indexOf('\t')+1);
-				String mission = line.substring(0, line.length());
-				EmpireType empire = new EmpireType(id, name, mission);
+				EmpireType empire = EmpireType.fromString(line);
 				universe.getEmpireList().add(empire);
 				line = br.readLine();
 			}
@@ -58,14 +53,7 @@ public class GameServiceImpl implements GameService {
 			br.readLine();
 			line = br.readLine();
 			while (!line.equals("")) {
-				String id = line.substring(0, line.indexOf('\t'));
-				line = line.substring(line.indexOf('\t')+1);
-				String name = line.substring(0, line.indexOf('\t'));
-				line = line.substring(line.indexOf('\t')+1);
-				String type = line.substring(0, line.indexOf('\t'));
-				line = line.substring(line.indexOf('\t')+1);
-				int maxYield = Integer.valueOf(line.substring(0, line.length()));
-				WeaponType weapon = new WeaponType(id, name, type, maxYield);
+				WeaponType weapon = WeaponType.fromString(line);
 				universe.getWeaponTypes().add(weapon);
 				line = br.readLine();
 			}
@@ -74,28 +62,8 @@ public class GameServiceImpl implements GameService {
 			br.readLine();
 			line = br.readLine();
 			while (!line.equals("")) {
-				String id = line.substring(0, line.indexOf('\t'));
-				line = line.substring(line.indexOf('\t')+1);
-				String name = line.substring(0, line.indexOf('\t'));
-				line = line.substring(line.indexOf('\t')+1);
-				String shipClass = line.substring(0, line.indexOf('\t'));
-				line = line.substring(line.indexOf('\t')+1);
-				String empire = line.substring(0, line.indexOf('\t'));
-				line = line.substring(line.indexOf('\t')+1);
-				int maxEnergy = Integer.valueOf(line.substring(0, line.indexOf('\t')));
-				line = line.substring(line.indexOf('\t')+1);
-				int maxSpeed = Integer.valueOf(line.substring(0, line.indexOf('\t')));
-				line = line.substring(line.indexOf('\t')+1);
-				int maxShield = Integer.valueOf(line.substring(0, line.indexOf('\t')));
-				line = line.substring(line.indexOf('\t')+1);
-				WeaponType energyWeapon = universe.getWeapon(line.substring(0, line.indexOf('\t')));
-				line = line.substring(line.indexOf('\t')+1);
-				WeaponType missileWeapon = universe.getWeapon(line.substring(0, line.indexOf('\t')));
-				line = line.substring(line.indexOf('\t')+1);
-				int maxMissile = Integer.valueOf(line.substring(0, line.length()));
-				ShipType ship = new ShipType(id, name, shipClass, universe.getEmpire(empire), maxEnergy, maxSpeed,
-						maxShield, maxMissile, energyWeapon, missileWeapon);
-				universe.getEmpire(empire).getShipTypes().add(ship);
+				ShipType newType = ShipType.fromString(line, universe);
+				newType.getEmpire().getShipTypes().add(newType);
 				line = br.readLine();
 			}
 			

@@ -16,7 +16,7 @@ import com.kmj.empire.common.EmpireType;
 import com.kmj.empire.common.EnergyWeaponType;
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.GameService;
-import com.kmj.empire.common.MissleWeaponType;
+import com.kmj.empire.common.MissileWeaponType;
 import com.kmj.empire.common.Planet;
 import com.kmj.empire.common.Player;
 import com.kmj.empire.common.Sector;
@@ -44,12 +44,12 @@ public class DummyServerConnectionProxy implements GameService {
 		startrek.getEmpireList().add(new EmpireType("FED", "Federation", "Exploration"));
 		startrek.getEmpireList().add(klingon);
 		startrek.getWeaponTypes().add(new EnergyWeaponType("PCAN", "Pulse Cannon", 150));
-		startrek.getWeaponTypes().add(new MissleWeaponType("GTOR", "Gravimetric Torpedo", 800));
+		startrek.getWeaponTypes().add(new MissileWeaponType("GTOR", "Gravimetric Torpedo", 800));
 		startrek.getEmpire("Klingon").getShipTypes().add(
 				new ShipType("BOP", "Bird of Prey", "D-12", startrek.getEmpire("Klingon"), 3000, 10, 500, 10, 
 				startrek.getWeapon("PCAN"), startrek.getWeapon("GTOR")));
 		startrek.getWeaponTypes().add(new EnergyWeaponType("PHAS", "Phaser", 100));
-		startrek.getWeaponTypes().add(new MissleWeaponType("PTOR", "Photon Torpedo", 300));
+		startrek.getWeaponTypes().add(new MissileWeaponType("PTOR", "Photon Torpedo", 300));
 		startrek.getEmpire("Federation").getShipTypes().add(new ShipType("STC", "Starship", "Constitution", startrek.getEmpire("Federation"), 2500, 10, 500, 10,
 				startrek.getWeapon("PHAS"), startrek.getWeapon("PTOR")));
 		
@@ -422,12 +422,12 @@ public class DummyServerConnectionProxy implements GameService {
 		}
 		else if(target.getAlert() == AlertLevel.YELLOW) {
 			// Damaged by 50% of the missile's yield.
-			target.setShield(target.getShield() - (playerShip.getType().getMissleWeapon().getMaxYield() / 2));
+			target.setShield(target.getShield() - (playerShip.getType().getMissileWeapon().getMaxYield() / 2));
 			if(target.getShield() < 0) game.destroy(target);
 		}
 		else {
 			// Damaged by 100% of the missile's yield.
-			target.setShield(target.getShield() - playerShip.getType().getMissleWeapon().getMaxYield());
+			target.setShield(target.getShield() - playerShip.getType().getMissileWeapon().getMaxYield());
 			if(target.getShield() < 0) game.destroy(target);
 		}
 		
@@ -446,7 +446,7 @@ public class DummyServerConnectionProxy implements GameService {
 		
 		String entry = game.getStardate() + ": " + source + " at (" +
 				playerShip.getX() + ", " + playerShip.getY() + ") fired " +
-				playerShip.getType().getMissleWeapon().getName() + " at " + dest +
+				playerShip.getType().getMissileWeapon().getName() + " at " + dest +
 				" at (" + target.getX() + ", " + target.getY() + "); ";
 		
 		if(target.getShield() > 0)

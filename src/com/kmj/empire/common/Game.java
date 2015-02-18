@@ -6,17 +6,17 @@ import java.util.HashMap;
 public class Game {
 
 	private int id;
-	protected String name;
-	protected ArrayList<Player> players;
-	protected ArrayList<Ship> ships;
-	protected ArrayList<Base> bases;
-	protected ArrayList<String> log;
-	protected HashMap<String, Ship> possessionMapping;
-	protected HashMap<Ship, String> propertyMapping;
+	private String name;
+	private ArrayList<Player> players;
+	private ArrayList<Ship> ships;
+	private ArrayList<Base> bases;
+	private ArrayList<String> log;
+	private HashMap<String, Ship> possessionMapping;
+	private HashMap<Ship, String> propertyMapping;
 	
-	protected int stardate;
-	protected Sector[][] sectorGrid;
-	protected UniverseType universe;
+	private int stardate;
+	private Sector[][] sectorGrid;
+	private UniverseType universe;
 	
 	public Game() {
 		stardate = 2500;
@@ -73,6 +73,8 @@ public class Game {
 	
 	public String getName() { return name; }
 	public ArrayList<Player> getActivePlayers() { return players; }
+	public ArrayList<Ship> getShips() { return ships; }
+	public ArrayList<Base> getBases() { return bases; }
 	public ArrayList<String> getLog() { return log; }
 	
 	public void addPlayer(Player player) {

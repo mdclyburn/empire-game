@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import com.kmj.empire.client.GameServiceProxy;
 import com.kmj.empire.common.ConnectionFailedException;
+import com.kmj.empire.common.Game;
 import com.kmj.empire.common.GameService;
 import com.kmj.empire.common.InvalidGameFileException;
 
@@ -46,6 +47,26 @@ public class JUnitTestServer {
 			}
 			assertFalse("GameId is not -100;", gameId == -100);
 			assertFalse("GameId did not return error", gameId == -1);
+			
+			fail();
+			//get game state to check if restore successful
+			Game game = gameService.getGameState(gameId);
+			
+			//check header
+			assertEquals("Check game id", game.getId(), gameId);
+			assertEquals("Check title", game.getName(), "Star Trek Forever");
+			assertEquals("Check stardate", game.getStardate(), 2236);
+			
+			//check empires
+			assertEquals("Check empires exists", game.getUniverse().getEmpireList().size(), 4);
+			assertTrue("Check empire BAJ", game.getUniverse().getEmpire("Bajoran").getId().equals("BAJ"));
+			assertTrue("Check empire BAJ", game.getUniverse().getEmpire("Bajoran").isExploration());
+			
+			//check weapons
+			assertEquals("Check weapons exists", game.getUniverse().getWeaponTypes().size(), 5);
+			assertTrue("Check weapon PHAS", game.getUniverse().getWeapon("Phaser").getId().equals("PHAS"));
+			assertTrue("Check weapon PHAS", game.getUniverse().getWeapon("ATOR").getMaxYield() == 10000);
+			assertTrue("Check weapon PHAS", game.getUniverse().getWeapon("PTOR").isMissleWeapon());
 			
 			
 			

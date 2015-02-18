@@ -44,4 +44,19 @@ public class EmpireType {
 		}
 		return null;
 	}
+	
+	public String toString() {
+		String empireString = id + "\t" + name + "\t" + missionType;
+		return empireString; 
+	}
+	
+	public static EmpireType fromString(String empireString) {
+		String id = empireString.substring(0, empireString.indexOf('\t'));
+		empireString = empireString.substring(empireString.indexOf('\t')+1);
+		String name = empireString.substring(0, empireString.indexOf('\t'));
+		empireString = empireString.substring(empireString.indexOf('\t')+1);
+		String mission = empireString.substring(0, empireString.length());
+		EmpireType empire = new EmpireType(id, name, mission);
+		return empire;
+	}
 }

@@ -37,4 +37,21 @@ public class WeaponType {
 	public boolean isMissleWeapon() {
 		return type.equals("MISSLE");
 	}
+	
+	public String toString() {
+		String weaponString = id + "\t" + name + "\t" + type + "\t" + maxYield;
+		return weaponString;
+	}
+	
+	public static WeaponType fromString(String weaponString) {
+		String id = weaponString.substring(0, weaponString.indexOf('\t'));
+		weaponString = weaponString.substring(weaponString.indexOf('\t')+1);
+		String name = weaponString.substring(0, weaponString.indexOf('\t'));
+		weaponString = weaponString.substring(weaponString.indexOf('\t')+1);
+		String type = weaponString.substring(0, weaponString.indexOf('\t'));
+		weaponString = weaponString.substring(weaponString.indexOf('\t')+1);
+		int maxYield = Integer.valueOf(weaponString.substring(0, weaponString.length()));
+		WeaponType weapon = new WeaponType(id, name, type, maxYield);
+		return weapon;
+	}
 }

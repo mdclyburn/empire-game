@@ -1,8 +1,8 @@
 package com.kmj.empire.common;
 
-public class MissleWeaponType extends WeaponType {
+public class MissileWeaponType extends WeaponType {
 
-	public MissleWeaponType(String id, String name, int maxYield) {
+	public MissileWeaponType(String id, String name, int maxYield) {
 		super(id, name, "MISSLE", maxYield);
 	}
 	

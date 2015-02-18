@@ -10,18 +10,18 @@ public class Ship extends MapEntity {
 	protected int missles, maxMissle;
 	protected int maxSpeed;
 	protected AlertLevel alert;
-	protected WeaponType energyWeapon, missleWeapon;
+	protected WeaponType energyWeapon, missileWeapon;
 	
 	public Ship(ShipType shipType, Game game, Sector sector, int x, int y) {
 		super(game, sector, x, y);
 		this.shipType = shipType;
 		maxEnergy = energy = shipType.getMaxEnergy();
 		maxShield = shield = shipType.getMaxShield();
-		maxMissle = missles = shipType.getMaxMissle();
+		maxMissle = missles = shipType.getMaxMissile();
 		maxSpeed = shipType.getMaxSpeed();
 		alert = AlertLevel.GREEN;
 		energyWeapon = shipType.getEnergyWeapon();
-		missleWeapon = shipType.getMissleWeapon();
+		missileWeapon = shipType.getMissileWeapon();
 	}
 	
 	public ShipType getType() { return shipType; }
@@ -94,7 +94,7 @@ public class Ship extends MapEntity {
 	}
 
 	public WeaponType getMissleWeapon() {
-		return missleWeapon;
+		return missileWeapon;
 	}
 
 	public void setId(int id) {
