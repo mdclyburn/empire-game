@@ -29,6 +29,14 @@ public class Ship extends MapEntity {
 	public AlertLevel getAlertLevel() { return alert; }
 	public int getShieldLevel() { return shield; }
 	
+	public void consumeEnergy() {
+		// Deplete energy by 2% if on yellow; 5% if on red
+		if(alert == AlertLevel.YELLOW)
+			energy -= (shipType.getMaxEnergy() / 50);
+		else if(alert == AlertLevel.RED)
+			energy -= (shipType.getMaxEnergy() / 20);
+	}
+	
 	public void consumeImpulseEnergy(int mvmt) {
 		energy -= (10 * mvmt);
 	}

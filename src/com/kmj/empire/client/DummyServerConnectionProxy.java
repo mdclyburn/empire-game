@@ -132,7 +132,6 @@ public class DummyServerConnectionProxy implements GameService {
 	
 	@Override
 	public void setAlertLevel(int sessionId, AlertLevel level) throws ConnectionFailedException {
-		System.out.println(users.get(sessionId) + " requesting " + level + " alert.");
 		sessions.get(sessionId).getPlayerShip(users.get(sessionId)).setAlert(level);
 		
 		// Log entry.

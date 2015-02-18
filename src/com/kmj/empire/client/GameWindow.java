@@ -264,7 +264,6 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 			sad.setVisible(true);
 			AlertLevel level;
 			String result = sad.getChoice();
-			System.out.println("need to go on " + result);
 			if(result.equals("Green"))
 				level = AlertLevel.GREEN;
 			else if(result.equals("Yellow"))

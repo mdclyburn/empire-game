@@ -70,9 +70,10 @@ public class Game {
 		if(!hasPlayed(player.getUserame())) {
 			possessionMapping.put(player.getUserame(), player.getShip());
 			propertyMapping.put(player.getShip(), player.getUserame());
+			sectorGrid[0][0].getShips().add(player.getShip());
+			ships.add(player.getShip());
 		}
 		players.add(player);
-		sectorGrid[0][0].getShips().add(player.getShip());
 	}
 	
 	public void addShip(Ship ship) {
@@ -131,6 +132,12 @@ public class Game {
 		propertyMapping.remove(ship);
 	}
 	
-	public void nextStardate() { stardate++; }
+	public void nextStardate() {
+		stardate++;
+		
+		// Deplete the energy of anyone on red or yellow alert.
+		System.out.println("Consuming energy of " + ships.size());
+		for(Ship s : ships) s.consumeEnergy();
+	}
 
 }
