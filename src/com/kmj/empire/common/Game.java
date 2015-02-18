@@ -163,8 +163,18 @@ public class Game {
 	public void nextStardate() {
 		stardate++;
 		
+		// AI action
+		aiAction();
+		
 		// Deplete the energy of anyone on red or yellow alert.
 		for(Ship s : ships) s.consumeEnergy();
+	}
+	
+	public void aiAction() {
+		for(Ship s : ships) {
+			if(propertyMapping.get(s) == null) {
+			}
+		}
 	}
 	
 }
