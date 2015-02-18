@@ -256,5 +256,13 @@ public class Server extends JFrame {
 		gameList.add(game);
 		return id;
 	}
+	
+	public Game getGame(int gameId) {
+		for (Game g : gameList) {
+			if (g.getId() == gameId)
+				return g;
+		}
+		return null;
+	}
 
 }

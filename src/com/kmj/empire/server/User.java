@@ -5,8 +5,10 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
+import com.google.gson.Gson;
 import com.kmj.empire.common.AuthenticationFailedException;
 import com.kmj.empire.common.ConnectionFailedException;
+import com.kmj.empire.common.Game;
 import com.kmj.empire.common.GameService;
 import com.kmj.empire.common.InvalidGameFileException;
 import com.kmj.empire.common.Player;
@@ -62,7 +64,9 @@ class User implements Runnable {
 			try {
 				code = in.readInt();
 			} catch (IOException e3) {
-				e3.printStackTrace();
+				server.printMessage(username+" has disconnected");
+				disconnected = true;
+				break;
 			}
 			
 			//if unauthenticated user attempts prohibited action
@@ -77,8 +81,10 @@ class User implements Runnable {
 					System.exit(1); 
 					
 				case 1: try {
+					System.out.println("restore game, reading utf");
 					String gameData = in.readUTF();
-					getGameService().restoreGame(gameData);
+					int gameId = getGameService().restoreGame(gameData);
+					out.writeInt(gameId);
 				} catch (ConnectionFailedException e2) {
 					e2.printStackTrace();
 				} catch (IOException e) {
@@ -88,9 +94,13 @@ class User implements Runnable {
 				} break;
 				
 				case 2: try {
-					getGameService().getGameState(code);
+					int gameId = in.readInt();
+					Game game = getGameService().getGameState(gameId);
+					out.writeUTF(new Gson().toJson(game));
 				} catch (ConnectionFailedException e1) {
 					e1.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
 				} break;
 				
 				case 3: try {

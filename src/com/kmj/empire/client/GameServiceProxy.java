@@ -17,6 +17,7 @@ import com.kmj.empire.common.BadDestinationException;
 import com.kmj.empire.common.ConnectionFailedException;
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.GameService;
+import com.kmj.empire.common.InvalidGameFileException;
 import com.kmj.empire.common.Sector;
 import com.kmj.empire.common.Ship;
 
@@ -38,7 +39,7 @@ public class GameServiceProxy implements GameService {
 	}
 	
 	@Override
-	public int restoreGame(String gameData) throws ConnectionFailedException {
+	public int restoreGame(String gameData) throws InvalidGameFileException, ConnectionFailedException {
 		int gameId = -1; 
 		
 		//send info to server
@@ -47,6 +48,8 @@ public class GameServiceProxy implements GameService {
 			out.writeInt(1);
 			out.writeUTF(gameData);
 			gameId = in.readInt();
+			if (gameId == -1)
+				throw new InvalidGameFileException();
 		} catch (IOException e) {
 			throw new ConnectionFailedException();
 		}
@@ -55,9 +58,17 @@ public class GameServiceProxy implements GameService {
 	}
 
 	@Override
-	public Game getGameState(int gameId) {
-		
-		return null;
+	public Game getGameState(int gameId) throws ConnectionFailedException {
+		Game game = null;
+		try {
+			out.writeInt(2);
+			out.writeInt(gameId);
+			String gameData = in.readUTF();
+			game = new Gson().fromJson(gameData, Game.class);
+		} catch (IOException e) {
+			throw new ConnectionFailedException();
+		}
+		return game;
 	}
 
 	@Override

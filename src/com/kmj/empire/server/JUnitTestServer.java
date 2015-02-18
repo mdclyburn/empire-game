@@ -47,6 +47,8 @@ public class JUnitTestServer {
 			assertFalse("GameId is not -100;", gameId == -100);
 			assertFalse("GameId did not return error", gameId == -1);
 			
+			
+			
 		} catch (IOException e) {
 			fail("Could not connect to server.");
 		} catch (ConnectionFailedException e) {
