@@ -136,7 +136,6 @@ public class Game {
 		stardate++;
 		
 		// Deplete the energy of anyone on red or yellow alert.
-		System.out.println("Consuming energy of " + ships.size());
 		for(Ship s : ships) s.consumeEnergy();
 	}
 

@@ -280,6 +280,10 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 			
 			refresh();
 		}
+		else if(s.equals(ACTION_REFRESH)) {
+			refresh();
+		}
+
 		return;
 	}
 	
