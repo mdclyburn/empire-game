@@ -114,7 +114,7 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 
 		// Retrieve information from server.
 		try {
-			gameState = server.getGameState(sessionId);
+			gameState = server.getGameState(sessionId).toGame();
 		} catch (ConnectionFailedException e) {
 			JOptionPane.showMessageDialog(this, e.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
 			System.exit(-1);
@@ -227,7 +227,7 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 	public void refresh() {
 		// Get game state from server.
 		try {
-			gameState = server.getGameState(sessionId);
+			gameState = server.getGameState(sessionId).toGame();
 		} catch (ConnectionFailedException e) {
 			JOptionPane.showMessageDialog(this, e.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
 		}

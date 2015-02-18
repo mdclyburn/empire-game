@@ -11,7 +11,7 @@ public interface GameService {
 	public int restoreGame(String gameData) throws InvalidGameFileException, ConnectionFailedException;
 	
 	/* Returns the details/state of the game being played by player identified by sessionId */
-	public Game getGameState(int sessionId) throws ConnectionFailedException;
+	public GameState getGameState(int sessionId) throws ConnectionFailedException;
 	
 	/* Returns a list of ongoing games */
 	public ArrayList<Game> getGamesList(int sessionId) throws AuthenticationFailedException, ConnectionFailedException;

@@ -35,7 +35,7 @@ public class WeaponType {
 	}
 
 	public boolean isMissleWeapon() {
-		return type.equals("MISSLE");
+		return type.equals("MISSILE");
 	}
 	
 	public String toString() {
@@ -51,7 +51,9 @@ public class WeaponType {
 		String type = weaponString.substring(0, weaponString.indexOf('\t'));
 		weaponString = weaponString.substring(weaponString.indexOf('\t')+1);
 		int maxYield = Integer.valueOf(weaponString.substring(0, weaponString.length()));
-		WeaponType weapon = new WeaponType(id, name, type, maxYield);
+		WeaponType weapon; 
+		if (type.equals("MISSILE")) weapon = new MissileWeaponType(id, name, maxYield);
+		else weapon = new EnergyWeaponType(id, name, maxYield);
 		return weapon;
 	}
 }

@@ -10,6 +10,7 @@ public class Game {
 	private ArrayList<Player> players;
 	private ArrayList<Ship> ships;
 	private ArrayList<Base> bases;
+	private ArrayList<Planet> planets;
 	private ArrayList<String> log;
 	private HashMap<String, Ship> possessionMapping;
 	private HashMap<Ship, String> propertyMapping;
@@ -29,6 +30,7 @@ public class Game {
 		players = new ArrayList<Player>();
 		ships = new ArrayList<Ship>();
 		bases = new ArrayList<Base>();
+		planets = new ArrayList<Planet>();
 		log = new ArrayList<String>();
 		possessionMapping = new HashMap<String, Ship>();
 		propertyMapping = new HashMap<Ship, String>();
@@ -86,8 +88,20 @@ public class Game {
 		return bases;
 	}
 	
+	public ArrayList<Planet> getPlanets() {
+		return planets;
+	}
+	
 	public ArrayList<String> getLog() {
 		return log;
+	}
+
+	public HashMap<String, Ship> getPossessionMapping() {
+		return possessionMapping;
+	}
+
+	public HashMap<Ship, String> getPropertyMapping() {
+		return propertyMapping;
 	}
 	
 	public void map(String username, Ship ship) {
@@ -116,6 +130,7 @@ public class Game {
 		int x = planet.getSector().x;
 		int y = planet.getSector().y;
 		sectorGrid[x - 1][y - 1].getPlanets().add(planet);
+		planets.add(planet);
 	}
 	
 	public void addBase(Base base) {

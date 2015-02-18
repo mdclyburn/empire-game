@@ -13,6 +13,7 @@ import com.kmj.empire.common.BadDestinationException;
 import com.kmj.empire.common.ConnectionFailedException;
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.GameService;
+import com.kmj.empire.common.GameState;
 import com.kmj.empire.common.InvalidGameFileException;
 import com.kmj.empire.common.Sector;
 
@@ -51,17 +52,17 @@ public class GameServiceProxy implements GameService {
 	}
 
 	@Override
-	public Game getGameState(int gameId) throws ConnectionFailedException {
-		Game game = null;
+	public GameState getGameState(int gameId) throws ConnectionFailedException {
+		GameState gameState = null;
 		try {
 			out.writeInt(2);
 			out.writeInt(gameId);
 			String gameData = in.readUTF();
-			game = new Gson().fromJson(gameData, Game.class);
+			gameState = new Gson().fromJson(gameData, GameState.class);
 		} catch (IOException e) {
 			throw new ConnectionFailedException();
 		}
-		return game;
+		return gameState;
 	}
 
 	@Override

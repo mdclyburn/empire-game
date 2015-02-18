@@ -8,8 +8,8 @@ import java.net.Socket;
 import com.google.gson.Gson;
 import com.kmj.empire.common.AuthenticationFailedException;
 import com.kmj.empire.common.ConnectionFailedException;
-import com.kmj.empire.common.Game;
 import com.kmj.empire.common.GameService;
+import com.kmj.empire.common.GameState;
 import com.kmj.empire.common.InvalidGameFileException;
 import com.kmj.empire.common.Player;
 
@@ -91,8 +91,8 @@ class User implements Runnable {
 				
 				case 2: try {
 					int gameId = in.readInt();
-					Game game = getGameService().getGameState(gameId);
-					out.writeUTF(new Gson().toJson(game));
+					GameState gameState = getGameService().getGameState(gameId);
+					out.writeUTF(new Gson().toJson(gameState));
 				} catch (ConnectionFailedException e1) {
 					e1.printStackTrace();
 				} catch (IOException e) {

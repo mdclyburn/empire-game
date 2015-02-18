@@ -7,7 +7,7 @@ public class Ship extends MapEntity {
 	protected ShipType shipType;
 	protected int energy, maxEnergy;
 	protected int shield, maxShield;
-	protected int missles, maxMissle;
+	protected int missiles, maxMissile;
 	protected int maxSpeed;
 	protected AlertLevel alert;
 	protected WeaponType energyWeapon, missileWeapon;
@@ -17,7 +17,7 @@ public class Ship extends MapEntity {
 		this.shipType = shipType;
 		maxEnergy = energy = shipType.getMaxEnergy();
 		maxShield = shield = shipType.getMaxShield();
-		maxMissle = missles = shipType.getMaxMissile();
+		maxMissile = missiles = shipType.getMaxMissile();
 		maxSpeed = shipType.getMaxSpeed();
 		alert = AlertLevel.GREEN;
 		energyWeapon = shipType.getEnergyWeapon();
@@ -66,15 +66,15 @@ public class Ship extends MapEntity {
 	}
 
 	public int getMissles() {
-		return missles;
+		return missiles;
 	}
 
 	public void setMissles(int missles) {
-		this.missles = missles;
+		this.missiles = missles;
 	}
 
 	public int getMaxMissle() {
-		return maxMissle;
+		return maxMissile;
 	}
 
 	public int getMaxSpeed() {
@@ -104,4 +104,43 @@ public class Ship extends MapEntity {
 	public void setEnergy(int energy) {
 		this.energy = energy;
 	}
+	
+	public String toString() {
+		String shipString = id + "\t" + shipType.getId() + "\t" + sector.getX() + "\t" + sector.getY() + "\t"
+			+ x + "\t" + y + "\t" + energy + "\t" + missiles + "\t" + alert + "\t" + shield;
+		return shipString;
+	}
+	
+	public static Ship fromString(String line, Game game) {
+		int id = Integer.valueOf(line.substring(0, line.indexOf('\t')));
+		line = line.substring(line.indexOf('\t')+1);
+		ShipType shipType = game.getUniverse().getShip(line.substring(0, line.indexOf('\t')));
+		line = line.substring(line.indexOf('\t')+1);
+		int sx = Integer.valueOf(line.substring(0, line.indexOf('\t')));
+		line = line.substring(line.indexOf('\t')+1);
+		int sy = Integer.valueOf(line.substring(0, line.indexOf('\t')));
+		line = line.substring(line.indexOf('\t')+1);
+		int px = Integer.valueOf(line.substring(0, line.indexOf('\t')));
+		line = line.substring(line.indexOf('\t')+1);
+		int py = Integer.valueOf(line.substring(0, line.indexOf('\t')));
+		line = line.substring(line.indexOf('\t')+1);
+		int energy = Integer.valueOf(line.substring(0, line.indexOf('\t')));
+		line = line.substring(line.indexOf('\t')+1);
+		int missiles = Integer.valueOf(line.substring(0, line.indexOf('\t')));
+		line = line.substring(line.indexOf('\t')+1);
+		AlertLevel alert = AlertLevel.GREEN;
+		String alertString = line.substring(0, line.indexOf('\t'));
+		if (alertString.equals("YELLOW")) alert = AlertLevel.YELLOW;
+		if (alertString.equals("RED")) alert = AlertLevel.RED;
+		line = line.substring(line.indexOf('\t')+1);
+		int shield = Integer.valueOf(line.substring(0, line.length()));
+		Ship ship = new Ship(shipType, game, game.getSector(sx, sy), px, py);
+		ship.setId(id);
+		ship.setEnergy(energy);
+		ship.setMissles(missiles);
+		ship.setAlert(alert);
+		ship.setShield(shield);
+		return ship;
+	}
+	
 }

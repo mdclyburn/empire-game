@@ -14,6 +14,7 @@ import com.kmj.empire.common.ConnectionFailedException;
 import com.kmj.empire.common.EmpireType;
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.GameService;
+import com.kmj.empire.common.GameState;
 import com.kmj.empire.common.Player;
 import com.kmj.empire.common.Sector;
 import com.kmj.empire.common.Ship;
@@ -74,19 +75,7 @@ public class GameServiceImpl implements GameService {
 			br.readLine();
 			line = br.readLine();
 			while (!line.equals("")) {
-				int id = Integer.valueOf(line.substring(0, line.indexOf('\t')));
-				line = line.substring(line.indexOf('\t')+1);
-				EmpireType empire = universe.getEmpire(line.substring(0, line.indexOf('\t')));
-				line = line.substring(line.indexOf('\t')+1);
-				int sx = Integer.valueOf(line.substring(0, line.indexOf('\t')));
-				line = line.substring(line.indexOf('\t')+1);
-				int sy = Integer.valueOf(line.substring(0, line.indexOf('\t')));
-				line = line.substring(line.indexOf('\t')+1);
-				int px = Integer.valueOf(line.substring(0, line.indexOf('\t')));
-				line = line.substring(line.indexOf('\t')+1);
-				int py = Integer.valueOf(line.substring(0, line.length()));
-				Base base = new Base(empire, restoredGame, restoredGame.getSector(sx, sy), px, py);
-				base.setId(id);
+				Base base = Base.fromString(line, restoredGame);
 				restoredGame.addBase(base);
 				line = br.readLine();
 			}
@@ -95,34 +84,7 @@ public class GameServiceImpl implements GameService {
 			br.readLine();
 			line = br.readLine();
 			while (!line.equals("")) {
-				int id = Integer.valueOf(line.substring(0, line.indexOf('\t')));
-				line = line.substring(line.indexOf('\t')+1);
-				ShipType shipType = universe.getShip(line.substring(0, line.indexOf('\t')));
-				line = line.substring(line.indexOf('\t')+1);
-				int sx = Integer.valueOf(line.substring(0, line.indexOf('\t')));
-				line = line.substring(line.indexOf('\t')+1);
-				int sy = Integer.valueOf(line.substring(0, line.indexOf('\t')));
-				line = line.substring(line.indexOf('\t')+1);
-				int px = Integer.valueOf(line.substring(0, line.indexOf('\t')));
-				line = line.substring(line.indexOf('\t')+1);
-				int py = Integer.valueOf(line.substring(0, line.indexOf('\t')));
-				line = line.substring(line.indexOf('\t')+1);
-				int energy = Integer.valueOf(line.substring(0, line.indexOf('\t')));
-				line = line.substring(line.indexOf('\t')+1);
-				int missiles = Integer.valueOf(line.substring(0, line.indexOf('\t')));
-				line = line.substring(line.indexOf('\t')+1);
-				AlertLevel alert = AlertLevel.GREEN;
-				String alertString = line.substring(0, line.indexOf('\t'));
-				if (alertString.equals("YELLOW")) alert = AlertLevel.YELLOW;
-				if (alertString.equals("RED")) alert = AlertLevel.RED;
-				line = line.substring(line.indexOf('\t')+1);
-				int shield = Integer.valueOf(line.substring(0, line.length()));
-				Ship ship = new Ship(shipType, restoredGame, restoredGame.getSector(sx, sy), px, py);
-				ship.setId(id);
-				ship.setEnergy(energy);
-				ship.setMissles(missiles);
-				ship.setAlert(alert);
-				ship.setShield(shield);
+				Ship ship = Ship.fromString(line, restoredGame);
 				restoredGame.addShip(ship);
 				line = br.readLine();
 			}
@@ -131,12 +93,9 @@ public class GameServiceImpl implements GameService {
 			br.readLine();
 			line = br.readLine();
 			while (!line.equals("") && line != null) {
-				String playerid = line.substring(0, line.indexOf('\t'));
-				line = line.substring(line.indexOf('\t')+1);
-				EmpireType empire = universe.getEmpire(line.substring(0, line.indexOf('\t')));
-				line = line.substring(line.indexOf('\t')+1);
-				int shipId = Integer.valueOf(line.substring(0, line.length()));
-				Player player = new Player(playerid, empire, restoredGame.getIdShip(shipId));
+				Player player = Player.fromString(line, restoredGame);
+				restoredGame.getPossessionMapping().put(player.getUserame(), player.getShip());
+				restoredGame.getPropertyMapping().put(player.getShip(),player.getUserame());
 				restoredGame.addPlayer(player);
 				line = br.readLine();
 			}
@@ -153,9 +112,9 @@ public class GameServiceImpl implements GameService {
 	}
 
 	@Override
-	public Game getGameState(int gameId) {
-		Game gameState = server.getGame(gameId);
-		return gameState;
+	public GameState getGameState(int gameId) {
+		Game game = server.getGame(gameId);
+		return new GameState(game);
 	}
 
 	@Override

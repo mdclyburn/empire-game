@@ -13,10 +13,9 @@ import com.kmj.empire.common.BadDestinationException;
 import com.kmj.empire.common.Base;
 import com.kmj.empire.common.ConnectionFailedException;
 import com.kmj.empire.common.EmpireType;
-import com.kmj.empire.common.EnergyWeaponType;
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.GameService;
-import com.kmj.empire.common.MissileWeaponType;
+import com.kmj.empire.common.GameState;
 import com.kmj.empire.common.Planet;
 import com.kmj.empire.common.Player;
 import com.kmj.empire.common.Sector;
@@ -231,8 +230,8 @@ public class DummyServerConnectionProxy implements GameService {
 	}
 
 	@Override
-	public Game getGameState(int sessionId) throws ConnectionFailedException {
-		return sessions.get(sessionId);
+	public GameState getGameState(int sessionId) throws ConnectionFailedException {
+		return new GameState(sessions.get(sessionId));
 	}
 
 	// Hand over the list of active Games. The list is prefabricated for

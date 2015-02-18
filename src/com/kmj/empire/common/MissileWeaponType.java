@@ -3,7 +3,7 @@ package com.kmj.empire.common;
 public class MissileWeaponType extends WeaponType {
 
 	public MissileWeaponType(String id, String name, int maxYield) {
-		super(id, name, "MISSLE", maxYield);
+		super(id, name, "MISSILE", maxYield);
 	}
 	
 	@Override
