@@ -23,7 +23,7 @@ public interface GameService {
 	public int createGame() throws ConnectionFailedException;
 	
 	/* Join an existing game on this server */
-	public void joinGame(int sessionId, String name) throws ConnectionFailedException;
+	public void joinGame(int sessionId, int id) throws ConnectionFailedException;
 	
 	/* Notifies the server of a disconnecting user. */
 	public void disconnect(int sessionId) throws ConnectionFailedException;

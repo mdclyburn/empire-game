@@ -168,7 +168,8 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 			String gameName = ((String) table.getValueAt(table.getSelectedRow(), 0));
 			if(gameName == null) return;
 			try {
-				server.joinGame(sessionId, gameName);
+				System.out.println("Requesting to join game " + model.getValueAt(table.getSelectedRow(), 2));
+				server.joinGame(sessionId, (int) model.getValueAt(table.getSelectedRow(), 2));
 			} catch (ConnectionFailedException c) {
 				if(c.getMessage().length() != 0)
 					JOptionPane.showMessageDialog(this, c.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);

@@ -32,11 +32,13 @@ import com.kmj.empire.common.WeaponType;
 
 public class DummyServerConnectionProxy implements GameService {
 	
+	int idCounter;
 	ArrayList<Game> gameList;
 	HashMap<Integer, String> users;
 	HashMap<Integer, Game> sessions;
 
 	public DummyServerConnectionProxy() {
+		idCounter = 0;
 		gameList = new ArrayList<Game>();
 		
 //		UniverseType startrek = new UniverseType("Star Trek");
@@ -222,7 +224,9 @@ public class DummyServerConnectionProxy implements GameService {
 			restoredGame.setStardate(stardate);
 			
 			gameList.add(restoredGame);
-			int gameId = 1;
+			int gameId = idCounter++;
+			restoredGame.setId(gameId);
+			System.out.println("Restored game with ID " + gameId);
 			return gameId;
 		} catch (IOException ioe) {
 			System.err.println("Failed to read .dat file, inproper format.");
@@ -251,10 +255,10 @@ public class DummyServerConnectionProxy implements GameService {
 	}
 
 	@Override
-	public void joinGame(int sessionId, String name) throws ConnectionFailedException {
+	public void joinGame(int sessionId, int id) throws ConnectionFailedException {
 		for(Game g : gameList) {
-			if(g.getName().equals(name)) {
-				System.out.println("Session " + sessionId + " joining " + name + ".");
+			if(g.getId() == id) {
+				System.out.println("Session " + sessionId + " joining " + g.getName() + "(" + g.getId() + ").");
 				
 				String username = users.get(sessionId);
 				sessions.put(sessionId, g);
@@ -343,7 +347,6 @@ public class DummyServerConnectionProxy implements GameService {
 			throw new BadDestinationException("There is not enough energy to warp that far.");
 		
 		// Find a place in that sector to warp to.
-		System.out.println("Looking for position for " + username + "...");
 		for(int y = 1; y <= 8; y++) {
 			for(int x = 1; x <= 8; x++) {
 				boolean containsEntity = false;
@@ -468,13 +471,11 @@ public class DummyServerConnectionProxy implements GameService {
 	}
 	
 	private void advance(Game game) {
-		System.out.println("Actuating AI for session " + game.getName());
 		ArrayList<Ship> ships = game.getShips();
 		for(int i = 0; i < ships.size(); i++) {
 			Ship ship = ships.get(i);
 			// See if this is an AI ship.
 			if(game.getPropertyMapping().get(ship) == null) {
-				System.out.println(ship.getType().getName() + " is searching for enemy to fire upon.");
 				Sector sector = ship.getSector();
 				// Search the sector for an enemy ship.
 				ArrayList<Ship> enemies = new ArrayList<Ship>();
@@ -486,10 +487,8 @@ public class DummyServerConnectionProxy implements GameService {
 				}
 				
 				// Continue search if enemy ships are in the sector.
-				System.out.println("Found " + enemies.size() + " enemies.");
 				if(enemies.size() > 0) {
 					// Find the closest.
-					System.out.println("Finding closest.");
 					Ship closest = null;
 					for(int k = 0; k < enemies.size(); k++) {
 						Ship enemyShip = enemies.get(k);
@@ -508,11 +507,9 @@ public class DummyServerConnectionProxy implements GameService {
 					String dest = "";
 					if(game.getOwner(closest) == null) dest = closest.getType().getName();
 					else dest = game.getOwner(closest);
-					System.out.println("Attacking " + dest);
 					if(closest.getAlert() == AlertLevel.GREEN) {
 						// The ship is immediately destroyed.
 						game.destroy(closest);
-						System.out.println(closest.getType().getName() + " was on green alert. It is destroyed.");
 					}
 					else if(closest.getAlert() == AlertLevel.YELLOW) {
 						// Damaged by 50% of the missile's yield.
@@ -526,11 +523,9 @@ public class DummyServerConnectionProxy implements GameService {
 					}
 					
 					// Remove a missile.
-					System.out.println("1 missile used.");
 					ship.setMissles(ship.getMissles() - 1);
 					
 					// Log the event.
-					System.out.println("Logging...");
 					String entry = game.getStardate() + ": " + ship.getType().getName() + " at (" +
 							ship.getX() + ", " + ship.getY() + ") fired " +
 							ship.getType().getMissleWeapon().getName() + " at " + dest +
@@ -540,9 +535,7 @@ public class DummyServerConnectionProxy implements GameService {
 						entry += "target's shields now at " + closest.getShield();
 					else
 						entry += "target destroyed.";
-					System.out.println("Made entry.");
 					game.getLog().add(0, entry);
-					System.out.println("Logged.");
 				}
 			}
 		}

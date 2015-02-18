@@ -83,7 +83,7 @@ public class GameServiceProxy implements GameService {
 	}
 
 	@Override
-	public void joinGame(int sessionId, String name)
+	public void joinGame(int sessionId, int id)
 			throws ConnectionFailedException {
 	}
 
