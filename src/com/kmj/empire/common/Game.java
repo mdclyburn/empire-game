@@ -135,6 +135,7 @@ public class Game {
 	}
 	
 	public void destroy(Ship ship) {
+		ships.remove(ship);
 		ship.getSector().getShips().remove(ship);
 		String username = getOwner(ship);
 		if(username == null) return;
