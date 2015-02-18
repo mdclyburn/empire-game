@@ -152,7 +152,10 @@ public class Game {
 		ship.getSector().getShips().remove(ship);
 		String username = getOwner(ship);
 		if(username == null) return;
-		
+
+		for(Player p : players)
+			if(p.getUserame().equals(username))
+				players.remove(p);
 		possessionMapping.remove(username);
 		propertyMapping.remove(ship);
 	}
