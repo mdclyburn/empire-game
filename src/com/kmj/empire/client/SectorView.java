@@ -32,6 +32,7 @@ public class SectorView extends JPanel implements MouseListener {
 	
 	public static final int MODE_SCANNER = 0;
 	public static final int MODE_NAVIGATE = 1;
+	public static final int MODE_MISSILE = 2;
 	
 	public SectorView() {
 		super();
@@ -141,6 +142,23 @@ public class SectorView extends JPanel implements MouseListener {
 				JOptionPane.showMessageDialog(this, c.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
 			}
 			// Set the mode back to scanner mode.
+			mode = MODE_SCANNER;
+			repaint();
+		}
+		// Missile Mode
+		else if(mode == MODE_MISSILE) {
+			// Sent message to server.
+			try {
+				Ship playerShip = game.getPlayerShip(Configuration.getInstance().getUsername());
+				server.fireTorpedo(sessionId, playerShip.getSector(), x, y);
+				parent.refresh();
+			}
+			catch(ActionException a) {
+				JOptionPane.showMessageDialog(this, a.getMessage(), "Action Error", JOptionPane.ERROR_MESSAGE);
+			}
+			catch(ConnectionFailedException c) {
+				JOptionPane.showMessageDialog(this, c.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
+			}
 			mode = MODE_SCANNER;
 			repaint();
 		}

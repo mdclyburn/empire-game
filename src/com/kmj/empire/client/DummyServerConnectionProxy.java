@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
+import com.kmj.empire.common.AlertLevel;
 import com.kmj.empire.common.AuthenticationFailedException;
 import com.kmj.empire.common.BadDestinationException;
 import com.kmj.empire.common.Base;
@@ -126,7 +127,17 @@ public class DummyServerConnectionProxy implements GameService {
 	@Override
 	public void disconnect(int sessionId) throws ConnectionFailedException {
 		Game game = sessions.get(sessionId);
-		game.getActivePlayers().remove(users.get(sessionId));
+		game.removePlayer(users.get(sessionId));
+	}
+	
+	@Override
+	public void setAlertLevel(int sessionId, AlertLevel level) throws ConnectionFailedException {
+		sessions.get(sessionId).getPlayerShip(users.get(sessionId)).setAlert(level);
+		
+		// Log entry.
+		sessions.get(sessionId).getLog().add(0, sessions.get(sessionId).getStardate() + ": " + users.get(sessionId) +
+				" is on " + level.toString().toLowerCase() + " alert.");
+		sessions.get(sessionId).nextStardate();
 	}
 	
 	@Override
@@ -154,6 +165,7 @@ public class DummyServerConnectionProxy implements GameService {
 		// Move player.
 		playerShip.setLocation(x, y);
 		playerShip.consumeImpulseEnergy(distance);
+		game.nextStardate();
 	}
 	
 	@Override
@@ -209,6 +221,7 @@ public class DummyServerConnectionProxy implements GameService {
 					playerShip.setX(x);
 					playerShip.setY(y);
 					playerShip.consumeWarpEnergy(distance);
+					game.nextStardate();
 					return;
 				}
 			}
@@ -218,7 +231,75 @@ public class DummyServerConnectionProxy implements GameService {
 		throw new BadDestinationException("The sector is full.");
 	}
 	
-	public void fireTorpedo(int sessionId, Ship target) throws ActionException, ConnectionFailedException {
+	public void fireTorpedo(int sessionId, Sector sector, int x, int y) throws ActionException, ConnectionFailedException {
+		String username = users.get(sessionId);
+		Game game = sessions.get(sessionId);
+		Ship playerShip = game.getPlayerShip(username);
+		
+		System.out.println(username + " firing 1 of " + playerShip.getMissles() + " at " + x + "-" + y + ".");
+		
+		// Make sure that the player has torpedoes left.
+		if(playerShip.getMissles() == 0)
+			throw new ActionException("There are no missiles left.");
+		
+		// Make sure that a ship is at that location.
+		System.out.println("Seeing if a ship is at location...");
+		Ship target = null;
+		for(Ship s : sector.getShips()) {
+			if(s.getX() == x && s.getY() == y) {
+				target = s;
+				System.out.println("Found the ship " + username + " is firing at.");
+				break;
+			}
+		}
+		if(target == null)
+			throw new ActionException("There is no ship at the specified location.");
+		
+		// Disallow self-destruction.
+		if(playerShip == target)
+			throw new ActionException("Don't blow yourself up.");
+		
+		// At this time, a torpedo never misses.
+		if(target.getAlert() == AlertLevel.GREEN) {
+			// The ship is immediately destroyed.
+			game.destroy(target);
+			System.out.println(target.getType().getName() + " was on green alert. It is destroyed.");
+		}
+		else if(target.getAlert() == AlertLevel.YELLOW) {
+			// Damaged by 50% of the missile's yield.
+			target.setShield(target.getShield() - (playerShip.getType().getMissleWeapon().getMaxYield() / 2));
+			if(target.getShield() < 0) game.destroy(target);
+		}
+		else {
+			// Damaged by 100% of the missile's yield.
+			target.setShield(target.getShield() - playerShip.getType().getMissleWeapon().getMaxYield());
+			if(target.getShield() < 0) game.destroy(target);
+		}
+		
+		// Log the event.
+		String source = "";
+		String dest = "";
+		if(game.getOwner(playerShip) == null)
+			source = playerShip.getType().getName();
+		else
+			source = game.getOwner(playerShip);
+		
+		if(game.getOwner(target) == null)
+			dest = target.getType().getName();
+		else
+			dest = game.getOwner(playerShip);
+		
+		String entry = game.getStardate() + ": " + source + " at (" +
+				playerShip.getX() + ", " + playerShip.getY() + ") fired " +
+				playerShip.getType().getMissleWeapon().getName() + " at " + dest +
+				" at (" + target.getX() + ", " + target.getY() + "); ";
+		
+		if(target.getShield() > 0)
+			entry += "target's shields now at " + target.getShield();
+		else
+			entry += "target destroyed.";
+		game.getLog().add(0, entry);
+		game.nextStardate();
 	}
 	
 	private void addSampleData() {
@@ -232,7 +313,10 @@ public class DummyServerConnectionProxy implements GameService {
 		base = new Base(gameList.get(0).getUniverse().getEmpire("Federation"), gameList.get(0), gameList.get(0).getSector(1, 1), 2, 5);
 		gameList.get(0).addBase(base);
 		
+		// AI ship
 		Ship ship = new Ship(gameList.get(0).getUniverse().getEmpire("Klingon").getShip("Bird of Prey"), gameList.get(0), gameList.get(0).getSector(1, 1), 7, 4);
+		ship.setAlert(AlertLevel.RED);
+		
 		gameList.get(0).addShip(ship);
 	}
 }
