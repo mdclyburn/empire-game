@@ -46,7 +46,7 @@ public class ShipAttributeTableModel extends AbstractTableModel {
 		if(row == 0) return "Class: " + ship.getType().getName();
 		else if(row == 1) return "Energy: " + ship.getEnergy();
 		else if(row == 2) return "Alert: " + ship.getAlertLevel();
-		else return "Shield: " + ship.getShieldLevel();
+		else return "Shield: " + (ship.getShieldLevel() > 0 ? ship.getShieldLevel() : "-1");
 	}
 
 }

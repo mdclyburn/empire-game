@@ -76,10 +76,13 @@ public class Game {
 	public ArrayList<String> getLog() { return log; }
 	
 	public void addPlayer(Player player) {
-		possessionMapping.put(player.getUserame(), player.getShip());
-		propertyMapping.put(player.getShip(), player.getUserame());
+		if(!hasPlayed(player.getUserame())) {
+			possessionMapping.put(player.getUserame(), player.getShip());
+			propertyMapping.put(player.getShip(), player.getUserame());
+			sectorGrid[0][0].getShips().add(player.getShip());
+			ships.add(player.getShip());
+		}
 		players.add(player);
-		sectorGrid[0][0].getShips().add(player.getShip());
 	}
 	
 	public void addShip(Ship ship) {
@@ -117,11 +120,32 @@ public class Game {
 	}
 	
 	public void removePlayer(String username) {
-		players.remove(username);
+		for(Player p : players) {
+			if(p.getUserame().equals(username)) {
+				players.remove(p);
+				break;
+			}
+		}
 	}
 	
 	public boolean hasPlayed(String username) {
 		return possessionMapping.containsKey(username);
+	}
+	
+	public void destroy(Ship ship) {
+		ship.getSector().getShips().remove(ship);
+		String username = getOwner(ship);
+		if(username == null) return;
+		
+		possessionMapping.remove(username);
+		propertyMapping.remove(ship);
+	}
+	
+	public void nextStardate() {
+		stardate++;
+		
+		// Deplete the energy of anyone on red or yellow alert.
+		for(Ship s : ships) s.consumeEnergy();
 	}
 
 }

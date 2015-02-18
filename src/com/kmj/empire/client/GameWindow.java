@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import com.kmj.empire.common.AlertLevel;
 import com.kmj.empire.common.ConnectionFailedException;
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.GameService;
@@ -55,28 +56,38 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 	protected static final int SECTOR_VIEW_X = DISPLAY_WIDTH + (3 * PADDING);
 	protected static final int SECTOR_VIEW_Y = PADDING;
 	
-	protected static final int PLAYER_LIST_LABEL_X = PADDING;
-	protected static final int PLAYER_LIST_LABEL_Y = PADDING + DISPLAY_HEIGHT + PADDING;
-	protected static final int PLAYER_LIST_WIDTH = DISPLAY_WIDTH / 2;
-	protected static final int PLAYER_LIST_HEIGHT = WINDOW_HEIGHT - (4 * PADDING) - DISPLAY_HEIGHT;
+	protected static final int GAME_LOG_WIDTH = (4 * WINDOW_WIDTH / 5) - (2 * PADDING);
+	protected static final int GAME_LOG_HEIGHT = (WINDOW_HEIGHT - DISPLAY_HEIGHT - (2 * PADDING)) / 2;
+	protected static final int GAME_LOG_X = PADDING;
+	protected static final int GAME_LOG_Y = UNIVERSE_VIEW_Y + DISPLAY_HEIGHT + PADDING;
+
+	protected static final int PLAYER_LIST_WIDTH = DISPLAY_WIDTH / 3;
+	protected static final int PLAYER_LIST_HEIGHT = GAME_LOG_HEIGHT - (3 * PADDING);
 	protected static final int PLAYER_LIST_X = PADDING;
-	protected static final int PLAYER_LIST_Y = PADDING + DISPLAY_HEIGHT + PADDING;
+	protected static final int PLAYER_LIST_Y = PADDING + DISPLAY_HEIGHT + PADDING + GAME_LOG_HEIGHT + PADDING;
 	
-	protected static final int GAME_LOG_WIDTH = PLAYER_LIST_WIDTH;
-	protected static final int GAME_LOG_HEIGHT = PLAYER_LIST_HEIGHT;
-	protected static final int GAME_LOG_X = PADDING + PLAYER_LIST_WIDTH + PADDING;
-	protected static final int GAME_LOG_Y = PLAYER_LIST_Y;
-	
-	protected static final int SHIP_ATTR_WIDTH = 2 * DISPLAY_WIDTH / 5;
+	protected static final int SHIP_ATTR_WIDTH = DISPLAY_WIDTH / 3;
 	protected static final int SHIP_ATTR_HEIGHT = PLAYER_LIST_HEIGHT;
-	protected static final int SHIP_ATTR_X = GAME_LOG_X + GAME_LOG_WIDTH + PADDING;
-	protected static final int SHIP_ATTR_Y = GAME_LOG_Y;
+	protected static final int SHIP_ATTR_X = PLAYER_LIST_X + PLAYER_LIST_WIDTH + PADDING;
+	protected static final int SHIP_ATTR_Y = PLAYER_LIST_Y;
 	
-	protected static final int ACTION_X = SHIP_ATTR_X + SHIP_ATTR_WIDTH + PADDING;
-	protected static final int ACTION_Y = SHIP_ATTR_Y;
+	protected static final int NAVIGATE_ACTION_X = SHIP_ATTR_X + SHIP_ATTR_WIDTH + PADDING;
+	protected static final int NAVIGATE_ACTION_Y = SHIP_ATTR_Y;
+	protected static final int NAVIGATE_ACTION_WIDTH = DISPLAY_WIDTH / 3;
+	
+	protected static final int WEAPON_ACTION_X = NAVIGATE_ACTION_X + NAVIGATE_ACTION_WIDTH + PADDING;
+	protected static final int WEAPON_ACTION_Y = SHIP_ATTR_Y;
+	protected static final int WEAPON_ACTION_WIDTH = DISPLAY_WIDTH / 3;
+	
+	protected static final int OTHER_ACTION_X = WEAPON_ACTION_X + WEAPON_ACTION_WIDTH + PADDING;
+	protected static final int OTHER_ACTION_Y = SHIP_ATTR_Y;
+	protected static final int OTHER_ACTION_WIDTH = DISPLAY_WIDTH / 3;
 	
 	protected static final String ACTION_IMPULSE = "impulse";
 	protected static final String ACTION_WARP = "warp";
+	protected static final String ACTION_MISSILE = "missile";
+	protected static final String ACTION_ALERT = "alert";
+	protected static final String ACTION_REFRESH = "refresh";
 
 	public GameWindow() {
 		super();
@@ -152,7 +163,7 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 		shipAttributeModel.setTableSource(gameState.getPlayerShip(Configuration.getInstance().getUsername()));
 		shipAttributes.setBounds(SHIP_ATTR_X, SHIP_ATTR_Y, SHIP_ATTR_WIDTH, SHIP_ATTR_HEIGHT);
 		shipAttributes.setModel(shipAttributeModel);
-		jsp = new JScrollPane(shipAttributes);
+		jsp = new JScrollPane(shipAttributes, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		jsp.setBounds(shipAttributes.getBounds());
 		add(jsp);
 		
@@ -160,29 +171,71 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 		
 		// Navigate Label
 		JLabel label = new JLabel("Navigate");
-		label.setBounds(ACTION_X, ACTION_Y, DISPLAY_WIDTH * 3 / 5, LINE_HEIGHT);
+		label.setBounds(NAVIGATE_ACTION_X, NAVIGATE_ACTION_Y, DISPLAY_WIDTH * 3 / 5, LINE_HEIGHT);
 		add(label);
 		
 		// Impulse button
 		JButton impulseButton = new JButton("Impulse");
-		impulseButton.setBounds(ACTION_X, ACTION_Y + label.getHeight() + PADDING, (3 * DISPLAY_WIDTH / 5) / 2, LINE_HEIGHT);
+		impulseButton.setBounds(NAVIGATE_ACTION_X, NAVIGATE_ACTION_Y + label.getHeight() + PADDING, (3 * DISPLAY_WIDTH / 5) / 2, LINE_HEIGHT);
 		impulseButton.setActionCommand(ACTION_IMPULSE);
 		impulseButton.addActionListener(this);
 		add(impulseButton);
 		
 		// Warp button
 		JButton warpButton = new JButton("Warp");
-		warpButton.setBounds(impulseButton.getX() + impulseButton.getWidth(),
-				impulseButton.getY(), impulseButton.getWidth(), impulseButton.getHeight());
+		warpButton.setBounds(impulseButton.getX(), impulseButton.getY() + impulseButton.getHeight() + PADDING,
+				impulseButton.getWidth(), impulseButton.getHeight());
 		warpButton.setActionCommand(ACTION_WARP);
 		warpButton.addActionListener(this);
 		add(warpButton);
 		
+		// Weapon Label
+		label = new JLabel("Weapons");
+		label.setBounds(WEAPON_ACTION_X, WEAPON_ACTION_Y, WEAPON_ACTION_WIDTH, LINE_HEIGHT);
+		add(label);
+		
+		// Missile button
+		JButton missileButton = new JButton("Missile");
+		missileButton.setBounds(WEAPON_ACTION_X, WEAPON_ACTION_Y + label.getHeight() + PADDING, WEAPON_ACTION_WIDTH, LINE_HEIGHT);
+		missileButton.setActionCommand(ACTION_MISSILE);
+		missileButton.addActionListener(this);
+		add(missileButton);
+		
+		// Other Label
+		label = new JLabel("Other Actions");
+		label.setBounds(OTHER_ACTION_X, OTHER_ACTION_Y, OTHER_ACTION_WIDTH, LINE_HEIGHT);
+		add(label);
+		
+		// Set Alert button
+		JButton alertButton = new JButton("Alert...");
+		alertButton.setBounds(OTHER_ACTION_X, OTHER_ACTION_Y + label.getHeight() + PADDING, OTHER_ACTION_WIDTH, LINE_HEIGHT);
+		alertButton.setActionCommand(ACTION_ALERT);
+		alertButton.addActionListener(this);
+		add(alertButton);
+		
+		// Refresh button
+		JButton refreshButton = new JButton("Refresh");
+		refreshButton.setBounds(OTHER_ACTION_X, alertButton.getY() + LINE_HEIGHT + PADDING, OTHER_ACTION_WIDTH, LINE_HEIGHT);
+		refreshButton.setActionCommand(ACTION_REFRESH);
+		refreshButton.addActionListener(this);
+		add(refreshButton);
+		
 		setVisible(true);
 	}
 	
-	// Update tables.
+	// Update statuses.
 	public void refresh() {
+		// Get game state from server.
+		try {
+			gameState = server.getGameState(sessionId);
+		} catch (ConnectionFailedException e) {
+			JOptionPane.showMessageDialog(this, e.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
+		}
+		// See if player is still alive.
+		if(gameState.getPlayerShip(Configuration.getInstance().getUsername()) == null) {
+			JOptionPane.showMessageDialog(this, "Your ship has been destroyed.", "Game Over", JOptionPane.INFORMATION_MESSAGE);
+			dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+		}
 		playerListModel.fireTableDataChanged();
 		gameLogModel.fireTableDataChanged();
 		shipAttributeModel.fireTableDataChanged();
@@ -192,11 +245,45 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 		String s = e.getActionCommand();
 		
 		if(s.equals(ACTION_IMPULSE)) {
+			// Switch view to current sector.
+			sectorView.setSector(gameState.getPlayerShip(Configuration.getInstance().getUsername()).getSector());
+			
 			sectorView.setMode(SectorView.MODE_NAVIGATE);
 		}
 		else if(s.equals(ACTION_WARP)) {
 			universeView.setMode(UniverseView.MODE_WARP);
 		}
+		else if(s.equals(ACTION_MISSILE)) {
+			// Switch view to current sector.
+			sectorView.setSector(gameState.getPlayerShip(Configuration.getInstance().getUsername()).getSector());
+			
+			sectorView.setMode(SectorView.MODE_MISSILE);
+		}
+		else if(s.equals(ACTION_ALERT)) {
+			SetAlertDialog sad = new SetAlertDialog(this, "Set Alert Level", gameState.getPlayerShip(Configuration.getInstance().getUsername()));
+			sad.setVisible(true);
+			AlertLevel level;
+			String result = sad.getChoice();
+			if(result.equals("Green"))
+				level = AlertLevel.GREEN;
+			else if(result.equals("Yellow"))
+				level = AlertLevel.YELLOW;
+			else if(result.equals("Red"))
+				level = AlertLevel.RED;
+			else return;
+			
+			try {
+				server.setAlertLevel(sessionId, level);
+			} catch (ConnectionFailedException c) {
+				JOptionPane.showMessageDialog(this, c.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
+			}
+			
+			refresh();
+		}
+		else if(s.equals(ACTION_REFRESH)) {
+			refresh();
+		}
+
 		return;
 	}
 	
