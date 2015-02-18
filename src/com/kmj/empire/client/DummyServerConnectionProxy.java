@@ -411,6 +411,10 @@ public class DummyServerConnectionProxy implements GameService {
 		if(playerShip == target)
 			throw new ActionException("Don't blow yourself up.");
 		
+		// Disallow betrayal.
+		if(playerShip.getType().getEmpire().getName().equals(target.getType().getEmpire().getName()))
+			throw new ActionException("You are on the same side.");
+		
 		// Get source and destination names.
 		String source = "";
 		String dest = "";
