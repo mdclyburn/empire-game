@@ -83,6 +83,11 @@ public class Game {
 		return log;
 	}
 	
+	public void map(String username, Ship ship) {
+		possessionMapping.put(username, ship);
+		propertyMapping.put(ship, username);
+	}
+	
 	public void addPlayer(Player player) {
 		if(!hasPlayed(player.getUserame())) {
 			possessionMapping.put(player.getUserame(), player.getShip());
