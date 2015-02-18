@@ -1,12 +1,18 @@
 package com.kmj.empire.client;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -20,6 +26,7 @@ import com.kmj.empire.common.AuthenticationFailedException;
 import com.kmj.empire.common.ConnectionFailedException;
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.GameService;
+import com.kmj.empire.common.InvalidGameFileException;
 
 // A window that displays a list of games present
 // on a server. The session ID should be set before
@@ -180,8 +187,30 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 		else if(s.equals(ACTION_RESTORE)) {
 			JFileChooser fc = new JFileChooser();
 			int result = fc.showOpenDialog(this);
+			File file = null;
 			if(result == JFileChooser.APPROVE_OPTION) {
-				File file = fc.getSelectedFile();
+				file = fc.getSelectedFile();
+			}
+			
+			try {
+				BufferedReader br = new BufferedReader(new FileReader(file));
+				String gameData = "";
+				String line = br.readLine();
+				while (line != null) {
+					gameData += line + "\n";
+					line = br.readLine();
+				}
+				br.close();
+				server.restoreGame(gameData);
+			} catch (InvalidGameFileException igfe) {
+				// TODO bad game file exception handling
+				igfe.printStackTrace();
+			} catch (ConnectionFailedException e1) {
+				// TODO conection failed execption handling
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO could not read file (file did not exist?)
+				e1.printStackTrace();
 			}
 		}
 		

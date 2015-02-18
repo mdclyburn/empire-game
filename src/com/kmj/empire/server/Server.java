@@ -43,6 +43,7 @@ public class Server extends JFrame {
 	public static final int MAX_USERS = 10;
 
 	public static Random random = new Random();
+	private static int nextId = 0;
 	
 	private ArrayList<Game> gameList;
 	
@@ -246,6 +247,22 @@ public class Server extends JFrame {
 	
 	public ArrayList<Game> getGamesList() {
 		return gameList;
+	}
+	
+	public int addGame(Game game) {
+		int id = nextId;
+		nextId++;
+		game.setId(id);
+		gameList.add(game);
+		return id;
+	}
+	
+	public Game getGame(int gameId) {
+		for (Game g : gameList) {
+			if (g.getId() == gameId)
+				return g;
+		}
+		return null;
 	}
 
 }

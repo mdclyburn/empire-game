@@ -3,6 +3,7 @@ package com.kmj.empire.common;
 public class Base extends MapEntity {
 	
 	protected EmpireType empireType;
+	private int id;
 	
 	public Base() {
 		super();
@@ -14,4 +15,11 @@ public class Base extends MapEntity {
 	}
 
 	public EmpireType getEmpire() { return empireType; }
+	public int getId() {
+		return id;
+	}
+	
+	public void setId(int id) {
+		this.id = id;
+	}
 }
