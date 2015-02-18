@@ -391,19 +391,15 @@ public class DummyServerConnectionProxy implements GameService {
 		Game game = sessions.get(sessionId);
 		Ship playerShip = game.getPlayerShip(username);
 		
-		System.out.println(username + " firing 1 of " + playerShip.getMissles() + " at " + x + "-" + y + ".");
-		
 		// Make sure that the player has torpedoes left.
 		if(playerShip.getMissles() == 0)
 			throw new ActionException("There are no missiles left.");
 		
 		// Make sure that a ship is at that location.
-		System.out.println("Seeing if a ship is at location...");
 		Ship target = null;
 		for(Ship s : sector.getShips()) {
 			if(s.getX() == x && s.getY() == y) {
 				target = s;
-				System.out.println("Found the ship " + username + " is firing at.");
 				break;
 			}
 		}
