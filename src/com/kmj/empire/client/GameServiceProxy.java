@@ -1,17 +1,13 @@
 package com.kmj.empire.client;
 
-import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.List;
 
 import com.google.gson.Gson;
+import com.kmj.empire.common.AlertLevel;
 import com.kmj.empire.common.AuthenticationFailedException;
 import com.kmj.empire.common.BadDestinationException;
 import com.kmj.empire.common.ConnectionFailedException;
@@ -19,16 +15,13 @@ import com.kmj.empire.common.Game;
 import com.kmj.empire.common.GameService;
 import com.kmj.empire.common.InvalidGameFileException;
 import com.kmj.empire.common.Sector;
-import com.kmj.empire.common.Ship;
 
 public class GameServiceProxy implements GameService {
 
-	private Socket socket;
 	private DataInputStream in;
 	private DataOutputStream out;
 	
 	public GameServiceProxy(Socket socket) {
-		this.socket = socket;
 		try {
 			this.in = new DataInputStream(socket.getInputStream());
 			this.out = new DataOutputStream(socket.getOutputStream());
@@ -115,10 +108,13 @@ public class GameServiceProxy implements GameService {
 	}
 
 	@Override
-	public void fireTorpedo(int sessionId, Ship target) throws ActionException,
-			ConnectionFailedException {
-		// TODO Auto-generated method stub
-		
+	public void setAlertLevel(int sessionId, AlertLevel level)
+			throws ConnectionFailedException {
+	}
+
+	@Override
+	public void fireTorpedo(int sessionId, Sector sector, int x, int y)
+			throws ActionException, ConnectionFailedException {
 	}
 
 }

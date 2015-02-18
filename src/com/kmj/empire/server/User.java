@@ -15,7 +15,6 @@ import com.kmj.empire.common.Player;
 
 class User implements Runnable {
 
-	private Socket socket;
 	private DataInputStream in;
 	private DataOutputStream out;
 	private User user[] = new User[Server.MAX_USERS];
@@ -31,7 +30,6 @@ class User implements Runnable {
 	
 	public User(Socket socket, User[] user, Server server, int pid)
 	{
-		this.socket = socket;
 		try {
 			in = new DataInputStream(socket.getInputStream());
 			out = new DataOutputStream(socket.getOutputStream()); 
@@ -66,12 +64,10 @@ class User implements Runnable {
 			} catch (IOException e3) {
 				server.printMessage(username+" has disconnected");
 				disconnected = true;
-				break;
 			}
 			
 			//if unauthenticated user attempts prohibited action
-			if (!autheniticated && code != 4) {
-				disconnected = true;
+			if (disconnected || (!autheniticated && code != 4)) {
 				break;
 			}
 			

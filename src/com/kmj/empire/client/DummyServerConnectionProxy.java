@@ -75,7 +75,6 @@ public class DummyServerConnectionProxy implements GameService {
 	@Override
 	public int restoreGame(String gameData) {
 		BufferedReader br = new BufferedReader(new StringReader(gameData));
-		System.out.println(gameData);
 		try {
 			br.readLine();
 			String line = br.readLine();
@@ -161,7 +160,8 @@ public class DummyServerConnectionProxy implements GameService {
 				int px = Integer.valueOf(line.substring(0, line.indexOf('\t')));
 				line = line.substring(line.indexOf('\t')+1);
 				int py = Integer.valueOf(line.substring(0, line.length()));
-				Base base = new Base(empire, restoredGame, restoredGame.getSector(sx, sy), py, py);
+				Base base = new Base(empire, restoredGame, restoredGame.getSector(sx, sy), px, py);
+				base.setId(id);
 				restoredGame.addBase(base);
 				line = br.readLine();
 			}

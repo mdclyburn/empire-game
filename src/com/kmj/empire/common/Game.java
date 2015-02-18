@@ -89,6 +89,7 @@ public class Game {
 		int x = ship.getSector().x;
 		int y = ship.getSector().y;
 		sectorGrid[x - 1][y - 1].getShips().add(ship);
+		ships.add(ship);
 	}
 	
 	public void addPlanet(Planet planet) {
@@ -101,6 +102,7 @@ public class Game {
 		int x = base.getSector().x;
 		int y = base.getSector().y;
 		sectorGrid[x - 1][y - 1].getBases().add(base);
+		bases.add(base);
 	}
 	
 	public Ship getIdShip(int id) {
@@ -147,5 +149,5 @@ public class Game {
 		// Deplete the energy of anyone on red or yellow alert.
 		for(Ship s : ships) s.consumeEnergy();
 	}
-
+	
 }
