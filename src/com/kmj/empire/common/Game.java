@@ -83,6 +83,18 @@ public class Game {
 		return log;
 	}
 	
+	public ArrayList<Ship> getShips() {
+		return ships;
+	}
+	
+	public HashMap<String, Ship> getPossessionMapping() {
+		return possessionMapping;
+	}
+	
+	public HashMap<Ship, String> getPropertyMapping() {
+		return propertyMapping;
+	}
+	
 	public void map(String username, Ship ship) {
 		possessionMapping.put(username, ship);
 		propertyMapping.put(ship, username);
@@ -153,9 +165,11 @@ public class Game {
 		String username = getOwner(ship);
 		if(username == null) return;
 
-		for(Player p : players)
+		for(int i = 0; i < players.size(); i++) {
+			Player p = players.get(i);
 			if(p.getUserame().equals(username))
 				players.remove(p);
+		}
 		possessionMapping.remove(username);
 		propertyMapping.remove(ship);
 	}
@@ -163,18 +177,8 @@ public class Game {
 	public void nextStardate() {
 		stardate++;
 		
-		// AI action
-		aiAction();
-		
 		// Deplete the energy of anyone on red or yellow alert.
 		for(Ship s : ships) s.consumeEnergy();
-	}
-	
-	public void aiAction() {
-		for(Ship s : ships) {
-			if(propertyMapping.get(s) == null) {
-			}
-		}
 	}
 	
 }

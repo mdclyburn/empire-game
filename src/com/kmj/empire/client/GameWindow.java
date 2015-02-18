@@ -248,6 +248,10 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 		playerListModel.fireTableDataChanged();
 		gameLogModel.fireTableDataChanged();
 		shipAttributeModel.fireTableDataChanged();
+		
+		// Repaint universe and sector views.
+		universeView.repaint();
+		sectorView.repaint();
 	}
 	
 	public void actionPerformed(ActionEvent e) {

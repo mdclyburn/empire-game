@@ -155,7 +155,6 @@ public class UniverseView extends JPanel implements MouseListener {
 			mode = MODE_SCANNER;
 			status.setText("Idling");
 		}
-		repaint();
 		parent.refresh();
 		
 		return;

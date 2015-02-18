@@ -293,6 +293,7 @@ public class DummyServerConnectionProxy implements GameService {
 		// Log entry.
 		sessions.get(sessionId).getLog().add(0, sessions.get(sessionId).getStardate() + ": " + users.get(sessionId) +
 				" is on " + level.toString().toLowerCase() + " alert.");
+		advance(sessions.get(sessionId));
 		sessions.get(sessionId).nextStardate();
 	}
 	
@@ -321,6 +322,7 @@ public class DummyServerConnectionProxy implements GameService {
 		// Move player.
 		playerShip.setLocation(x, y);
 		playerShip.consumeImpulseEnergy(distance);
+		advance(game);
 		game.nextStardate();
 	}
 	
@@ -377,6 +379,7 @@ public class DummyServerConnectionProxy implements GameService {
 					playerShip.setX(x);
 					playerShip.setY(y);
 					playerShip.consumeWarpEnergy(distance);
+					advance(game);
 					game.nextStardate();
 					return;
 				}
@@ -459,7 +462,90 @@ public class DummyServerConnectionProxy implements GameService {
 		else
 			entry += "target destroyed.";
 		game.getLog().add(0, entry);
+		
+		advance(game);
 		game.nextStardate();
+	}
+	
+	private void advance(Game game) {
+		System.out.println("Actuating AI for session " + game.getName());
+		ArrayList<Ship> ships = game.getShips();
+		for(int i = 0; i < ships.size(); i++) {
+			Ship ship = ships.get(i);
+			// See if this is an AI ship.
+			if(game.getPropertyMapping().get(ship) == null) {
+				System.out.println(ship.getType().getName() + " is searching for enemy to fire upon.");
+				Sector sector = ship.getSector();
+				// Search the sector for an enemy ship.
+				ArrayList<Ship> enemies = new ArrayList<Ship>();
+				ArrayList<Ship> sectorShips = sector.getShips();
+				for(int j = 0; j < sectorShips.size(); j++) {
+					Ship possEnemyShip = sectorShips.get(j);
+					if(!possEnemyShip.getType().getEmpire().getName().equals(ship.getType().getEmpire().getName()))
+						enemies.add(possEnemyShip);
+				}
+				
+				// Continue search if enemy ships are in the sector.
+				System.out.println("Found " + enemies.size() + " enemies.");
+				if(enemies.size() > 0) {
+					// Find the closest.
+					System.out.println("Finding closest.");
+					Ship closest = null;
+					for(int k = 0; k < enemies.size(); k++) {
+						Ship enemyShip = enemies.get(k);
+						if(closest == null) {
+							closest = enemyShip;
+						}
+						else {
+							// Calculate its distance.
+							int newDistance = Math.abs(ship.getX() - enemyShip.getX()) + Math.abs(ship.getY() - enemyShip.getY());
+							int oldDistance = Math.abs(ship.getX() - closest.getX()) + Math.abs(ship.getY() - closest.getY());
+							if(newDistance < oldDistance) closest = enemyShip;
+						}
+					}
+					
+					// Attack.
+					String dest = "";
+					if(game.getOwner(closest) == null) dest = closest.getType().getName();
+					else dest = game.getOwner(closest);
+					System.out.println("Attacking " + dest);
+					if(closest.getAlert() == AlertLevel.GREEN) {
+						// The ship is immediately destroyed.
+						game.destroy(closest);
+						System.out.println(closest.getType().getName() + " was on green alert. It is destroyed.");
+					}
+					else if(closest.getAlert() == AlertLevel.YELLOW) {
+						// Damaged by 50% of the missile's yield.
+						closest.setShield(closest.getShield() - (ship.getType().getMissleWeapon().getMaxYield() / 2));
+						if(closest.getShield() < 0) game.destroy(closest);
+					}
+					else {
+						// Damaged by 100% of the missile's yield.
+						closest.setShield(closest.getShield() - ship.getType().getMissleWeapon().getMaxYield());
+						if(closest.getShield() < 0) game.destroy(closest);
+					}
+					
+					// Remove a missile.
+					System.out.println("1 missile used.");
+					ship.setMissles(ship.getMissles() - 1);
+					
+					// Log the event.
+					System.out.println("Logging...");
+					String entry = game.getStardate() + ": " + ship.getType().getName() + " at (" +
+							ship.getX() + ", " + ship.getY() + ") fired " +
+							ship.getType().getMissleWeapon().getName() + " at " + dest +
+							" at (" + closest.getX() + ", " + closest.getY() + "); ";
+					
+					if(closest.getShield() > 0)
+						entry += "target's shields now at " + closest.getShield();
+					else
+						entry += "target destroyed.";
+					System.out.println("Made entry.");
+					game.getLog().add(0, entry);
+					System.out.println("Logged.");
+				}
+			}
+		}
 	}
 	
 	private void addSampleData() {

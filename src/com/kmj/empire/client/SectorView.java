@@ -94,6 +94,8 @@ public class SectorView extends JPanel implements MouseListener {
 			
 			// Draw ships.
 			String username = Configuration.getInstance().getUsername();
+			// Make sure player's ship exists.
+			if(game.getPlayerShip(username) == null) return;
 			String playerAlliance = game.getPlayerShip(username).getType().getEmpire().getName();
 			for(Ship s : sector.getShips()) {
 				int x = (s.getX() - 1) * (getWidth() / 8) + (getWidth() / 8 / 2) - (getWidth() / 8 / 6 / 2);
@@ -151,7 +153,6 @@ public class SectorView extends JPanel implements MouseListener {
 			// Set the mode back to scanner mode.
 			mode = MODE_SCANNER;
 			status.setText("Idling");
-			repaint();
 		}
 		// Missile Mode
 		else if(mode == MODE_MISSILE) {
@@ -169,7 +170,6 @@ public class SectorView extends JPanel implements MouseListener {
 			}
 			mode = MODE_SCANNER;
 			status.setText("Idling");
-			repaint();
 		}
 	}
 
