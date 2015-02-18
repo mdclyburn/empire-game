@@ -44,8 +44,8 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 	UniverseView universeView;
 	SectorView sectorView;
 	
-	protected static final int WINDOW_WIDTH = 1000;
-	protected static final int WINDOW_HEIGHT = 800;
+	protected static final int WINDOW_WIDTH = 800;
+	protected static final int WINDOW_HEIGHT = 700;
 	protected static final int PADDING = 15;
 	protected static final int LINE_HEIGHT = 25;
 	
@@ -169,53 +169,38 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 		
 		sectorView.setTableModel(shipAttributeModel);
 		
-		// Navigate Label
-		JLabel label = new JLabel("Navigate");
-		label.setBounds(NAVIGATE_ACTION_X, NAVIGATE_ACTION_Y, DISPLAY_WIDTH * 3 / 5, LINE_HEIGHT);
-		add(label);
-		
 		// Impulse button
 		JButton impulseButton = new JButton("Impulse");
-		impulseButton.setBounds(NAVIGATE_ACTION_X, NAVIGATE_ACTION_Y + label.getHeight() + PADDING, (3 * DISPLAY_WIDTH / 5) / 2, LINE_HEIGHT);
+		impulseButton.setBounds(NAVIGATE_ACTION_X, NAVIGATE_ACTION_Y, (3 * DISPLAY_WIDTH / 5) / 2, impulseButton.getPreferredSize().height);
 		impulseButton.setActionCommand(ACTION_IMPULSE);
 		impulseButton.addActionListener(this);
 		add(impulseButton);
 		
 		// Warp button
 		JButton warpButton = new JButton("Warp");
-		warpButton.setBounds(impulseButton.getX(), impulseButton.getY() + impulseButton.getHeight() + PADDING,
+		warpButton.setBounds(impulseButton.getX(), impulseButton.getY() + impulseButton.getHeight() + 5,
 				impulseButton.getWidth(), impulseButton.getHeight());
 		warpButton.setActionCommand(ACTION_WARP);
 		warpButton.addActionListener(this);
 		add(warpButton);
 		
-		// Weapon Label
-		label = new JLabel("Weapons");
-		label.setBounds(WEAPON_ACTION_X, WEAPON_ACTION_Y, WEAPON_ACTION_WIDTH, LINE_HEIGHT);
-		add(label);
-		
 		// Missile button
 		JButton missileButton = new JButton("Missile");
-		missileButton.setBounds(WEAPON_ACTION_X, WEAPON_ACTION_Y + label.getHeight() + PADDING, WEAPON_ACTION_WIDTH, LINE_HEIGHT);
+		missileButton.setBounds(WEAPON_ACTION_X, WEAPON_ACTION_Y, WEAPON_ACTION_WIDTH, missileButton.getPreferredSize().height);
 		missileButton.setActionCommand(ACTION_MISSILE);
 		missileButton.addActionListener(this);
 		add(missileButton);
 		
-		// Other Label
-		label = new JLabel("Other Actions");
-		label.setBounds(OTHER_ACTION_X, OTHER_ACTION_Y, OTHER_ACTION_WIDTH, LINE_HEIGHT);
-		add(label);
-		
 		// Set Alert button
 		JButton alertButton = new JButton("Alert...");
-		alertButton.setBounds(OTHER_ACTION_X, OTHER_ACTION_Y + label.getHeight() + PADDING, OTHER_ACTION_WIDTH, LINE_HEIGHT);
+		alertButton.setBounds(OTHER_ACTION_X, OTHER_ACTION_Y, OTHER_ACTION_WIDTH, alertButton.getPreferredSize().height);
 		alertButton.setActionCommand(ACTION_ALERT);
 		alertButton.addActionListener(this);
 		add(alertButton);
 		
 		// Refresh button
 		JButton refreshButton = new JButton("Refresh");
-		refreshButton.setBounds(OTHER_ACTION_X, alertButton.getY() + LINE_HEIGHT + PADDING, OTHER_ACTION_WIDTH, LINE_HEIGHT);
+		refreshButton.setBounds(OTHER_ACTION_X, alertButton.getY() + alertButton.getHeight() + 5, OTHER_ACTION_WIDTH, refreshButton.getPreferredSize().height);
 		refreshButton.setActionCommand(ACTION_REFRESH);
 		refreshButton.addActionListener(this);
 		add(refreshButton);

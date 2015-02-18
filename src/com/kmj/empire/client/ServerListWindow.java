@@ -50,7 +50,6 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 	protected static final int TABLE_HEIGHT = WINDOW_HEIGHT - (4 * PADDING);
 	
 	protected static final int BUTTON_WIDTH = (WINDOW_WIDTH / 4) - (2 * PADDING);
-	protected static final int BUTTON_HEIGHT = 30;
 	protected static final int BUTTON_START = TABLE_WIDTH + (2 * PADDING);
 
 	protected static final String ACTION_CREATE = "create";
@@ -93,13 +92,13 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 		JButton button;
 		
 		button = new JButton("Create");
-		button.setBounds(BUTTON_START, PADDING, BUTTON_WIDTH, BUTTON_HEIGHT);
+		button.setBounds(BUTTON_START, PADDING, BUTTON_WIDTH, button.getPreferredSize().height);
 		button.setActionCommand(ACTION_CREATE);
 		button.addActionListener(this);
 		add(button);
 		
 		button = new JButton("Join");
-		button.setBounds(BUTTON_START, PADDING + BUTTON_HEIGHT + PADDING, BUTTON_WIDTH, BUTTON_HEIGHT);
+		button.setBounds(BUTTON_START, PADDING + button.getPreferredSize().height + PADDING, BUTTON_WIDTH, button.getPreferredSize().height);
 		button.setActionCommand(ACTION_JOIN);
 		button.addActionListener(this);
 		button.setEnabled(false); // Only enable when an item is selected.
@@ -107,19 +106,19 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 		joinButton = button;
 		
 		button = new JButton("Restore");
-		button.setBounds(BUTTON_START, PADDING + (2 * BUTTON_HEIGHT) + (2 * PADDING), BUTTON_WIDTH, BUTTON_HEIGHT);
+		button.setBounds(BUTTON_START, PADDING + (2 * button.getPreferredSize().height) + (2 * PADDING), BUTTON_WIDTH, button.getPreferredSize().height);
 		button.setActionCommand(ACTION_RESTORE);
 		button.addActionListener(this);
 		add(button);
 		
 		button = new JButton("Refresh");
-		button.setBounds(BUTTON_START, PADDING + (3 * BUTTON_HEIGHT) + (3 * PADDING), BUTTON_WIDTH, BUTTON_HEIGHT);
+		button.setBounds(BUTTON_START, PADDING + (3 * button.getPreferredSize().height) + (3 * PADDING), BUTTON_WIDTH, button.getPreferredSize().height);
 		button.setActionCommand(ACTION_REFRESH);
 		button.addActionListener(this);
 		add(button);
 		
 		button = new JButton("Disconnect");
-		button.setBounds(BUTTON_START, PADDING + (4 * BUTTON_HEIGHT) + (4 * PADDING), BUTTON_WIDTH, BUTTON_HEIGHT);
+		button.setBounds(BUTTON_START, PADDING + (4 * button.getPreferredSize().height) + (4 * PADDING), BUTTON_WIDTH, button.getPreferredSize().height);
 		button.setActionCommand(ACTION_DISCONNECT);
 		button.addActionListener(this);
 		add(button);
