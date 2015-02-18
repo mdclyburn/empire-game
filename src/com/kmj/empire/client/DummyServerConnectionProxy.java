@@ -331,7 +331,7 @@ public class DummyServerConnectionProxy implements GameService {
 		Ship playerShip = game.getPlayerShip(username);
 		
 		// Make sure distance is navigable.
-		int distance = Math.abs(sector.getX() - playerShip.getX()) + Math.abs(sector.getY() - playerShip.getY());
+		int distance = Math.abs(sector.getX() - playerShip.getSector().getX()) + Math.abs(sector.getY() - playerShip.getSector().getY());
 		int max = playerShip.getType().getMaxSpeed();
 		if(distance > max)
 			throw new BadDestinationException("The distance is " + (distance - max) + " sectors too far.");
