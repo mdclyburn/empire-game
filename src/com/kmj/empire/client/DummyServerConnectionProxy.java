@@ -411,6 +411,19 @@ public class DummyServerConnectionProxy implements GameService {
 		if(playerShip == target)
 			throw new ActionException("Don't blow yourself up.");
 		
+		// Get source and destination names.
+		String source = "";
+		String dest = "";
+		if(game.getOwner(playerShip) == null)
+			source = playerShip.getType().getName();
+		else
+			source = game.getOwner(playerShip);
+		
+		if(game.getOwner(target) == null)
+			dest = target.getType().getName();
+		else
+			dest = game.getOwner(target);
+		
 		// At this time, a torpedo never misses.
 		if(target.getAlert() == AlertLevel.GREEN) {
 			// The ship is immediately destroyed.
@@ -432,18 +445,6 @@ public class DummyServerConnectionProxy implements GameService {
 		playerShip.setMissles(playerShip.getMissles() - 1);
 		
 		// Log the event.
-		String source = "";
-		String dest = "";
-		if(game.getOwner(playerShip) == null)
-			source = playerShip.getType().getName();
-		else
-			source = game.getOwner(playerShip);
-		
-		if(game.getOwner(target) == null)
-			dest = target.getType().getName();
-		else
-			dest = game.getOwner(target);
-		
 		String entry = game.getStardate() + ": " + source + " at (" +
 				playerShip.getX() + ", " + playerShip.getY() + ") fired " +
 				playerShip.getType().getMissleWeapon().getName() + " at " + dest +
