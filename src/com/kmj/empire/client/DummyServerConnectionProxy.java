@@ -39,22 +39,22 @@ public class DummyServerConnectionProxy implements GameService {
 	public DummyServerConnectionProxy() {
 		gameList = new ArrayList<Game>();
 		
-		UniverseType startrek = new UniverseType("Star Trek");
-		EmpireType klingon = new EmpireType("KLI", "Klingon", "Aggression");
-		startrek.getEmpireList().add(new EmpireType("FED", "Federation", "Exploration"));
-		startrek.getEmpireList().add(klingon);
-		startrek.getWeaponTypes().add(new EnergyWeaponType("PCAN", "Pulse Cannon", 150));
-		startrek.getWeaponTypes().add(new MissleWeaponType("GTOR", "Gravimetric Torpedo", 800));
-		startrek.getEmpire("Klingon").getShipTypes().add(
-				new ShipType("BOP", "Bird of Prey", "D-12", startrek.getEmpire("Klingon"), 3000, 10, 500, 10, 
-				startrek.getWeapon("PCAN"), startrek.getWeapon("GTOR")));
-		startrek.getWeaponTypes().add(new EnergyWeaponType("PHAS", "Phaser", 100));
-		startrek.getWeaponTypes().add(new MissleWeaponType("PTOR", "Photon Torpedo", 300));
-		startrek.getEmpire("Federation").getShipTypes().add(new ShipType("STC", "Starship", "Constitution", startrek.getEmpire("Federation"), 2500, 10, 500, 10,
-				startrek.getWeapon("PHAS"), startrek.getWeapon("PTOR")));
-		
-		gameList.add(new Game("Trekkie's Delight", startrek));
-		addSampleData();
+//		UniverseType startrek = new UniverseType("Star Trek");
+//		EmpireType klingon = new EmpireType("KLI", "Klingon", "Aggression");
+//		startrek.getEmpireList().add(new EmpireType("FED", "Federation", "Exploration"));
+//		startrek.getEmpireList().add(klingon);
+//		startrek.getWeaponTypes().add(new EnergyWeaponType("PCAN", "Pulse Cannon", 150));
+//		startrek.getWeaponTypes().add(new MissleWeaponType("GTOR", "Gravimetric Torpedo", 800));
+//		startrek.getEmpire("Klingon").getShipTypes().add(
+//				new ShipType("BOP", "Bird of Prey", "D-12", startrek.getEmpire("Klingon"), 3000, 10, 500, 10, 
+//				startrek.getWeapon("PCAN"), startrek.getWeapon("GTOR")));
+//		startrek.getWeaponTypes().add(new EnergyWeaponType("PHAS", "Phaser", 100));
+//		startrek.getWeaponTypes().add(new MissleWeaponType("PTOR", "Photon Torpedo", 300));
+//		startrek.getEmpire("Federation").getShipTypes().add(new ShipType("STC", "Starship", "Constitution", startrek.getEmpire("Federation"), 2500, 10, 500, 10,
+//				startrek.getWeapon("PHAS"), startrek.getWeapon("PTOR")));
+//		
+//		gameList.add(new Game("Trekkie's Delight", startrek));
+//		addSampleData();
 		
 		users = new HashMap<Integer, String>();
 		sessions = new HashMap<Integer, Game>();
@@ -230,7 +230,6 @@ public class DummyServerConnectionProxy implements GameService {
 
 	@Override
 	public Game getGameState(int sessionId) throws ConnectionFailedException {
-		System.out.println("Getting game state for session " + sessionId);
 		return sessions.get(sessionId);
 	}
 
