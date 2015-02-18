@@ -71,9 +71,22 @@ public class Game {
 		this.stardate = stardate;
 	}
 	
-	public String getName() { return name; }
-	public ArrayList<Player> getActivePlayers() { return players; }
-	public ArrayList<String> getLog() { return log; }
+	public String getName() {
+		return name;
+	}
+	
+	public ArrayList<Player> getActivePlayers() {
+		return players;
+	}
+	
+	public ArrayList<String> getLog() {
+		return log;
+	}
+	
+	public void map(String username, Ship ship) {
+		possessionMapping.put(username, ship);
+		propertyMapping.put(ship, username);
+	}
 	
 	public void addPlayer(Player player) {
 		if(!hasPlayed(player.getUserame())) {
@@ -139,7 +152,10 @@ public class Game {
 		ship.getSector().getShips().remove(ship);
 		String username = getOwner(ship);
 		if(username == null) return;
-		
+
+		for(Player p : players)
+			if(p.getUserame().equals(username))
+				players.remove(p);
 		possessionMapping.remove(username);
 		propertyMapping.remove(ship);
 	}
