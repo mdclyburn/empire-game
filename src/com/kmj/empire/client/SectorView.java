@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
@@ -25,6 +26,7 @@ public class SectorView extends JPanel implements MouseListener {
 	protected Game game;
 	protected GameService server;
 	protected GameWindow parent;
+	protected JLabel status;
 	
 	protected ShipAttributeTableModel model;
 	
@@ -45,6 +47,7 @@ public class SectorView extends JPanel implements MouseListener {
 		this.game = game;
 		this.server = server;
 		this.sessionId = sessionId;
+		this.status = status;
 	}
 	
 	public void setSector(Sector sector) {
@@ -58,6 +61,10 @@ public class SectorView extends JPanel implements MouseListener {
 	
 	public void setMode(int mode) {
 		this.mode = mode;
+	}
+	
+	public void setStatus(JLabel status) {
+		this.status = status;
 	}
 	
 	@Override
@@ -87,6 +94,8 @@ public class SectorView extends JPanel implements MouseListener {
 			
 			// Draw ships.
 			String username = Configuration.getInstance().getUsername();
+			// Make sure player's ship exists.
+			if(game.getPlayerShip(username) == null) return;
 			String playerAlliance = game.getPlayerShip(username).getType().getEmpire().getName();
 			for(Ship s : sector.getShips()) {
 				int x = (s.getX() - 1) * (getWidth() / 8) + (getWidth() / 8 / 2) - (getWidth() / 8 / 6 / 2);
@@ -143,7 +152,7 @@ public class SectorView extends JPanel implements MouseListener {
 			}
 			// Set the mode back to scanner mode.
 			mode = MODE_SCANNER;
-			repaint();
+			status.setText("Idling");
 		}
 		// Missile Mode
 		else if(mode == MODE_MISSILE) {
@@ -160,7 +169,7 @@ public class SectorView extends JPanel implements MouseListener {
 				JOptionPane.showMessageDialog(this, c.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
 			}
 			mode = MODE_SCANNER;
-			repaint();
+			status.setText("Idling");
 		}
 	}
 

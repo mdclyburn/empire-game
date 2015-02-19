@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
@@ -14,7 +15,6 @@ import com.kmj.empire.common.Base;
 import com.kmj.empire.common.ConnectionFailedException;
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.GameService;
-import com.kmj.empire.common.Sector;
 import com.kmj.empire.common.Ship;
 
 public class UniverseView extends JPanel implements MouseListener {
@@ -26,6 +26,7 @@ public class UniverseView extends JPanel implements MouseListener {
 	protected int selectedSectorX;
 	protected int selectedSectorY;
 	protected SectorView sectorView;
+	protected JLabel status;
 	
 	protected int mode;
 	
@@ -49,15 +50,24 @@ public class UniverseView extends JPanel implements MouseListener {
 		this.sessionId = sessionId;
 		selectedSectorX = selectedSectorY = 1;
 		addMouseListener(this);
+		
+		// Focus on sector player is in.
+		Ship ship = game.getPlayerShip(Configuration.getInstance().getUsername());
+		selectedSectorX = ship.getSector().getX();
+		selectedSectorY = ship.getSector().getY();
 	}
 	
 	public void setSectorView(SectorView sectorView) {
 		this.sectorView = sectorView;
-		sectorView.setSector(game.getSector(selectedSectorY, selectedSectorX));
+		sectorView.setSector(game.getSector(selectedSectorX, selectedSectorY));
 	}
 	
 	public void setMode(int mode) {
 		this.mode = mode;
+	}
+	
+	public void setStatus(JLabel status) {
+		this.status = status;
 	}
 	
 	@Override
@@ -148,8 +158,8 @@ public class UniverseView extends JPanel implements MouseListener {
 			}
 			sectorView.setSector(game.getSector(selectedSectorX, selectedSectorY));
 			mode = MODE_SCANNER;
+			status.setText("Idling");
 		}
-		repaint();
 		parent.refresh();
 		
 		return;

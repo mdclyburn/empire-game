@@ -14,7 +14,7 @@ import com.kmj.empire.common.Game;
 public class NewPlayerDialog extends JDialog implements ActionListener {
 	
 	private static final int DIALOG_WIDTH = 300;
-	private static final int DIALOG_HEIGHT = 175;
+	private static final int DIALOG_HEIGHT = 200;
 	private static final int PADDING = 20;
 	
 	private static final int COMBOBOX_WIDTH = DIALOG_WIDTH - (2 * PADDING);
@@ -77,7 +77,7 @@ public class NewPlayerDialog extends JDialog implements ActionListener {
 		
 		JButton button = new JButton("OK");
 		button.setActionCommand(ACTION_OK);
-		button.setBounds(OK_BUTTON_X, OK_BUTTON_Y, OK_BUTTON_WIDTH, OK_BUTTON_HEIGHT);
+		button.setBounds(OK_BUTTON_X, OK_BUTTON_Y, OK_BUTTON_WIDTH, button.getPreferredSize().height);
 		button.addActionListener(this);
 		add(button);
 	}

@@ -31,11 +31,13 @@ import com.kmj.empire.common.WeaponType;
 
 public class DummyServerConnectionProxy implements GameService {
 	
+	int idCounter;
 	ArrayList<Game> gameList;
 	HashMap<Integer, String> users;
 	HashMap<Integer, Game> sessions;
 
 	public DummyServerConnectionProxy() {
+		idCounter = 0;
 		gameList = new ArrayList<Game>();
 		
 //		UniverseType startrek = new UniverseType("Star Trek");
@@ -221,7 +223,9 @@ public class DummyServerConnectionProxy implements GameService {
 			restoredGame.setStardate(stardate);
 			
 			gameList.add(restoredGame);
-			int gameId = 1;
+			int gameId = idCounter++;
+			restoredGame.setId(gameId);
+			System.out.println("Restored game with ID " + gameId);
 			return gameId;
 		} catch (IOException ioe) {
 			System.err.println("Failed to read .dat file, inproper format.");
@@ -250,10 +254,10 @@ public class DummyServerConnectionProxy implements GameService {
 	}
 
 	@Override
-	public void joinGame(int sessionId, String name) throws ConnectionFailedException {
+	public void joinGame(int sessionId, int id) throws ConnectionFailedException {
 		for(Game g : gameList) {
-			if(g.getName().equals(name)) {
-				System.out.println("Session " + sessionId + " joining " + name + ".");
+			if(g.getId() == id) {
+				System.out.println("Session " + sessionId + " joining " + g.getName() + "(" + g.getId() + ").");
 				
 				String username = users.get(sessionId);
 				sessions.put(sessionId, g);
@@ -268,8 +272,32 @@ public class DummyServerConnectionProxy implements GameService {
 					NewPlayerDialog d = new NewPlayerDialog(null, "New Player", g);
 					d.setVisible(true);
 					if(d.getSelectedEmpire().length() == 0) throw new ConnectionFailedException("");
+					
+					// Find a random spot.
 					Random r = new Random();
-					Ship ship = new Ship(g.getUniverse().getShip(d.getSelectedShip()), g, g.getSector(1, 1), 1, 1);
+					Sector sector = null;
+					int sx, sy, x, y;
+					sx = sy = x = y = 1;
+					while(true) {
+						sx = r.nextInt(8) + 1;
+						sy = r.nextInt(8) + 1;
+						x = r.nextInt(8) + 1;
+						y = r.nextInt(8) + 1;
+						sector = g.getSector(sx, sy);
+						for(Ship s : sector.getShips()) {
+							if(s.getX() == x && s.getY() == y) continue;
+						}
+						for(Base b : sector.getBases()) {
+							if(b.getX() == x && b.getY() == y) continue;
+						}
+						for(Planet p : sector.getPlanets()) {
+							if(p.getX() == x && p.getY() == y) continue;
+						}
+						
+						break;
+					}
+					System.out.println("Placing ship in " + sx + "-" + sy + ", " + x + "-" + y);
+					Ship ship = new Ship(g.getUniverse().getShip(d.getSelectedShip()), g, sector, x, y);
 					Player player = new Player(username, ship.getType().getEmpire(), ship);
 					g.addPlayer(player);
 				}
@@ -292,6 +320,7 @@ public class DummyServerConnectionProxy implements GameService {
 		// Log entry.
 		sessions.get(sessionId).getLog().add(0, sessions.get(sessionId).getStardate() + ": " + users.get(sessionId) +
 				" is on " + level.toString().toLowerCase() + " alert.");
+		advance(sessions.get(sessionId));
 		sessions.get(sessionId).nextStardate();
 	}
 	
@@ -320,6 +349,7 @@ public class DummyServerConnectionProxy implements GameService {
 		// Move player.
 		playerShip.setLocation(x, y);
 		playerShip.consumeImpulseEnergy(distance);
+		advance(game);
 		game.nextStardate();
 	}
 	
@@ -330,7 +360,7 @@ public class DummyServerConnectionProxy implements GameService {
 		Ship playerShip = game.getPlayerShip(username);
 		
 		// Make sure distance is navigable.
-		int distance = Math.abs(sector.getX() - playerShip.getX()) + Math.abs(sector.getY() - playerShip.getY());
+		int distance = Math.abs(sector.getX() - playerShip.getSector().getX()) + Math.abs(sector.getY() - playerShip.getSector().getY());
 		int max = playerShip.getType().getMaxSpeed();
 		if(distance > max)
 			throw new BadDestinationException("The distance is " + (distance - max) + " sectors too far.");
@@ -340,7 +370,6 @@ public class DummyServerConnectionProxy implements GameService {
 			throw new BadDestinationException("There is not enough energy to warp that far.");
 		
 		// Find a place in that sector to warp to.
-		System.out.println("Looking for position for " + username + "...");
 		for(int y = 1; y <= 8; y++) {
 			for(int x = 1; x <= 8; x++) {
 				boolean containsEntity = false;
@@ -376,6 +405,7 @@ public class DummyServerConnectionProxy implements GameService {
 					playerShip.setX(x);
 					playerShip.setY(y);
 					playerShip.consumeWarpEnergy(distance);
+					advance(game);
 					game.nextStardate();
 					return;
 				}
@@ -410,6 +440,10 @@ public class DummyServerConnectionProxy implements GameService {
 		if(playerShip == target)
 			throw new ActionException("Don't blow yourself up.");
 		
+		// Disallow betrayal.
+		if(playerShip.getType().getEmpire().getName().equals(target.getType().getEmpire().getName()))
+			throw new ActionException("You are on the same side.");
+		
 		// Get source and destination names.
 		String source = "";
 		String dest = "";
@@ -426,8 +460,8 @@ public class DummyServerConnectionProxy implements GameService {
 		// At this time, a torpedo never misses.
 		if(target.getAlert() == AlertLevel.GREEN) {
 			// The ship is immediately destroyed.
+			target.setShield(-1);
 			game.destroy(target);
-			System.out.println(target.getType().getName() + " was on green alert. It is destroyed.");
 		}
 		else if(target.getAlert() == AlertLevel.YELLOW) {
 			// Damaged by 50% of the missile's yield.
@@ -454,7 +488,81 @@ public class DummyServerConnectionProxy implements GameService {
 		else
 			entry += "target destroyed.";
 		game.getLog().add(0, entry);
+		
+		advance(game);
 		game.nextStardate();
+	}
+	
+	private void advance(Game game) {
+		ArrayList<Ship> ships = game.getShips();
+		for(int i = 0; i < ships.size(); i++) {
+			Ship ship = ships.get(i);
+			// See if this is an AI ship.
+			if(game.getPropertyMapping().get(ship) == null) {
+				Sector sector = ship.getSector();
+				// Search the sector for an enemy ship.
+				ArrayList<Ship> enemies = new ArrayList<Ship>();
+				ArrayList<Ship> sectorShips = sector.getShips();
+				for(int j = 0; j < sectorShips.size(); j++) {
+					Ship possEnemyShip = sectorShips.get(j);
+					if(!possEnemyShip.getType().getEmpire().getName().equals(ship.getType().getEmpire().getName()))
+						enemies.add(possEnemyShip);
+				}
+				
+				// Continue search if enemy ships are in the sector.
+				if(enemies.size() > 0) {
+					// Find the closest.
+					Ship closest = null;
+					for(int k = 0; k < enemies.size(); k++) {
+						Ship enemyShip = enemies.get(k);
+						if(closest == null) {
+							closest = enemyShip;
+						}
+						else {
+							// Calculate its distance.
+							int newDistance = Math.abs(ship.getX() - enemyShip.getX()) + Math.abs(ship.getY() - enemyShip.getY());
+							int oldDistance = Math.abs(ship.getX() - closest.getX()) + Math.abs(ship.getY() - closest.getY());
+							if(newDistance < oldDistance) closest = enemyShip;
+						}
+					}
+					
+					// Attack.
+					String dest = "";
+					if(game.getOwner(closest) == null) dest = closest.getType().getName();
+					else dest = game.getOwner(closest);
+					if(closest.getAlert() == AlertLevel.GREEN) {
+						// The ship is immediately destroyed.
+						closest.setShield(-1);
+						game.destroy(closest);
+					}
+					else if(closest.getAlert() == AlertLevel.YELLOW) {
+						// Damaged by 50% of the missile's yield.
+						closest.setShield(closest.getShield() - (ship.getType().getMissleWeapon().getMaxYield() / 2));
+						if(closest.getShield() < 0) game.destroy(closest);
+					}
+					else {
+						// Damaged by 100% of the missile's yield.
+						closest.setShield(closest.getShield() - ship.getType().getMissleWeapon().getMaxYield());
+						if(closest.getShield() < 0) game.destroy(closest);
+					}
+					
+					// Remove a missile.
+					ship.setMissles(ship.getMissles() - 1);
+					
+					// Log the event.
+					String entry = game.getStardate() + ": " + ship.getType().getName() + " at (" +
+							ship.getX() + ", " + ship.getY() + ") fired " +
+							ship.getType().getMissleWeapon().getName() + " at " + dest +
+							" at (" + closest.getX() + ", " + closest.getY() + "); ";
+					
+					if(closest.getShield() > 0)
+						entry += "target's shields now at " + closest.getShield();
+					else
+						entry += "target destroyed.";
+					game.getLog().add(0, entry);
+				}
+			}
+		}
 	}
 	
 	private void addSampleData() {

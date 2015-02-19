@@ -15,7 +15,7 @@ import com.kmj.empire.common.Ship;
 public class SetAlertDialog extends JDialog implements ActionListener {
 	
 	private static final int DIALOG_WIDTH = 300;
-	private static final int DIALOG_HEIGHT = 200;
+	private static final int DIALOG_HEIGHT = 230;
 	private static final int PADDING = 35;
 	
 	private static final String ACTION_OK = "ok";
@@ -57,7 +57,7 @@ public class SetAlertDialog extends JDialog implements ActionListener {
 
 		JButton button = new JButton("OK");
 		button.setActionCommand(ACTION_OK);
-		button.setBounds((DIALOG_WIDTH / 2) - 50, 140, 100, 30);
+		button.setBounds((DIALOG_WIDTH / 2) - 50, 140, 100, button.getPreferredSize().height);
 		button.addActionListener(this);
 		add(button);
 	}
