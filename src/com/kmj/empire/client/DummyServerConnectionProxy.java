@@ -16,7 +16,6 @@ import com.kmj.empire.common.EmpireType;
 import com.kmj.empire.common.EnergyWeaponType;
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.GameService;
-import com.kmj.empire.common.MissleWeaponType;
 import com.kmj.empire.common.Planet;
 import com.kmj.empire.common.Player;
 import com.kmj.empire.common.Sector;
