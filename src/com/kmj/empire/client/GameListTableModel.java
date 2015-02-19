@@ -16,13 +16,13 @@ public class GameListTableModel extends AbstractTableModel {
 	ArrayList<Game> games;
 	String[] header;
 
-	GameListTableModel() {
+	public GameListTableModel() {
 		header = new String[2];
 		header[0] = "Name";
 		header[1] = "Players";
 	}
 
-	void setTableSource(ArrayList<Game> games) { this.games = games; }
+	public void setTableSource(ArrayList<Game> games) { this.games = games; }
 
 	@Override
 	public int getRowCount() {

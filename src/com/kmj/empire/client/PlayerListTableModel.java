@@ -13,12 +13,12 @@ public class PlayerListTableModel extends AbstractTableModel {
 	protected ArrayList<String> players;
 	protected String[] header;
 	
-	PlayerListTableModel() {
+	public PlayerListTableModel() {
 		header = new String[1];
 		header[COLUMN_NAME] = "Player List";
 	}
 	
-	void setTableSource(ArrayList<String> players) { this.players = players; }
+	public void setTableSource(ArrayList<String> players) { this.players = players; }
 	
 	@Override
 	public int getRowCount() {

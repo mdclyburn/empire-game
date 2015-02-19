@@ -16,7 +16,7 @@ public class GameLogTableModel extends AbstractTableModel {
 		header[COLUMN_ENTRY] = "Universe Log";
 	}
 
-	void setTableSource(ArrayList<String> log) { this.log = log; }
+	public void setTableSource(ArrayList<String> log) { this.log = log; }
 
 	@Override
 	public int getRowCount() {

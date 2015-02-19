@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
+import com.kmj.empire.client.ui.NewPlayerDialog;
 import com.kmj.empire.common.AlertLevel;
 import com.kmj.empire.common.AuthenticationFailedException;
 import com.kmj.empire.common.BadDestinationException;

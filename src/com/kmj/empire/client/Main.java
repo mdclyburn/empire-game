@@ -1,5 +1,7 @@
 package com.kmj.empire.client;
 
+import com.kmj.empire.client.ui.ServerConnectionWindow;
+
 public class Main {
 
 	public static void main(String[] args) {
