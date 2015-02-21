@@ -10,7 +10,6 @@ public class PlayerListTableModel extends AbstractTableModel {
 
 	public static final int COLUMN_NAME = 0;
 	
-	protected ArrayList<String> players;
 	protected String[] header;
 	
 	public PlayerListTableModel() {
@@ -18,10 +17,9 @@ public class PlayerListTableModel extends AbstractTableModel {
 		header[COLUMN_NAME] = "Player List";
 	}
 	
-	public void setTableSource(ArrayList<String> players) { this.players = players; }
-	
 	@Override
 	public int getRowCount() {
+		ArrayList<Player> players = Session.getInstance().getGame().getActivePlayers();
 		return (players != null ? players.size() : 0);
 	}
 	
@@ -39,7 +37,7 @@ public class PlayerListTableModel extends AbstractTableModel {
 	@Override
 	public Object getValueAt(int row, int column) {
 		switch(column) {
-		case COLUMN_NAME: return players.get(row);
+		case COLUMN_NAME: return Session.getInstance().getGame().getActivePlayers().get(row).getUserame();
 		default:
 			System.out.println("Invalid row-column query: " + row + "-" + column + ".");
 			return null;

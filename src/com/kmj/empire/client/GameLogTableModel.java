@@ -8,7 +8,6 @@ public class GameLogTableModel extends AbstractTableModel {
 
 	protected static final int COLUMN_ENTRY = 0;
 
-	protected ArrayList<String> log;
 	protected String[] header;
 
 	public GameLogTableModel() {
@@ -16,10 +15,9 @@ public class GameLogTableModel extends AbstractTableModel {
 		header[COLUMN_ENTRY] = "Universe Log";
 	}
 
-	public void setTableSource(ArrayList<String> log) { this.log = log; }
-
 	@Override
 	public int getRowCount() {
+		ArrayList<String> log = Session.getInstance().getGame().getLog();
 		return (log != null ? log.size() : 0);
 	}
 
@@ -36,7 +34,7 @@ public class GameLogTableModel extends AbstractTableModel {
 	@Override
 	public Object getValueAt(int row, int column) {
 		switch(column) {
-		case COLUMN_ENTRY: return log.get(row);
+		case COLUMN_ENTRY: return Session.getInstance().getGame().getLog().get(row);
 		default:
 			System.out.println("Invalid row-column query: " + row + "-" + column + ".");
 			return null;

@@ -11,23 +11,21 @@ import javax.swing.JPanel;
 
 import com.kmj.empire.client.ActionException;
 import com.kmj.empire.client.Configuration;
+import com.kmj.empire.client.Session;
+import com.kmj.empire.client.SessionObserver;
 import com.kmj.empire.client.ShipAttributeTableModel;
 import com.kmj.empire.common.BadDestinationException;
 import com.kmj.empire.common.Base;
 import com.kmj.empire.common.ConnectionFailedException;
 import com.kmj.empire.common.Game;
-import com.kmj.empire.common.GameService;
 import com.kmj.empire.common.Planet;
 import com.kmj.empire.common.Sector;
 import com.kmj.empire.common.Ship;
 
-public class SectorView extends JPanel implements MouseListener {
+public class SectorView extends JPanel implements SessionObserver, MouseListener {
 	
 	protected Sector sector;
 
-	protected int sessionId;
-	protected Game game;
-	protected GameService server;
 	protected GameWindow parent;
 	protected JLabel status;
 	
@@ -44,13 +42,9 @@ public class SectorView extends JPanel implements MouseListener {
 		addMouseListener(this);
 	}
 	
-	public SectorView(GameWindow parent, Game game, GameService server, int sessionId) {
+	public SectorView(GameWindow parent) {
 		this();
 		this.parent = parent;
-		this.game = game;
-		this.server = server;
-		this.sessionId = sessionId;
-		this.status = status;
 	}
 	
 	public void setSector(Sector sector) {
@@ -86,6 +80,7 @@ public class SectorView extends JPanel implements MouseListener {
 		}
 		
 		// Draw sector contents.
+		Game game = Session.getInstance().getGame();
 		if(sector == null) return;
 		else {
 			// Draw planets.
@@ -127,11 +122,23 @@ public class SectorView extends JPanel implements MouseListener {
 			}
 		}
 	}
+	
+	@Override
+	public void onIdChanged(int newId) {
+		
+	}
+	
+	@Override
+	public void onGameChanged(Game newGame) {
+		repaint();
+	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		int x = (e.getX() / (getWidth() / 8)) + 1;
 		int y = (e.getY() / (getHeight() / 8)) + 1;
+		
+		Game game = Session.getInstance().getGame();
 		
 		// Scanner Mode
 		if(mode == MODE_SCANNER) {
@@ -146,7 +153,7 @@ public class SectorView extends JPanel implements MouseListener {
 		else if(mode == MODE_NAVIGATE) {
 			// Send message to server.
 			try {
-				server.navigate(sessionId, x, y);
+				Session.getInstance().navigate(x, y);
 				parent.refresh();
 			} catch (BadDestinationException b) {
 				JOptionPane.showMessageDialog(this, b.getMessage(), "Navigation Error", JOptionPane.ERROR_MESSAGE);
@@ -162,7 +169,7 @@ public class SectorView extends JPanel implements MouseListener {
 			// Sent message to server.
 			try {
 				Ship playerShip = game.getPlayerShip(Configuration.getInstance().getUsername());
-				server.fireTorpedo(sessionId, playerShip.getSector(), x, y);
+				Session.getInstance().fireTorpedo(playerShip.getSector(), x, y);
 				parent.refresh();
 			}
 			catch(ActionException a) {

@@ -222,9 +222,6 @@ public class DummyServerConnectionProxy implements GameService {
 		return sessions.get(sessionId);
 	}
 
-	// Hand over the list of active Games. The list is prefabricated for
-	// the purposes of this class and do not represent actual, live
-	// Games.
 	@Override
 	public ArrayList<Game> getGamesList(int sessionId) throws AuthenticationFailedException, ConnectionFailedException {
 		return gameList;
