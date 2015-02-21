@@ -128,11 +128,6 @@ public class GameServiceImpl implements GameService {
 		
 		return 0;
 	}
-
-	@Override
-	public void joinGame(int sessionId, String name)
-			throws ConnectionFailedException {
-	}
 	
 	@Override
 	public ArrayList<Game> getGamesList(int sessionId)
@@ -162,6 +157,11 @@ public class GameServiceImpl implements GameService {
 	@Override
 	public void fireTorpedo(int sessionId, Sector sector, int x, int y)
 			throws ActionException, ConnectionFailedException {
+	}
+
+	@Override
+	public void joinGame(int sessionId, int id)
+			throws ConnectionFailedException {
 	}
 
 }

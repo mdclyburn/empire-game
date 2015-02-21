@@ -126,7 +126,7 @@ class User implements Runnable {
 				} break;
 				
 				case 6: try {
-					getGameService().joinGame(code, null);
+					getGameService().joinGame(code, 0);
 				} catch (ConnectionFailedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

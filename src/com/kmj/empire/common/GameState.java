@@ -69,10 +69,11 @@ public class GameState {
 		for (Ship s: game.getPropertyMapping().keySet()) {
 			propertyMapping.put(s.toString(), game.getPropertyMapping().get(s));
 		}
-		
 	}
 	
-	public Game toGame() {
+	public Game toGame(Game game) {
+		//empty game
+		
 		UniverseType universe = new UniverseType(universeName);
 		for (String s : empires) universe.getEmpireList().add(EmpireType.fromString(s));
 		for (String s : weapons) universe.getWeaponTypes().add(WeaponType.fromString(s));
@@ -80,7 +81,10 @@ public class GameState {
 			ShipType shipType = ShipType.fromString(s, universe);
 			universe.getEmpire(shipType.getEmpire().getId()).getShipTypes().add(shipType);
 		}
-		Game game = new Game(name, universe);
+		if (game == null) game = new Game(name, universe);
+		game.empty();
+		game.setName(name);
+		game.setUniverseType(universe);
 		game.setId(id);
 		game.setStardate(stardate);
 		for (String s : ships) game.addShip(Ship.fromString(s, game));

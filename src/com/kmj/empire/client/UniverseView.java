@@ -19,6 +19,8 @@ import com.kmj.empire.common.Ship;
 
 public class UniverseView extends JPanel implements MouseListener {
 	
+	private static final long serialVersionUID = -1877850654997600073L;
+	
 	protected Game game;
 	protected GameService server;
 	protected GameWindow parent;

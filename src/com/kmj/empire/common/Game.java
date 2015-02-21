@@ -67,13 +67,20 @@ public class Game {
 		return sectorGrid[x - 1][y - 1];
 	}
 	
-	public int getStardate() { return stardate; }
+	public int getStardate() { 
+		return stardate; 
+	}
 	
 	public void setStardate(int stardate) {
 		this.stardate = stardate;
 	}
+	
 	public String getName() {
 		return name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	public ArrayList<Player> getActivePlayers() {
@@ -100,18 +107,6 @@ public class Game {
 		return possessionMapping;
 	}
 
-	public HashMap<Ship, String> getPropertyMapping() {
-		return propertyMapping;
-	}
-	
-	public ArrayList<Ship> getShips() {
-		return ships;
-	}
-	
-	public HashMap<String, Ship> getPossessionMapping() {
-		return possessionMapping;
-	}
-	
 	public HashMap<Ship, String> getPropertyMapping() {
 		return propertyMapping;
 	}
@@ -201,6 +196,23 @@ public class Game {
 		
 		// Deplete the energy of anyone on red or yellow alert.
 		for(Ship s : ships) s.consumeEnergy();
+	}
+	
+	public void empty() {
+		players.removeAll(players);
+		ships.removeAll(ships);
+		bases.removeAll(bases);
+		planets.removeAll(planets);
+		log.removeAll(log);
+		possessionMapping = new HashMap<String, Ship>();
+		propertyMapping = new HashMap<Ship, String>();
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				sectorGrid[i][j].bases.removeAll(sectorGrid[i][j].bases);
+				sectorGrid[i][j].ships.removeAll(sectorGrid[i][j].ships);
+				sectorGrid[i][j].planets.removeAll(sectorGrid[i][j].planets);
+			}
+		}
 	}
 	
 }

@@ -54,7 +54,8 @@ public class JUnitTestServer {
 			
 			//get game state to check if restore successful
 			GameState gameState = gameService.getGameState(gameId);
-			Game game = gameState.toGame();
+			Game game = new Game();
+			gameState.toGame(game);
 			
 			//check header
 			assertEquals("Check game id", game.getId(), gameId);

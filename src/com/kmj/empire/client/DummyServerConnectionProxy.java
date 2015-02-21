@@ -537,12 +537,12 @@ public class DummyServerConnectionProxy implements GameService {
 					}
 					else if(closest.getAlert() == AlertLevel.YELLOW) {
 						// Damaged by 50% of the missile's yield.
-						closest.setShield(closest.getShield() - (ship.getType().getMissleWeapon().getMaxYield() / 2));
+						closest.setShield(closest.getShield() - (ship.getType().getMissileWeapon().getMaxYield() / 2));
 						if(closest.getShield() < 0) game.destroy(closest);
 					}
 					else {
 						// Damaged by 100% of the missile's yield.
-						closest.setShield(closest.getShield() - ship.getType().getMissleWeapon().getMaxYield());
+						closest.setShield(closest.getShield() - ship.getType().getMissileWeapon().getMaxYield());
 						if(closest.getShield() < 0) game.destroy(closest);
 					}
 					
@@ -552,7 +552,7 @@ public class DummyServerConnectionProxy implements GameService {
 					// Log the event.
 					String entry = game.getStardate() + ": " + ship.getType().getName() + " at (" +
 							ship.getX() + ", " + ship.getY() + ") fired " +
-							ship.getType().getMissleWeapon().getName() + " at " + dest +
+							ship.getType().getMissileWeapon().getName() + " at " + dest +
 							" at (" + closest.getX() + ", " + closest.getY() + "); ";
 					
 					if(closest.getShield() > 0)
