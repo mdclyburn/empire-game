@@ -18,7 +18,7 @@ public class MapEntity {
 	}
 
 	public void setSector(int x, int y) {
-		sector = game.getSector(x-1,y-1);
+		sector = game.getSector(x,y);
 	}
 	
 	public void setLocation(int x, int y) {

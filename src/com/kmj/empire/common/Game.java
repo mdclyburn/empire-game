@@ -12,8 +12,8 @@ public class Game {
 	private ArrayList<Base> bases;
 	private ArrayList<Planet> planets;
 	private ArrayList<String> log;
-	private HashMap<String, Ship> possessionMapping;
-	private HashMap<Ship, String> propertyMapping;
+	private HashMap<String, Integer> possessionMapping;
+	private HashMap<Integer, String> propertyMapping;
 	
 	private int stardate;
 	private Sector[][] sectorGrid;
@@ -32,8 +32,8 @@ public class Game {
 		bases = new ArrayList<Base>();
 		planets = new ArrayList<Planet>();
 		log = new ArrayList<String>();
-		possessionMapping = new HashMap<String, Ship>();
-		propertyMapping = new HashMap<Ship, String>();
+		possessionMapping = new HashMap<String, Integer>();
+		propertyMapping = new HashMap<Integer, String>();
 		name = "Empire Session";
 	}
 	
@@ -103,23 +103,38 @@ public class Game {
 		return log;
 	}
 
-	public HashMap<String, Ship> getPossessionMapping() {
+	public HashMap<String, Integer> getPossessionMapping() {
 		return possessionMapping;
 	}
 
-	public HashMap<Ship, String> getPropertyMapping() {
+	public HashMap<Integer, String> getPropertyMapping() {
 		return propertyMapping;
 	}
 	
+	public void setPossessionMapping(HashMap<String, Integer> possessionMapping) {
+		this.possessionMapping = possessionMapping;
+	}
+
+	public void setPropertyMapping(HashMap<Integer, String> propertyMapping) {
+		this.propertyMapping = propertyMapping;
+	}
+	
 	public void map(String username, Ship ship) {
-		possessionMapping.put(username, ship);
-		propertyMapping.put(ship, username);
+		possessionMapping.put(username, ship.getId());
+		propertyMapping.put(ship.getId(), username);
 	}
 	
 	public void addPlayer(Player player) {
+		
 		if(!hasPlayed(player.getUserame())) {
-			possessionMapping.put(player.getUserame(), player.getShip());
-			propertyMapping.put(player.getShip(), player.getUserame());
+			//assign the players ship a new id
+			int id = 0;
+			while (getIdShip(id) != null) id++;
+			player.getShip().setId(id);
+			
+			//add player ship relationship to mapping
+			possessionMapping.put(player.getUserame(), player.getShip().getId());
+			propertyMapping.put(player.getShip().getId(), player.getUserame());
 			sectorGrid[player.getShip().getSector().getX() - 1][player.getShip().getSector().getY() - 1].getShips().add(player.getShip());
 			ships.add(player.getShip());
 		}
@@ -156,11 +171,11 @@ public class Game {
 	}
 	
 	public Ship getPlayerShip(String player) {
-		return possessionMapping.get(player);
+		return getIdShip(possessionMapping.get(player));
 	}
 	
 	public String getOwner(Ship ship) {
-		return propertyMapping.get(ship);
+		return propertyMapping.get(ship.getId());
 	}
 	
 	public void removePlayer(String username) {
@@ -188,7 +203,7 @@ public class Game {
 				players.remove(p);
 		}
 		possessionMapping.remove(username);
-		propertyMapping.remove(ship);
+		propertyMapping.remove(ship.getId());
 	}
 	
 	public void nextStardate() {
@@ -204,8 +219,8 @@ public class Game {
 		bases.removeAll(bases);
 		planets.removeAll(planets);
 		log.removeAll(log);
-		possessionMapping = new HashMap<String, Ship>();
-		propertyMapping = new HashMap<Ship, String>();
+		possessionMapping = new HashMap<String, Integer>();
+		propertyMapping = new HashMap<Integer, String>();
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
 				sectorGrid[i][j].bases.removeAll(sectorGrid[i][j].bases);

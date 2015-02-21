@@ -94,8 +94,8 @@ public class GameServiceImpl implements GameService {
 			line = br.readLine();
 			while (!line.equals("") && line != null) {
 				Player player = Player.fromString(line, restoredGame);
-				restoredGame.getPossessionMapping().put(player.getUserame(), player.getShip());
-				restoredGame.getPropertyMapping().put(player.getShip(),player.getUserame());
+				restoredGame.getPossessionMapping().put(player.getUserame(), player.getShip().getId());
+				restoredGame.getPropertyMapping().put(player.getShip().getId(),player.getUserame());
 				restoredGame.addPlayer(player);
 				line = br.readLine();
 			}

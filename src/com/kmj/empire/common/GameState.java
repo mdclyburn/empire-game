@@ -22,8 +22,8 @@ public class GameState {
 	private ArrayList<String> bases;
 	private ArrayList<String> planets;
 	private ArrayList<String> log;
-	private HashMap<String, String> possessionMapping;
-	private HashMap<String, String> propertyMapping;
+	private HashMap<String, Integer> possessionMapping;
+	private HashMap<Integer, String> propertyMapping;
 	
 	
 	private int stardate;
@@ -36,6 +36,8 @@ public class GameState {
 		stardate = game.getStardate();
 		log = game.getLog();
 		universeName = game.getUniverse().getName();
+		possessionMapping = game.getPossessionMapping();
+		propertyMapping = game.getPropertyMapping();
 		
 		//important
 		empires = new ArrayList<String>();
@@ -45,8 +47,6 @@ public class GameState {
 		ships = new ArrayList<String>();
 		bases = new ArrayList<String>();
 		planets = new ArrayList<String>();
-		possessionMapping = new HashMap<String, String>();
-		propertyMapping = new HashMap<String, String>();
 		
 		for (EmpireType e: game.getUniverse().getEmpireList())
 			empires.add(e.toString());
@@ -63,12 +63,6 @@ public class GameState {
 			players.add(p.toString());
 		for (Planet p: game.getPlanets())
 			planets.add(p.toString());
-		for (String s: game.getPossessionMapping().keySet()) {
-			possessionMapping.put(s, game.getPossessionMapping().get(s).toString());
-		}
-		for (Ship s: game.getPropertyMapping().keySet()) {
-			propertyMapping.put(s.toString(), game.getPropertyMapping().get(s));
-		}
 	}
 	
 	public Game toGame(Game game) {
@@ -87,11 +81,9 @@ public class GameState {
 		game.setUniverseType(universe);
 		game.setId(id);
 		game.setStardate(stardate);
+		game.setPossessionMapping(possessionMapping);
+		game.setPropertyMapping(propertyMapping);
 		for (String s : ships) game.addShip(Ship.fromString(s, game));
-		for (String s : possessionMapping.keySet())
-			game.getPossessionMapping().put(s, Ship.fromString(possessionMapping.get(s), game));
-		for (String s : propertyMapping.keySet())
-			game.getPropertyMapping().put(Ship.fromString(s, game), propertyMapping.get(s));
 		for (String s : bases) game.addBase(Base.fromString(s, game));
 		for (String s : planets) game.addPlanet(Planet.fromString(s, game));
 		for (String s : players) game.addPlayer(Player.fromString(s, game));
