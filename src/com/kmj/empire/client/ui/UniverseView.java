@@ -11,19 +11,17 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import com.kmj.empire.client.Configuration;
+import com.kmj.empire.client.Session;
+import com.kmj.empire.client.SessionObserver;
 import com.kmj.empire.common.BadDestinationException;
 import com.kmj.empire.common.Base;
 import com.kmj.empire.common.ConnectionFailedException;
 import com.kmj.empire.common.Game;
-import com.kmj.empire.common.GameService;
 import com.kmj.empire.common.Ship;
 
-public class UniverseView extends JPanel implements MouseListener {
-	
-	protected Game game;
-	protected GameService server;
+public class UniverseView extends JPanel implements SessionObserver, MouseListener {
+
 	protected GameWindow parent;
-	protected int sessionId;
 	protected int selectedSectorX;
 	protected int selectedSectorY;
 	protected SectorView sectorView;
@@ -43,24 +41,21 @@ public class UniverseView extends JPanel implements MouseListener {
 		mode = MODE_SCANNER;
 	}
 	
-	public UniverseView(GameWindow parent, Game game, GameService server, int sessionId) {
+	public UniverseView(GameWindow parent) {
 		super();
 		this.parent = parent;
-		this.game = game;
-		this.server = server;
-		this.sessionId = sessionId;
 		selectedSectorX = selectedSectorY = 1;
 		addMouseListener(this);
 		
 		// Focus on sector player is in.
-		Ship ship = game.getPlayerShip(Configuration.getInstance().getUsername());
+		Ship ship = Session.getInstance().getGame().getPlayerShip(Configuration.getInstance().getUsername());
 		selectedSectorX = ship.getSector().getX();
 		selectedSectorY = ship.getSector().getY();
 	}
 	
 	public void setSectorView(SectorView sectorView) {
 		this.sectorView = sectorView;
-		sectorView.setSector(game.getSector(selectedSectorX, selectedSectorY));
+		sectorView.setSector(Session.getInstance().getGame().getSector(selectedSectorX, selectedSectorY));
 	}
 	
 	public void setMode(int mode) {
@@ -114,6 +109,8 @@ public class UniverseView extends JPanel implements MouseListener {
 		g.setColor(Color.WHITE);
 		for(int y = 0; y < 8; y++) {
 			for(int x = 0; x < 8; x++) {
+				Game game = Session.getInstance().getGame();
+				
 				// Calculate figures.
 				int planets = game.getSector(x + 1, y + 1).getPlanets().size();
 				
@@ -137,9 +134,20 @@ public class UniverseView extends JPanel implements MouseListener {
 			}
 		}
 	}
+	
+	@Override
+	public void onIdChanged(int newId) {
+		
+	}
+	
+	@Override
+	public void onGameChanged(Game newGame) {
+		repaint();
+	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		Game game = Session.getInstance().getGame();
 		selectedSectorX = (e.getX() / (getWidth() / 8)) + 1;
 		selectedSectorY = (e.getY() / (getHeight() / 8)) + 1;
 		
@@ -151,7 +159,7 @@ public class UniverseView extends JPanel implements MouseListener {
 		// Move to a new sector.
 		if(mode == MODE_WARP) {
 			try {
-				server.warp(sessionId, game.getSector(selectedSectorX, selectedSectorY));
+				Session.getInstance().warp(game.getSector(selectedSectorX, selectedSectorY));
 			} catch (BadDestinationException b) {
 				JOptionPane.showMessageDialog(this, b.getMessage(), "Warp Error", JOptionPane.ERROR_MESSAGE);
 			} catch (ConnectionFailedException c) {

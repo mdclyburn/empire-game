@@ -16,11 +16,12 @@ import javax.swing.JTable;
 import com.kmj.empire.client.Configuration;
 import com.kmj.empire.client.GameLogTableModel;
 import com.kmj.empire.client.PlayerListTableModel;
+import com.kmj.empire.client.Session;
+import com.kmj.empire.client.SessionObserver;
 import com.kmj.empire.client.ShipAttributeTableModel;
 import com.kmj.empire.common.AlertLevel;
 import com.kmj.empire.common.ConnectionFailedException;
 import com.kmj.empire.common.Game;
-import com.kmj.empire.common.GameService;
 import com.kmj.empire.common.Player;
 
 // The GameWindow is where the user will spend most of their time
@@ -28,13 +29,7 @@ import com.kmj.empire.common.Player;
 // engine and buttons at the bottom of the display to facilitate
 // user actions.
 
-public class GameWindow extends JFrame implements ActionListener, WindowListener {
-
-	protected int sessionId;
-	protected String name;
-
-	protected Game gameState;
-	protected GameService server;
+public class GameWindow extends JFrame implements SessionObserver, ActionListener, WindowListener {
 
 	protected ServerListWindow serverListWindow;
 
@@ -97,17 +92,13 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 
 	public GameWindow() {
 		super();
-		setSessionId(-1);
 		System.out.println("The default GameWindow constructor is in use. No valid\n" +
 				"session ID was given. Correct this.");
 	}
 
-	public GameWindow(int sessionId, String name, ServerListWindow serverListWindow, GameService server) {
+	public GameWindow(String name, ServerListWindow serverListWindow) {
 		super(name);
-		setSessionId(sessionId);
-		setName(name);
 		this.serverListWindow = serverListWindow;
-		this.server = server;
 		launch();
 	}
 
@@ -118,20 +109,20 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 		setLayout(null);
 		addWindowListener(this);
 
-		// Retrieve information from server.
+		// Get the initial state from the server.
 		try {
-			gameState = server.getGameState(sessionId);
+			Session.getInstance().refresh();
 		} catch (ConnectionFailedException e) {
 			JOptionPane.showMessageDialog(this, e.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
 			System.exit(-1);
 		}
 
 		// Update views.
-		universeView = new UniverseView(this, gameState, server, sessionId);
+		universeView = new UniverseView(this);
 		universeView.setBounds(UNIVERSE_VIEW_X, UNIVERSE_VIEW_Y, DISPLAY_WIDTH, DISPLAY_HEIGHT);
 		add(universeView);
 
-		sectorView = new SectorView(this, gameState, server, sessionId);
+		sectorView = new SectorView(this);
 		sectorView.setBounds(SECTOR_VIEW_X, SECTOR_VIEW_Y, DISPLAY_WIDTH, DISPLAY_HEIGHT);
 		add(sectorView);
 
@@ -139,14 +130,12 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 		// changes to universe view can be reflected in the
 		// sector view.
 		universeView.setSectorView(sectorView);
+		
+		Game game = Session.getInstance().getGame();
 
 		// Player List
 		playerList = new JTable();
 		playerListModel = new PlayerListTableModel();
-		ArrayList<String> names = new ArrayList<String>();
-		for (Player p : gameState.getActivePlayers())
-			names.add(p.getUserame());
-		playerListModel.setTableSource(names);
 		playerList.setModel(playerListModel);
 		playerList.setBounds(PLAYER_LIST_X, PLAYER_LIST_Y, PLAYER_LIST_WIDTH, PLAYER_LIST_HEIGHT);
 		JScrollPane jsp = new JScrollPane(playerList);
@@ -156,7 +145,6 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 		// Game log
 		gameLog = new JTable();
 		gameLogModel = new GameLogTableModel();
-		gameLogModel.setTableSource(gameState.getLog());
 		gameLog.setModel(gameLogModel);
 		gameLog.setBounds(GAME_LOG_X, GAME_LOG_Y, GAME_LOG_WIDTH, GAME_LOG_HEIGHT);
 		jsp = new JScrollPane(gameLog);
@@ -164,7 +152,7 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 		add(jsp);
 
 		// Stardate display
-		stardate = new JLabel("Stardate " + Integer.toString(gameState.getStardate()));
+		stardate = new JLabel("Stardate " + Integer.toString(game.getStardate()));
 		stardate.setBounds(gameLog.getX() + gameLog.getWidth() + PADDING, GAME_LOG_Y, WINDOW_WIDTH - GAME_LOG_WIDTH - (3 * PADDING), stardate.getPreferredSize().height);
 		add(stardate);
 
@@ -178,7 +166,7 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 		// Ship Attributes
 		shipAttributes = new JTable();
 		shipAttributeModel = new ShipAttributeTableModel();
-		shipAttributeModel.setTableSource(gameState.getPlayerShip(Configuration.getInstance().getUsername()));
+		shipAttributeModel.setTableSource(game.getPlayerShip(Configuration.getInstance().getUsername()));
 		shipAttributes.setBounds(SHIP_ATTR_X, SHIP_ATTR_Y, SHIP_ATTR_WIDTH, SHIP_ATTR_HEIGHT);
 		shipAttributes.setModel(shipAttributeModel);
 		jsp = new JScrollPane(shipAttributes, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -225,30 +213,44 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 
 		setVisible(true);
 	}
+	
+	@Override
+	public void onIdChanged(int newId) {}
+	
+	@Override
+	public void onGameChanged(Game newGame) {
+		// See if the player is still alive.
+		Session session = Session.getInstance();
+		String username = Configuration.getInstance().getUsername();
+		if(Session.getInstance().getGame().getPlayerShip(username) == null) {
+			JOptionPane.showMessageDialog(this, "Your ship has been destroyed.", "Game Over", JOptionPane.INFORMATION_MESSAGE);
+			dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+		}
+		
+		// Set the stardate.
+		stardate.setText("Stardate " + Integer.toString(session.getGame().getStardate()));
+	}
 
 	// Update statuses.
 	public void refresh() {
 		// Get game state from server.
+		Session session = Session.getInstance();
 		try {
-			gameState = server.getGameState(sessionId);
+			session.refresh();
 		} catch (ConnectionFailedException e) {
 			JOptionPane.showMessageDialog(this, e.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
 		}
 		// See if player is still alive.
-		if(gameState.getPlayerShip(Configuration.getInstance().getUsername()) == null) {
+		if(Session.getInstance().getGame().getPlayerShip(Configuration.getInstance().getUsername()) == null) {
 			JOptionPane.showMessageDialog(this, "Your ship has been destroyed.", "Game Over", JOptionPane.INFORMATION_MESSAGE);
 			dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 		}
 
 		// Set stardate
-		stardate.setText("Stardate " + Integer.toString(gameState.getStardate()));
+		stardate.setText("Stardate " + Integer.toString(session.getGame().getStardate()));
 
-		// Update player list.
-		ArrayList<String> names = new ArrayList<String>();
-		for (Player p : gameState.getActivePlayers())
-			names.add(p.getUserame());
-		playerListModel.setTableSource(names);
 
+		// Update tables.
 		playerListModel.fireTableDataChanged();
 		gameLogModel.fireTableDataChanged();
 		shipAttributeModel.fireTableDataChanged();
@@ -260,11 +262,12 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 
 	public void actionPerformed(ActionEvent e) {
 		String s = e.getActionCommand();
+		Game game = Session.getInstance().getGame();
 
 		if(s.equals(ACTION_IMPULSE)) {
 			actionStatus.setText("Impulse Movement");
 			// Switch view to current sector.
-			sectorView.setSector(gameState.getPlayerShip(Configuration.getInstance().getUsername()).getSector());
+			sectorView.setSector(game.getPlayerShip(Configuration.getInstance().getUsername()).getSector());
 
 			sectorView.setMode(SectorView.MODE_NAVIGATE);
 		}
@@ -275,13 +278,13 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 		else if(s.equals(ACTION_MISSILE)) {
 			actionStatus.setText("Readying Missile...");
 			// Switch view to current sector.
-			sectorView.setSector(gameState.getPlayerShip(Configuration.getInstance().getUsername()).getSector());
+			sectorView.setSector(game.getPlayerShip(Configuration.getInstance().getUsername()).getSector());
 
 			sectorView.setMode(SectorView.MODE_MISSILE);
 		}
 		else if(s.equals(ACTION_ALERT)) {
 			actionStatus.setText("Going on Alert...");
-			SetAlertDialog sad = new SetAlertDialog(this, "Set Alert Level", gameState.getPlayerShip(Configuration.getInstance().getUsername()));
+			SetAlertDialog sad = new SetAlertDialog(this, "Set Alert Level", game.getPlayerShip(Configuration.getInstance().getUsername()));
 			sad.setVisible(true);
 			AlertLevel level;
 			String result = sad.getChoice();
@@ -294,7 +297,7 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 			else return;
 
 			try {
-				server.setAlertLevel(sessionId, level);
+				Session.getInstance().setAlertLevel(level);
 			} catch (ConnectionFailedException c) {
 				JOptionPane.showMessageDialog(this, c.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
 			}
@@ -311,16 +314,10 @@ public class GameWindow extends JFrame implements ActionListener, WindowListener
 		return;
 	}
 
-	public int getSessionId() { return sessionId; }
-	public String getName() { return name; }
-
-	public void setSessionId(int sessionId) { this.sessionId = sessionId; }
-	public void setName(String name) { this.name = name; }
-
 	@Override
 	public void windowClosing(WindowEvent e) {
 		try {
-			server.disconnect(sessionId);
+			Session.getInstance().disconnect();
 		} catch (ConnectionFailedException c) {
 			JOptionPane.showMessageDialog(this, c.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
 		}
