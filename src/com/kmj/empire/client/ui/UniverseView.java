@@ -117,6 +117,9 @@ public class UniverseView extends JPanel implements SessionObserver, MouseListen
 		g.drawLine(bottomLeft.width, bottomLeft.height, bottomRight.width, bottomRight.height);
 		g.drawLine(bottomRight.width, bottomRight.height, topRight.width, topRight.height);
 		
+		// Quit at this point if the player is dead.
+		if(Session.getInstance().isGameOver()) return;
+		
 		// Display information.
 		g.setColor(Color.WHITE);
 		for(int y = 0; y < 8; y++) {

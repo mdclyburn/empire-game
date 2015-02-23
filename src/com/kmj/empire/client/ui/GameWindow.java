@@ -225,23 +225,17 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 	
 	@Override
 	public void onGameChanged(Game newGame) {
-		// See if the player is still alive.
-		Session session = Session.getInstance();
-		String username = Configuration.getInstance().getUsername();
-		if(Session.getInstance().getGame().getPlayerShip(username) == null) {
-			JOptionPane.showMessageDialog(this, "Your ship has been destroyed.", "Game Over", JOptionPane.INFORMATION_MESSAGE);
-			dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-		}
+		// See if the player is still alive.\
+		checkGameOver();
 		
 		// Set the stardate.
-		stardate.setText("Stardate " + Integer.toString(session.getGame().getStardate()));
-		checkGameOver();
+		stardate.setText("Stardate " + Integer.toString(Session.getInstance().getGame().getStardate()));
 	}
 
 	// Update statuses.
 	private void checkGameOver() {
 		// See if player is still alive.
-		if(Session.getInstance().getGame().getPlayerShip(Configuration.getInstance().getUsername()) == null) {
+		if(Session.getInstance().isGameOver()) {
 			JOptionPane.showMessageDialog(this, "Your ship has been destroyed.", "Game Over", JOptionPane.INFORMATION_MESSAGE);
 			dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 		}

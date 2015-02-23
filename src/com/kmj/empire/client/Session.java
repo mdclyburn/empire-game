@@ -80,6 +80,11 @@ public class Session {
 		observers.remove(o);
 	}
 	
+	// Provide users an easy way to check for 'Game Over'.
+	public boolean isGameOver() {
+		return (game.getPlayerShip(Configuration.getInstance().getUsername()) == null);
+	}
+	
 	// Functions that call down to the GameService, providing
 	// all the necessary boilerplate.
 	

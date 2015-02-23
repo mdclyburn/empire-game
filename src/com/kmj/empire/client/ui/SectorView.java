@@ -91,6 +91,9 @@ public class SectorView extends JPanel implements SessionObserver, MouseListener
 				g.fillOval(x, y, getWidth() / 8 / 3, getHeight() / 8 / 3);
 			}
 			
+			// Bail if game is over.
+			if(Session.getInstance().isGameOver()) return;
+			
 			// Draw ships.
 			String username = Configuration.getInstance().getUsername();
 			// Make sure player's ship exists.
