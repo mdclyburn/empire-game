@@ -3,9 +3,10 @@ package com.kmj.empire.client;
 import javax.swing.table.AbstractTableModel;
 
 import com.kmj.empire.common.AlertLevel;
+import com.kmj.empire.common.Game;
 import com.kmj.empire.common.Ship;
 
-public class ShipAttributeTableModel extends AbstractTableModel {
+public class ShipAttributeTableModel extends AbstractTableModel implements SessionObserver {
 	
 	protected Ship ship;
 	protected String[] header;
@@ -47,6 +48,16 @@ public class ShipAttributeTableModel extends AbstractTableModel {
 		else if(row == 1) return "Energy: " + ship.getEnergy();
 		else if(row == 2) return "Alert: " + ship.getAlertLevel();
 		else return "Shield: " + (ship.getShieldLevel() > 0 ? ship.getShieldLevel() : "-1");
+	}
+	
+	@Override
+	public void onIdChanged(int newId) {
+		
+	}
+	
+	@Override
+	public void onGameChanged(Game newGame) {
+		fireTableDataChanged();
 	}
 
 }

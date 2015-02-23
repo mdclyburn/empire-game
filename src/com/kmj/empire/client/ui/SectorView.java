@@ -40,6 +40,7 @@ public class SectorView extends JPanel implements SessionObserver, MouseListener
 	public SectorView() {
 		super();
 		addMouseListener(this);
+		Session.getInstance().addObserver(this);
 	}
 	
 	public SectorView(GameWindow parent) {
@@ -154,7 +155,6 @@ public class SectorView extends JPanel implements SessionObserver, MouseListener
 			// Send message to server.
 			try {
 				Session.getInstance().navigate(x, y);
-				parent.refresh();
 			} catch (BadDestinationException b) {
 				JOptionPane.showMessageDialog(this, b.getMessage(), "Navigation Error", JOptionPane.ERROR_MESSAGE);
 			} catch (ConnectionFailedException c) {
@@ -170,7 +170,6 @@ public class SectorView extends JPanel implements SessionObserver, MouseListener
 			try {
 				Ship playerShip = game.getPlayerShip(Configuration.getInstance().getUsername());
 				Session.getInstance().fireTorpedo(playerShip.getSector(), x, y);
-				parent.refresh();
 			}
 			catch(ActionException a) {
 				JOptionPane.showMessageDialog(this, a.getMessage(), "Action Error", JOptionPane.ERROR_MESSAGE);

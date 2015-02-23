@@ -72,6 +72,14 @@ public class Session {
 		this.provider = provider;
 	}
 	
+	public void addObserver(SessionObserver o) {
+		observers.add(o);
+	}
+	
+	public void removeObserver(SessionObserver o) {
+		observers.remove(o);
+	}
+	
 	// Functions that call down to the GameService, providing
 	// all the necessary boilerplate.
 	

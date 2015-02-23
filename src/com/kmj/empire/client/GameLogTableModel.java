@@ -4,7 +4,9 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
-public class GameLogTableModel extends AbstractTableModel {
+import com.kmj.empire.common.Game;
+
+public class GameLogTableModel extends AbstractTableModel implements SessionObserver{
 
 	protected static final int COLUMN_ENTRY = 0;
 
@@ -39,6 +41,16 @@ public class GameLogTableModel extends AbstractTableModel {
 			System.out.println("Invalid row-column query: " + row + "-" + column + ".");
 			return null;
 		}
+	}
+	
+	@Override
+	public void onIdChanged(int newId) {
+		
+	}
+	
+	@Override
+	public void onGameChanged(Game newGame) {
+		fireTableDataChanged();
 	}
 
 }

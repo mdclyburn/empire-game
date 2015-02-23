@@ -210,6 +210,12 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 		refreshButton.setActionCommand(ACTION_REFRESH);
 		refreshButton.addActionListener(this);
 		add(refreshButton);
+		
+		// Listen for changes.
+		Session.getInstance().addObserver(this);
+		Session.getInstance().addObserver(playerListModel);
+		Session.getInstance().addObserver(playerListModel);
+		Session.getInstance().addObserver(gameLogModel);
 
 		setVisible(true);
 	}
@@ -229,35 +235,16 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 		
 		// Set the stardate.
 		stardate.setText("Stardate " + Integer.toString(session.getGame().getStardate()));
+		checkGameOver();
 	}
 
 	// Update statuses.
-	public void refresh() {
-		// Get game state from server.
-		Session session = Session.getInstance();
-		try {
-			session.refresh();
-		} catch (ConnectionFailedException e) {
-			JOptionPane.showMessageDialog(this, e.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
-		}
+	private void checkGameOver() {
 		// See if player is still alive.
 		if(Session.getInstance().getGame().getPlayerShip(Configuration.getInstance().getUsername()) == null) {
 			JOptionPane.showMessageDialog(this, "Your ship has been destroyed.", "Game Over", JOptionPane.INFORMATION_MESSAGE);
 			dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 		}
-
-		// Set stardate
-		stardate.setText("Stardate " + Integer.toString(session.getGame().getStardate()));
-
-
-		// Update tables.
-		playerListModel.fireTableDataChanged();
-		gameLogModel.fireTableDataChanged();
-		shipAttributeModel.fireTableDataChanged();
-
-		// Repaint universe and sector views.
-		universeView.repaint();
-		sectorView.repaint();
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -302,12 +289,15 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 				JOptionPane.showMessageDialog(this, c.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
 			}
 			actionStatus.setText("Idling");
-
-			refresh();
 		}
 		else if(s.equals(ACTION_REFRESH)) {
 			actionStatus.setText("Refreshing...");
-			refresh();
+			try {
+				Session.getInstance().refresh();
+			} catch (ConnectionFailedException c) {
+				JOptionPane.showMessageDialog(this, c.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
+				
+			}
 			actionStatus.setText("Idling");
 		}
 

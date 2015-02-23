@@ -21,31 +21,43 @@ import com.kmj.empire.common.Ship;
 
 public class UniverseView extends JPanel implements SessionObserver, MouseListener {
 
-	protected GameWindow parent;
 	protected int selectedSectorX;
 	protected int selectedSectorY;
-	protected SectorView sectorView;
+
 	protected JLabel status;
-	
-	protected int mode;
+	protected GameWindow parent;
+	protected SectorView sectorView;
 	
 	protected static final int PADDING = 5;
 	
+	// The mode of the UniverseView decides what actions the view
+	// will take when an element is selected.
+	protected int mode;
+	
+	/*
+	 * UNIVERSE VIEW MODES
+	 * ===================
+	 * MODE_SCANNER		Enables the player to view the contents of another sector.
+	 * MODE_WARP		Enables the player to move to another sector.
+	 */
 	protected static final int MODE_SCANNER = 0;
 	protected static final int MODE_WARP = 1;
 
 	public UniverseView() {
 		super();
 		selectedSectorX = selectedSectorY = 1;
-		addMouseListener(this);
 		mode = MODE_SCANNER;
+		addMouseListener(this);
+		Session.getInstance().addObserver(this);
 	}
 	
 	public UniverseView(GameWindow parent) {
 		super();
 		this.parent = parent;
 		selectedSectorX = selectedSectorY = 1;
+		mode = MODE_SCANNER;
 		addMouseListener(this);
+		Session.getInstance().addObserver(this);
 		
 		// Focus on sector player is in.
 		Ship ship = Session.getInstance().getGame().getPlayerShip(Configuration.getInstance().getUsername());
@@ -154,6 +166,7 @@ public class UniverseView extends JPanel implements SessionObserver, MouseListen
 		// Notify the sector view of the new sector selection.
 		if(mode == MODE_SCANNER) {
 			sectorView.setSector(game.getSector(selectedSectorX, selectedSectorY));
+			repaint();
 		}
 		
 		// Move to a new sector.
@@ -169,7 +182,6 @@ public class UniverseView extends JPanel implements SessionObserver, MouseListen
 			mode = MODE_SCANNER;
 			status.setText("Idling");
 		}
-		parent.refresh();
 		
 		return;
 	}
