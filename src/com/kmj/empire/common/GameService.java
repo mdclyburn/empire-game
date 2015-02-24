@@ -2,7 +2,7 @@ package com.kmj.empire.common;
 
 import java.util.ArrayList;
 
-import com.kmj.empire.client.ActionException;
+import com.kmj.empire.client.controller.ActionException;
 
 public interface GameService {
 	

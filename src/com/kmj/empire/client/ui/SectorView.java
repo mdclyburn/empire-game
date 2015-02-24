@@ -1,4 +1,4 @@
-package com.kmj.empire.client;
+package com.kmj.empire.client.ui;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -9,22 +9,23 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import com.kmj.empire.client.controller.ActionException;
+import com.kmj.empire.client.controller.Configuration;
+import com.kmj.empire.client.controller.Session;
+import com.kmj.empire.client.controller.SessionObserver;
+import com.kmj.empire.client.ui.model.ShipAttributeTableModel;
 import com.kmj.empire.common.BadDestinationException;
 import com.kmj.empire.common.Base;
 import com.kmj.empire.common.ConnectionFailedException;
 import com.kmj.empire.common.Game;
-import com.kmj.empire.common.GameService;
 import com.kmj.empire.common.Planet;
 import com.kmj.empire.common.Sector;
 import com.kmj.empire.common.Ship;
 
-public class SectorView extends JPanel implements MouseListener {
+public class SectorView extends JPanel implements SessionObserver, MouseListener {
 	
 	protected Sector sector;
 
-	protected int sessionId;
-	protected Game game;
-	protected GameService server;
 	protected GameWindow parent;
 	protected JLabel status;
 	
@@ -39,15 +40,12 @@ public class SectorView extends JPanel implements MouseListener {
 	public SectorView() {
 		super();
 		addMouseListener(this);
+		Session.getInstance().addObserver(this);
 	}
 	
-	public SectorView(GameWindow parent, Game game, GameService server, int sessionId) {
+	public SectorView(GameWindow parent) {
 		this();
 		this.parent = parent;
-		this.game = game;
-		this.server = server;
-		this.sessionId = sessionId;
-		this.status = status;
 	}
 	
 	public void setSector(Sector sector) {
@@ -83,6 +81,7 @@ public class SectorView extends JPanel implements MouseListener {
 		}
 		
 		// Draw sector contents.
+		Game game = Session.getInstance().getGame();
 		if(sector == null) return;
 		else {
 			// Draw planets.
@@ -91,6 +90,9 @@ public class SectorView extends JPanel implements MouseListener {
 				int y = (p.getY() - 1) * (getHeight() / 8) + (getHeight() / 8 / 2) - (getHeight() / 8 / 3 / 2);
 				g.fillOval(x, y, getWidth() / 8 / 3, getHeight() / 8 / 3);
 			}
+			
+			// Bail if game is over.
+			if(Session.getInstance().isGameOver()) return;
 			
 			// Draw ships.
 			String username = Configuration.getInstance().getUsername();
@@ -124,11 +126,23 @@ public class SectorView extends JPanel implements MouseListener {
 			}
 		}
 	}
+	
+	@Override
+	public void onIdChanged(int newId) {
+		
+	}
+	
+	@Override
+	public void onGameChanged(Game newGame) {
+		repaint();
+	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		int x = (e.getX() / (getWidth() / 8)) + 1;
 		int y = (e.getY() / (getHeight() / 8)) + 1;
+		
+		Game game = Session.getInstance().getGame();
 		
 		// Scanner Mode
 		if(mode == MODE_SCANNER) {
@@ -143,8 +157,7 @@ public class SectorView extends JPanel implements MouseListener {
 		else if(mode == MODE_NAVIGATE) {
 			// Send message to server.
 			try {
-				server.navigate(sessionId, x, y);
-				parent.refresh();
+				Session.getInstance().navigate(x, y);
 			} catch (BadDestinationException b) {
 				JOptionPane.showMessageDialog(this, b.getMessage(), "Navigation Error", JOptionPane.ERROR_MESSAGE);
 			} catch (ConnectionFailedException c) {
@@ -159,8 +172,7 @@ public class SectorView extends JPanel implements MouseListener {
 			// Sent message to server.
 			try {
 				Ship playerShip = game.getPlayerShip(Configuration.getInstance().getUsername());
-				server.fireTorpedo(sessionId, playerShip.getSector(), x, y);
-				parent.refresh();
+				Session.getInstance().fireTorpedo(playerShip.getSector(), x, y);
 			}
 			catch(ActionException a) {
 				JOptionPane.showMessageDialog(this, a.getMessage(), "Action Error", JOptionPane.ERROR_MESSAGE);

@@ -1,4 +1,4 @@
-package com.kmj.empire.client;
+ package com.kmj.empire.client.ui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,7 +10,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -19,10 +18,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import com.kmj.empire.client.controller.Session;
+import com.kmj.empire.client.ui.model.GameListTableModel;
 import com.kmj.empire.common.AuthenticationFailedException;
 import com.kmj.empire.common.ConnectionFailedException;
-import com.kmj.empire.common.Game;
-import com.kmj.empire.common.GameService;
 import com.kmj.empire.common.InvalidGameFileException;
 
 // A window that displays a list of games present
@@ -30,11 +29,6 @@ import com.kmj.empire.common.InvalidGameFileException;
 // the client queries the server.
 
 public class ServerListWindow extends JFrame implements ActionListener, MouseListener, WindowListener {
-
-	protected int sessionId;
-	protected ArrayList<Game> gameList;
-	
-	protected GameService server;
 	
 	protected JTable table;
 	protected GameListTableModel model;
@@ -60,13 +54,6 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 
 	public ServerListWindow() {
 		super();
-		sessionId = -1;
-	}
-	
-	public ServerListWindow(int sessionId, GameService server) {
-		super();
-		this.sessionId = sessionId;
-		this.server = server;
 		launch();
 	}
 	
@@ -131,11 +118,11 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 		return;
 	}
 	
-	public void setSessionId(int sessionId) { this.sessionId = sessionId; }
-	
 	protected void refresh() {
 		// Get new list from server.
-		try { model.setTableSource(server.getGamesList(sessionId)); }
+		try {
+			model.setTableSource(Session.getInstance().getGamesList());
+		}
 		catch(AuthenticationFailedException e) {
 			JOptionPane.showMessageDialog(this, e.getMessage(), "Authentication Error", JOptionPane.ERROR_MESSAGE);
 		}
@@ -169,14 +156,14 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 			if(gameName == null) return;
 			try {
 				System.out.println("Requesting to join game " + model.getValueAt(table.getSelectedRow(), 2));
-				server.joinGame(sessionId, (int) model.getValueAt(table.getSelectedRow(), 2));
+				Session.getInstance().joinGame((int) model.getValueAt(table.getSelectedRow(), 2));
 			} catch (ConnectionFailedException c) {
 				if(c.getMessage().length() != 0)
 					JOptionPane.showMessageDialog(this, c.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			
-			GameWindow w = new GameWindow(sessionId, gameName, this, server);
+			GameWindow w = new GameWindow(gameName, this);
 			setVisible(false);
 		}
 		
@@ -199,7 +186,7 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 					line = br.readLine();
 				}
 				br.close();
-				server.restoreGame(gameData);
+				Session.getInstance().restoreGame(gameData);
 			} catch (InvalidGameFileException igfe) {
 				JOptionPane.showMessageDialog(this, igfe.getMessage(), "Restoration Error", JOptionPane.ERROR_MESSAGE);
 			} catch (ConnectionFailedException c) {
@@ -237,7 +224,7 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 	@Override
 	public void windowClosing(WindowEvent e) {
 		// Reopen the server connection window.
-		ServerConnectionWindow w = new ServerConnectionWindow(server);
+		ServerConnectionWindow w = new ServerConnectionWindow();
 		
 		// Close this window.
 		dispose();

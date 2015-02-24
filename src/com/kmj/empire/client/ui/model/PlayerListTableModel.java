@@ -1,27 +1,28 @@
-package com.kmj.empire.client;
+package com.kmj.empire.client.ui.model;
 
 import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
+import com.kmj.empire.client.controller.Session;
+import com.kmj.empire.client.controller.SessionObserver;
+import com.kmj.empire.common.Game;
 import com.kmj.empire.common.Player;
 
-public class PlayerListTableModel extends AbstractTableModel {
+public class PlayerListTableModel extends AbstractTableModel implements SessionObserver {
 
 	public static final int COLUMN_NAME = 0;
 	
-	protected ArrayList<String> players;
 	protected String[] header;
 	
-	PlayerListTableModel() {
+	public PlayerListTableModel() {
 		header = new String[1];
 		header[COLUMN_NAME] = "Player List";
 	}
 	
-	void setTableSource(ArrayList<String> players) { this.players = players; }
-	
 	@Override
 	public int getRowCount() {
+		ArrayList<Player> players = Session.getInstance().getGame().getActivePlayers();
 		return (players != null ? players.size() : 0);
 	}
 	
@@ -39,10 +40,20 @@ public class PlayerListTableModel extends AbstractTableModel {
 	@Override
 	public Object getValueAt(int row, int column) {
 		switch(column) {
-		case COLUMN_NAME: return players.get(row);
+		case COLUMN_NAME: return Session.getInstance().getGame().getActivePlayers().get(row).getUserame();
 		default:
 			System.out.println("Invalid row-column query: " + row + "-" + column + ".");
 			return null;
 		}
+	}
+	
+	@Override
+	public void onIdChanged(int newId) {
+		
+	}
+	
+	@Override
+	public void onGameChanged(Game newGame) {
+		fireTableDataChanged();
 	}
 }

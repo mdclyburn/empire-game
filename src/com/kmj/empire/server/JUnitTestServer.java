@@ -10,7 +10,7 @@ import java.net.Socket;
 
 import org.junit.Test;
 
-import com.kmj.empire.client.GameServiceProxy;
+import com.kmj.empire.client.controller.GameServiceProxy;
 import com.kmj.empire.common.ConnectionFailedException;
 import com.kmj.empire.common.GameService;
 import com.kmj.empire.common.InvalidGameFileException;

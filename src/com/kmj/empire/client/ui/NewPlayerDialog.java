@@ -1,4 +1,4 @@
-package com.kmj.empire.client;
+package com.kmj.empire.client.ui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

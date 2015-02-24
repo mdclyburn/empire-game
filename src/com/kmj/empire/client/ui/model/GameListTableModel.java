@@ -1,4 +1,4 @@
-package com.kmj.empire.client;
+package com.kmj.empire.client.ui.model;
 
 import java.util.ArrayList;
 
@@ -8,21 +8,21 @@ import javax.swing.table.AbstractTableModel;
 import com.kmj.empire.common.Game;
 
 public class GameListTableModel extends AbstractTableModel {
-	
+
 	public static final int COLUMN_NAME = 0;
 	public static final int COLUMN_PLAYERS = 1;
 	public static final int COLUMN_ID = 2;
-	
+
 	ArrayList<Game> games;
 	String[] header;
-	
-	GameListTableModel() {
+
+	public GameListTableModel() {
 		header = new String[2];
 		header[0] = "Name";
 		header[1] = "Players";
 	}
-	
-	void setTableSource(ArrayList<Game> games) { this.games = games; }
+
+	public void setTableSource(ArrayList<Game> games) { this.games = games; }
 
 	@Override
 	public int getRowCount() {
@@ -37,7 +37,7 @@ public class GameListTableModel extends AbstractTableModel {
 		// 1		The number of players in an active game.
 		return 2;
 	}
-	
+
 	@Override
 	public String getColumnName(int c) { return header[c]; }
 
