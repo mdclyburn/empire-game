@@ -2,7 +2,7 @@
  * An exception that is thrown when the user provides invalid
  * input when entering configuration data in the client.
  */
-package com.kmj.empire.client;
+package com.kmj.empire.client.controller;
 
 public class BadConfigurationException extends Exception {
 

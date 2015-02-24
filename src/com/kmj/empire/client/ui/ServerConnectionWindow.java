@@ -11,10 +11,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import com.kmj.empire.client.BadConfigurationException;
-import com.kmj.empire.client.Configuration;
-import com.kmj.empire.client.DummyServerConnectionProxy;
-import com.kmj.empire.client.Session;
+import com.kmj.empire.client.controller.BadConfigurationException;
+import com.kmj.empire.client.controller.Configuration;
+import com.kmj.empire.client.controller.DummyServerConnectionProxy;
+import com.kmj.empire.client.controller.Session;
 import com.kmj.empire.common.AuthenticationFailedException;
 import com.kmj.empire.common.ConnectionFailedException;
 import com.kmj.empire.common.GameService;

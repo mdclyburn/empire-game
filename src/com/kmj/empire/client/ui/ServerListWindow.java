@@ -18,8 +18,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-import com.kmj.empire.client.GameListTableModel;
-import com.kmj.empire.client.Session;
+import com.kmj.empire.client.controller.Session;
+import com.kmj.empire.client.ui.model.GameListTableModel;
 import com.kmj.empire.common.AuthenticationFailedException;
 import com.kmj.empire.common.ConnectionFailedException;
 import com.kmj.empire.common.InvalidGameFileException;

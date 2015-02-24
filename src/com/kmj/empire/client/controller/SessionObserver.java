@@ -1,4 +1,4 @@
-package com.kmj.empire.client;
+package com.kmj.empire.client.controller;
 
 import com.kmj.empire.common.Game;
 

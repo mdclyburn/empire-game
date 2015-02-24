@@ -9,11 +9,11 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import com.kmj.empire.client.ActionException;
-import com.kmj.empire.client.Configuration;
-import com.kmj.empire.client.Session;
-import com.kmj.empire.client.SessionObserver;
-import com.kmj.empire.client.ShipAttributeTableModel;
+import com.kmj.empire.client.controller.ActionException;
+import com.kmj.empire.client.controller.Configuration;
+import com.kmj.empire.client.controller.Session;
+import com.kmj.empire.client.controller.SessionObserver;
+import com.kmj.empire.client.ui.model.ShipAttributeTableModel;
 import com.kmj.empire.common.BadDestinationException;
 import com.kmj.empire.common.Base;
 import com.kmj.empire.common.ConnectionFailedException;

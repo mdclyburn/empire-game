@@ -1,5 +1,8 @@
 package com.kmj.empire.client;
 
+import com.kmj.empire.client.controller.Configuration;
+import com.kmj.empire.client.controller.DummyServerConnectionProxy;
+import com.kmj.empire.client.controller.Session;
 import com.kmj.empire.client.ui.ServerConnectionWindow;
 
 public class Main {

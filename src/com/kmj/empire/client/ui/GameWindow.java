@@ -13,12 +13,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-import com.kmj.empire.client.Configuration;
-import com.kmj.empire.client.GameLogTableModel;
-import com.kmj.empire.client.PlayerListTableModel;
-import com.kmj.empire.client.Session;
-import com.kmj.empire.client.SessionObserver;
-import com.kmj.empire.client.ShipAttributeTableModel;
+import com.kmj.empire.client.controller.Configuration;
+import com.kmj.empire.client.controller.Session;
+import com.kmj.empire.client.controller.SessionObserver;
+import com.kmj.empire.client.ui.model.GameLogTableModel;
+import com.kmj.empire.client.ui.model.PlayerListTableModel;
+import com.kmj.empire.client.ui.model.ShipAttributeTableModel;
 import com.kmj.empire.common.AlertLevel;
 import com.kmj.empire.common.ConnectionFailedException;
 import com.kmj.empire.common.Game;

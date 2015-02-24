@@ -1,4 +1,4 @@
-package com.kmj.empire.client;
+package com.kmj.empire.client.ui.model;
 
 import java.util.ArrayList;
 

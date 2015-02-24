@@ -1,7 +1,8 @@
-package com.kmj.empire.client;
+package com.kmj.empire.client.ui.model;
 
 import javax.swing.table.AbstractTableModel;
 
+import com.kmj.empire.client.controller.SessionObserver;
 import com.kmj.empire.common.AlertLevel;
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.Ship;

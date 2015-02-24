@@ -2,7 +2,7 @@
  * An exception that is thrown when an illegal action is performed
  * by the client that is detected by the server.
  */
-package com.kmj.empire.client;
+package com.kmj.empire.client.controller;
 
 public class ActionException extends Exception {
 

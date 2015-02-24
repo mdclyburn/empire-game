@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 
-import com.kmj.empire.client.ActionException;
+import com.kmj.empire.client.controller.ActionException;
 import com.kmj.empire.common.AlertLevel;
 import com.kmj.empire.common.AuthenticationFailedException;
 import com.kmj.empire.common.BadDestinationException;

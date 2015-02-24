@@ -3,7 +3,7 @@
  * with the appropriate method call to the location specified by the String
  * CONFIGURATION_FILE.
  */
-package com.kmj.empire.client;
+package com.kmj.empire.client.controller;
 
 import java.io.File;
 import java.io.FileInputStream;

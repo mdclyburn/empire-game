@@ -1,9 +1,11 @@
-package com.kmj.empire.client;
+package com.kmj.empire.client.ui.model;
 
 import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
+import com.kmj.empire.client.controller.Session;
+import com.kmj.empire.client.controller.SessionObserver;
 import com.kmj.empire.common.Game;
 
 public class GameLogTableModel extends AbstractTableModel implements SessionObserver{
