@@ -1,0 +1,72 @@
+\chapter{Supplementary Specification}
+
+\section{Introduction}
+
+This document contains all requirements not contained in the use cases.
+
+\section{Functionality}
+
+\subsection{System Features}
+
+The Game system shall provide these features:
+
+\begin{itemize}
+	\item Players may create a universe that other players can join.
+	\item Diverse game objectives that can be chosen by a player.
+	\item A ''modifiable'' aspect where users can create their own assets and scenarios.
+	\item  multiplayer and single player turn-by-turn strategy game mechanic.
+	\item Game opponents who have their own AI.
+	\item The ability to save and load games.
+	\item Generating reports: overview and detailed report of game statistics.
+	\item Logging and Error Handling
+\end{itemize}
+
+Should an unexpected error occur:
+
+\begin{itemize}
+	\item Client log diagnostic/error information to a file
+	\item Display user friendly error message
+	\item Server has a snapshot ability to restore a game on client/server crash
+\end{itemize}
+
+\subsection{Usability}
+
+The game interface is designed such that a player who is familiar with turn based strategy games can learn how to play the game by reading the game user guide in at most five minutes.
+
+\subsection{Reliability}
+
+The game system shall perform without crashes during usage.
+
+\subsection{Performance}
+
+\begin{itemize}
+	\item One game server shall support up to 500 player clients simultaneous.
+	\item One game server shall support multiple "Universes"
+	\item One game client shall be able to join an unlimited number of game servers.
+	\item Every client action shall be acknowledged by server within one second.
+\end{itemize}
+
+\subsection{Supportability}
+
+\begin{itemize}
+	\item The game client shall allow key configuration parameters (asset folders, connection settings) to be specified in a configuration file.
+	\item Implementation Restraints
+	\item The game server shall use Java 7 as the back-end.
+	\item The game client shall use Java 7 Swing as the GUI front-end to interconnect with the back-end.
+	\item The game client/server will support any Operating System that is compatible with Java.
+\end{itemize}
+
+\subsection{Reports}
+
+The game shall provide the following reports:
+
+\begin{itemize}
+	\item Universe Status Summary
+	\begin{itemize}
+		\item For a given "Universe", this displays the statistics of in-game Players (Ships commanded, Faction) and summary of the contents of each sector with Current Star Date.
+	\end{itemize}
+	\item Sector Detail
+	\begin{itemize}
+		\item Shows a list of all entities and ship statuses within.
+	\end{itemize}
+\end{itemize}
