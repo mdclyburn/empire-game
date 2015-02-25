@@ -42,7 +42,7 @@ class User implements Runnable {
 		this.server = server;
 		this.sessionId = pid;
 
-		gameService = new GameServiceImpl(server);
+		gameService = new GameServiceImpl(server, this);
 	}
 	
 	public void run()
@@ -80,7 +80,8 @@ class User implements Runnable {
 				case -1: 
 					System.err.println("Failed to read code"); 
 					System.exit(1); 
-					
+
+				/* restoreGame() request received */
 				case 1: try {
 					System.out.println("restore game, reading utf");
 					String gameData = in.readUTF();
@@ -94,6 +95,7 @@ class User implements Runnable {
 					disconnected = true;
 				} break;
 				
+				/* getGameState() request received */
 				case 2: try {
 					int gameId = in.readInt();
 					GameState gameState = getGameService().getGameState(gameId);
@@ -103,7 +105,8 @@ class User implements Runnable {
 				} catch (IOException e) {
 					disconnected = true;
 				} break;
-				
+
+				/* getGamesList() request received */
 				case 3: try {
 					System.out.println("sending game list");
 					for (Game g : getGameService().getGamesList(code)) {
@@ -121,13 +124,19 @@ class User implements Runnable {
 				} catch (IOException e) {
 					disconnected = true;
 				} break;
-				
+
+				/* authenticate() request received */
 				case 4: try {
 					username = in.readUTF();
 					password = in.readUTF();
-					int sessionId = getGameService().authenticate(username, password);
-					if (sessionId != -1) authenticated = true;
-					out.writeInt(sessionId);
+					if (getGameService().authenticate(username, password) == 0) {
+						out.writeInt(sessionId);
+						authenticated = true;
+					}
+					else {
+						out.writeInt(-1);
+						disconnected = true;
+					}
 				} catch (AuthenticationFailedException e) {
 					disconnected = true;
 				} catch (ConnectionFailedException e) {
@@ -136,16 +145,22 @@ class User implements Runnable {
 					System.err.println("Failed to read username and password.");
 					disconnected = true;
 				} break;
-				
+
+				/* createGame() request received */
 				case 5: try {
 					getGameService().createGame();
 				} catch (ConnectionFailedException e) {
 					disconnected = true;
 				} break;
 				
+				/* Received join request */
 				case 6: try {
-					getGameService().joinGame(code, 0);
+					int gameId = in.readInt();
+					System.out.println("Joining gameid: "+gameId);
+					getGameService().joinGame(sessionId, gameId);
 				} catch (ConnectionFailedException e) {
+					disconnected = true;
+				} catch (IOException e) {
 					disconnected = true;
 				} break;
 			}

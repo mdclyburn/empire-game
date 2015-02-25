@@ -4,14 +4,17 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Random;
 
 import com.kmj.empire.client.controller.ActionException;
+import com.kmj.empire.client.ui.NewPlayerDialog;
 import com.kmj.empire.common.AlertLevel;
 import com.kmj.empire.common.Base;
 import com.kmj.empire.common.EmpireType;
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.GameService;
 import com.kmj.empire.common.GameState;
+import com.kmj.empire.common.Planet;
 import com.kmj.empire.common.Player;
 import com.kmj.empire.common.Sector;
 import com.kmj.empire.common.Ship;
@@ -25,9 +28,11 @@ import com.kmj.empire.common.exceptions.ConnectionFailedException;
 public class GameServiceImpl implements GameService {
 	
 	private Server server;
+	private User user;
 	
-	public GameServiceImpl(Server server) {
+	public GameServiceImpl(Server server, User user) {
 		this.server = server;
+		this.user = user;
 	}
 
 	@Override
@@ -118,9 +123,9 @@ public class GameServiceImpl implements GameService {
 	}
 
 	@Override
-	public int authenticate(String user, String password) {
-		
-		return 0;
+	public int authenticate(String user, String password) throws AuthenticationFailedException {
+		if (password.equals("p")) return 0;
+		else return -1;
 	}
 
 	@Override
@@ -160,8 +165,57 @@ public class GameServiceImpl implements GameService {
 	}
 
 	@Override
-	public void joinGame(int sessionId, int id)
-			throws ConnectionFailedException {
+	public void joinGame(int sessionId, int id) throws ConnectionFailedException {
+		for(Game g : server.getGamesList()) {
+			if(g.getId() == id) {
+				System.out.println("Session " + sessionId + " joining " + g.getName() + "(" + g.getId() + ").");
+
+				String username = user.getUsername();
+
+				if(g.hasPlayed(username)) {
+					Ship ship = g.getPlayerShip(username);
+					Player player = new Player(username, ship.getType().getEmpire(), ship);
+					g.addPlayer(player);
+				}
+				else {
+					System.out.println("Adding new player to game.");
+					// Get information from user
+					NewPlayerDialog d = new NewPlayerDialog(null, "New Player", g);
+					d.setVisible(true);
+					if(d.getSelectedEmpire().length() == 0) throw new ConnectionFailedException("");
+
+					// Find a random spot.
+					Random r = new Random();
+					Sector sector = null;
+					int sx, sy, x, y;
+					sx = sy = x = y = 1;
+					while(true) {
+						sx = r.nextInt(8) + 1;
+						sy = r.nextInt(8) + 1;
+						x = r.nextInt(8) + 1;
+						y = r.nextInt(8) + 1;
+						sector = g.getSector(sx, sy);
+						for(Ship s : sector.getShips()) {
+							if(s.getX() == x && s.getY() == y) continue;
+						}
+						for(Base b : sector.getBases()) {
+							if(b.getX() == x && b.getY() == y) continue;
+						}
+						for(Planet p : sector.getPlanets()) {
+							if(p.getX() == x && p.getY() == y) continue;
+						}
+
+						break;
+					}
+					System.out.println("Placing ship in " + sx + "-" + sy + ", " + x + "-" + y);
+					Ship ship = new Ship(g.getUniverse().getShip(d.getSelectedShip()), g, sector, x, y);
+					Player player = new Player(username, ship.getType().getEmpire(), ship);
+					g.addPlayer(player);
+				}
+				System.out.println("Player ship exists: "+g.getPlayerShip(username));
+				break;
+			}
+		}
 	}
 
 }

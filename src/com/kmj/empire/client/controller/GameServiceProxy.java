@@ -112,8 +112,13 @@ public class GameServiceProxy implements GameService {
 	}
 
 	@Override
-	public void joinGame(int sessionId, int id)
-			throws ConnectionFailedException {
+	public void joinGame(int sessionId, int id) throws ConnectionFailedException {
+		try {
+			out.writeInt(6);
+			out.writeInt(id);
+		} catch (IOException e) {
+			throw new ConnectionFailedException("Connection failed while joining game.");
+		}
 	}
 
 	@Override
