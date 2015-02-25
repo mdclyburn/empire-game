@@ -145,6 +145,7 @@ public class Game {
 		int x = ship.getSector().x;
 		int y = ship.getSector().y;
 		sectorGrid[x - 1][y - 1].getShips().add(ship);
+		System.out.println("adding ship to: "+x + " "+ y);
 		ships.add(ship);
 	}
 	

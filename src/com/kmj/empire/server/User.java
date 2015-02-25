@@ -25,7 +25,7 @@ class User implements Runnable {
 	
 	private boolean disconnected = false;
 	//will be false what autheniticated is truely implemented
-	private boolean autheniticated = true;
+	private boolean authenticated = false;
 	private String username, password;
 	private int sessionId;
 	private Player player;
@@ -68,8 +68,11 @@ class User implements Runnable {
 				disconnected = true;
 			}
 			
+			System.out.println("code: "+code);
+			
 			//if unauthenticated user attempts prohibited action
-			if (disconnected || (!autheniticated && code != 4)) {
+			if (disconnected || (!authenticated && code != 4)) {
+				System.out.println("ending user thread...");
 				break;
 			}
 			
@@ -102,10 +105,14 @@ class User implements Runnable {
 				} break;
 				
 				case 3: try {
+					System.out.println("sending game list");
 					for (Game g : getGameService().getGamesList(code)) {
 						out.writeUTF(new Gson().toJson(new GameState(g)));
+
+						System.out.println("sending game");
 					}
-					out.writeUTF(null);
+					out.writeUTF("");
+					System.out.println("sent game list");
 				} catch (ConnectionFailedException e) {
 					disconnected = true;
 				} catch (AuthenticationFailedException e) {
@@ -118,7 +125,9 @@ class User implements Runnable {
 				case 4: try {
 					username = in.readUTF();
 					password = in.readUTF();
-					getGameService().authenticate(username, password);
+					int sessionId = getGameService().authenticate(username, password);
+					if (sessionId != -1) authenticated = true;
+					out.writeInt(sessionId);
 				} catch (AuthenticationFailedException e) {
 					disconnected = true;
 				} catch (ConnectionFailedException e) {

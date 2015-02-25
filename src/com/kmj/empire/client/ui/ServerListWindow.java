@@ -123,6 +123,7 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 	protected void refresh() {
 		// Get new list from server.
 		try {
+			System.out.println("refreshing "+Session.getInstance().getGamesList());
 			model.setTableSource(Session.getInstance().getGamesList());
 		}
 		catch(AuthenticationFailedException e) {

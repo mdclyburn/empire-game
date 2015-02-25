@@ -163,6 +163,7 @@ public class ServerConnectionWindow extends JFrame implements ActionListener {
 				
 				// Get the session ID provided to us and hand it to the Session.
 				Session session = Session.getInstance();
+				Session.getInstance().connect();
 				int id = session.getProvider().authenticate(username, password);
 				session.setId(id);
 				ServerListWindow serverListWindow = new ServerListWindow();

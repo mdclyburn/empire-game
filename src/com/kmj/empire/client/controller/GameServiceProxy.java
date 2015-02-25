@@ -96,19 +96,19 @@ public class GameServiceProxy implements GameService {
 			throws AuthenticationFailedException, ConnectionFailedException {
 		try {
 			out.writeInt(3);
-			out.writeInt(sessionId);
 			ArrayList<Game> gamesList = new ArrayList<Game>();
 			String gameString;
-			while ((gameString = in.readUTF()) != null) {
+			while (!(gameString = in.readUTF()).equals("")) {
+				System.out.println("Received game: "+gameString);
 				Game game = null;
-				new Gson().fromJson(gameString, GameState.class).toGame(game);
+				game = new Gson().fromJson(gameString, GameState.class).toGame(game);
 				gamesList.add(game);
-				gameString = in.readUTF();
+				System.out.println("Game: "+game);
 			}
+			return gamesList;
 		} catch (IOException e) {
 			throw new ConnectionFailedException();
 		}
-		return null;
 	}
 
 	@Override

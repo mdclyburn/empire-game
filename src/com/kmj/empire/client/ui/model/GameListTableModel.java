@@ -5,10 +5,14 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 
+import com.kmj.empire.client.controller.Session;
+import com.kmj.empire.client.controller.SessionObserver;
 import com.kmj.empire.common.Game;
 
 public class GameListTableModel extends AbstractTableModel {
 
+	private static final long serialVersionUID = 8136003534138739190L;
+	
 	public static final int COLUMN_NAME = 0;
 	public static final int COLUMN_PLAYERS = 1;
 	public static final int COLUMN_ID = 2;
@@ -48,7 +52,7 @@ public class GameListTableModel extends AbstractTableModel {
 			return null;
 		}
 		switch(column) {
-		case COLUMN_NAME: return games.get(row).getName();
+		case COLUMN_NAME: System.out.println(games); return games.get(row).getName();
 		case COLUMN_PLAYERS: return games.get(row).getActivePlayers().size();
 		case COLUMN_ID: return games.get(row).getId();
 		default:

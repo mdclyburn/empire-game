@@ -1,5 +1,8 @@
 package com.kmj.empire.client.controller;
 
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import com.kmj.empire.common.AlertLevel;
@@ -126,6 +129,18 @@ public class Session {
 	public void fireTorpedo(Sector sector, int x, int y) throws ActionException, ConnectionFailedException {
 		provider.fireTorpedo(id, sector, x, y);
 		refresh();
+	}
+
+	public void connect() throws ConnectionFailedException {
+		try {
+			Socket socket = new Socket(Configuration.getInstance().getServerAddress(), Configuration.getInstance().getServerPort());
+			Session.getInstance().setProvider(new GameServiceProxy(socket));
+		} catch (UnknownHostException e) {
+			throw new ConnectionFailedException("Unknown host.");
+		} catch (IOException e) {
+			throw new ConnectionFailedException("Failed to connect to server.");
+		}
+		
 	}
 
 }
