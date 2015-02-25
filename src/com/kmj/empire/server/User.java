@@ -4,7 +4,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
 
 import com.google.gson.Gson;
 import com.kmj.empire.common.Game;
@@ -48,13 +47,6 @@ class User implements Runnable {
 	public void run()
 	{
 		System.out.println("User thread started...");
-		/* output codes */
-		/* 1 - restoreGame() */
-		/* 2 - getGameState() */
-		/* 3 - getGamesList */
-		/* 4 - authenticate */
-		/* 5 - createGame */
-		/* 6 - joinGame */
 		
 		//server loop
 		while (!Thread.interrupted()) {
@@ -71,7 +63,7 @@ class User implements Runnable {
 			System.out.println("code: "+code);
 			
 			//if unauthenticated user attempts prohibited action
-			if (disconnected || (!authenticated && code != 4)) {
+			if (disconnected || (!authenticated && code != GameService.AUTHENTICATE)) {
 				System.out.println("ending user thread...");
 				break;
 			}
@@ -82,7 +74,7 @@ class User implements Runnable {
 					System.exit(1); 
 
 				/* restoreGame() request received */
-				case 1: try {
+				case GameService.RESTORE_GAME: try {
 					System.out.println("restore game, reading utf");
 					String gameData = in.readUTF();
 					int gameId = getGameService().restoreGame(gameData);
@@ -96,7 +88,7 @@ class User implements Runnable {
 				} break;
 				
 				/* getGameState() request received */
-				case 2: try {
+				case GameService.GET_GAME_STATE: try {
 					int gameId = in.readInt();
 					GameState gameState = getGameService().getGameState(gameId);
 					out.writeUTF(new Gson().toJson(gameState));
@@ -107,7 +99,7 @@ class User implements Runnable {
 				} break;
 
 				/* getGamesList() request received */
-				case 3: try {
+				case GameService.GET_GAMES_LIST: try {
 					System.out.println("sending game list");
 					for (Game g : getGameService().getGamesList(code)) {
 						out.writeUTF(new Gson().toJson(new GameState(g)));
@@ -126,7 +118,7 @@ class User implements Runnable {
 				} break;
 
 				/* authenticate() request received */
-				case 4: try {
+				case GameService.AUTHENTICATE: try {
 					username = in.readUTF();
 					password = in.readUTF();
 					if (getGameService().authenticate(username, password) == 0) {
@@ -147,14 +139,14 @@ class User implements Runnable {
 				} break;
 
 				/* createGame() request received */
-				case 5: try {
+				case GameService.CREATE_GAME: try {
 					getGameService().createGame();
 				} catch (ConnectionFailedException e) {
 					disconnected = true;
 				} break;
 				
 				/* Received join request */
-				case 6: try {
+				case GameService.JOIN_GAME: try {
 					int gameId = in.readInt();
 					System.out.println("Joining gameid: "+gameId);
 					getGameService().joinGame(sessionId, gameId);

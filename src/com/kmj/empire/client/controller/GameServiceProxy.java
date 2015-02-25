@@ -40,7 +40,7 @@ public class GameServiceProxy implements GameService {
 		//send info to server
 		try {
 			//send game to server
-			out.writeInt(1);
+			out.writeInt(RESTORE_GAME);
 			out.writeUTF(gameData);
 			gameId = in.readInt();
 			if (gameId == -1)
@@ -56,7 +56,7 @@ public class GameServiceProxy implements GameService {
 	public GameState getGameState(int gameId) throws ConnectionFailedException {
 		GameState gameState = null;
 		try {
-			out.writeInt(2);
+			out.writeInt(GET_GAME_STATE);
 			out.writeInt(gameId);
 			String gameData = in.readUTF();
 			gameState = new Gson().fromJson(gameData, GameState.class);
@@ -69,7 +69,7 @@ public class GameServiceProxy implements GameService {
 	@Override
 	public int authenticate(String user, String password) throws AuthenticationFailedException, ConnectionFailedException {
 		try {
-			out.writeInt(4);
+			out.writeInt(AUTHENTICATE);
 			out.writeUTF(user);
 			out.writeUTF(password);
 			int sessionId = in.readInt();
@@ -83,7 +83,7 @@ public class GameServiceProxy implements GameService {
 	@Override
 	public int createGame() throws ConnectionFailedException {
 		try {
-			out.writeInt(5);
+			out.writeInt(CREATE_GAME);
 			int gameId = in.readInt();
 			return gameId;
 		} catch (IOException e) {
@@ -95,7 +95,7 @@ public class GameServiceProxy implements GameService {
 	public ArrayList<Game> getGamesList(int sessionId)
 			throws AuthenticationFailedException, ConnectionFailedException {
 		try {
-			out.writeInt(3);
+			out.writeInt(GET_GAMES_LIST);
 			ArrayList<Game> gamesList = new ArrayList<Game>();
 			String gameString;
 			while (!(gameString = in.readUTF()).equals("")) {
@@ -114,7 +114,7 @@ public class GameServiceProxy implements GameService {
 	@Override
 	public void joinGame(int sessionId, int id) throws ConnectionFailedException {
 		try {
-			out.writeInt(6);
+			out.writeInt(JOIN_GAME);
 			out.writeInt(id);
 		} catch (IOException e) {
 			throw new ConnectionFailedException("Connection failed while joining game.");
@@ -123,32 +123,52 @@ public class GameServiceProxy implements GameService {
 
 	@Override
 	public void disconnect(int sessionId) throws ConnectionFailedException {
-		// TODO Auto-generated method stub
-		
+		try {
+			out.writeInt(DISCONNECT);
+			//TODO handle disconnect
+		} catch (IOException e) {
+			throw new ConnectionFailedException("Connection failed while disconnecting.");
+		}
 	}
 
 	@Override
-	public void navigate(int sessionId, int x, int y)
-			throws BadDestinationException, ConnectionFailedException {
-		// TODO Auto-generated method stub
-		
+	public void navigate(int sessionId, int x, int y) throws BadDestinationException, ConnectionFailedException {
+		try {
+			out.writeInt(NAVIGATE);
+			//TODO handle navigate
+		} catch (IOException e) {
+			throw new ConnectionFailedException("Connection failed while navigating.");
+		}
 	}
 
 	@Override
-	public void warp(int sessionId, Sector sector)
-			throws BadDestinationException, ConnectionFailedException {
-		// TODO Auto-generated method stub
-		
+	public void warp(int sessionId, Sector sector) throws BadDestinationException, ConnectionFailedException {
+		try {
+			out.writeInt(WARP);
+			//TODO handle warp
+		} catch (IOException e) {
+			throw new ConnectionFailedException("Connection failed while warping.");
+		}
 	}
 
 	@Override
-	public void setAlertLevel(int sessionId, AlertLevel level)
-			throws ConnectionFailedException {
+	public void setAlertLevel(int sessionId, AlertLevel level) throws ConnectionFailedException {
+		try {
+			out.writeInt(SET_ALERT_LEVEL);
+			//TODO handle setAlertLevel()
+		} catch (IOException e) {
+			throw new ConnectionFailedException("Connection failed while setting alert level.");
+		}
 	}
 
 	@Override
-	public void fireTorpedo(int sessionId, Sector sector, int x, int y)
-			throws ActionException, ConnectionFailedException {
+	public void fireTorpedo(int sessionId, Sector sector, int x, int y) throws ActionException, ConnectionFailedException {
+		try {
+			out.writeInt(FIRE_TORPEDO);
+			//TODO handle fireTorpedo()
+		} catch (IOException e) {
+			throw new ConnectionFailedException("Connection failed while firing torpedo.");
+		}
 	}
 
 }

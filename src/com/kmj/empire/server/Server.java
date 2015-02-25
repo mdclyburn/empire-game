@@ -14,8 +14,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -32,8 +30,6 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 
 import com.kmj.empire.common.Game;
-import com.kmj.empire.common.GameService;
-import com.kmj.empire.server.GameServiceImpl;
 
 
 public class Server extends JFrame {
