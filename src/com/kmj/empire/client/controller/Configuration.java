@@ -1,4 +1,9 @@
-package com.kmj.empire.client;
+/*
+ * Holds all the client-side configuration data. This class also saves the data
+ * with the appropriate method call to the location specified by the String
+ * CONFIGURATION_FILE.
+ */
+package com.kmj.empire.client.controller;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,11 +19,11 @@ public class Configuration implements Serializable {
 	private String password;
 	private String serverAddress;
 	private int serverPort;
-	
+
 	private static Configuration configuration;
-	
+
 	public static final String CONFIGURATION_FILE = "resources/client_configuration";
-	
+
 	private Configuration() {
 		username = "";
 		password = "";
@@ -29,10 +34,10 @@ public class Configuration implements Serializable {
 	static {
 		configuration = new Configuration();
 	}
-	
+
 	public static Configuration getInstance() { return configuration; }
-	
-	// Getters and Setters
+
+	// Getters
 	public void setUsername(String username) throws BadConfigurationException {
 		// The username:
 		// - cannot be blank
@@ -40,7 +45,7 @@ public class Configuration implements Serializable {
 			throw new BadConfigurationException("The username cannot be blank.");
 		this.username = username;
 	}
-	
+
 	public void setPassword(String password) throws BadConfigurationException {
 		// The password:
 		// - cannot be blank
@@ -48,7 +53,7 @@ public class Configuration implements Serializable {
 			throw new BadConfigurationException("The password cannot be blank.");
 		this.password = password;
 	}
-	
+
 	public void setServerAddress(String serverAddress) throws BadConfigurationException {
 		// The server address:
 		// - cannot be blank
@@ -66,16 +71,17 @@ public class Configuration implements Serializable {
 			throw new BadConfigurationException("The port number cannot be greater than 65535.");
 		this.serverPort = serverPort;
 	}
-	
+
 	public String getUsername() { return username; }
 	public String getPassword() { return password; }
 	public String getServerAddress() { return serverAddress; }
 	public int getServerPort() { return serverPort; }
-	
+
 	// Load the serialized Configuration from disk.
 	public void load() {
 		File configurationFile = new File(CONFIGURATION_FILE);
-		
+
+		// Check for file before attempting a load.
 		if(!configurationFile.isFile()) {
 			System.out.println("There is no configuration to load from " + configurationFile.getAbsolutePath() + ".");
 		}
@@ -96,10 +102,10 @@ public class Configuration implements Serializable {
 			}
 		}
 	}
-	
+
 	public void save() {
 		File configurationFile = new File(CONFIGURATION_FILE);
-		
+
 		try {
 			FileOutputStream fos = new FileOutputStream(configurationFile);
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -111,6 +117,6 @@ public class Configuration implements Serializable {
 			System.out.println("Failed to save configuration to " + configurationFile.getPath() + ".");
 		}
 	}
-	
+
 	private static final long serialVersionUID = 7316808087757863475L;
 }

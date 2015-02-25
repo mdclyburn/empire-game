@@ -2,11 +2,12 @@ package com.kmj.empire.common;
 
 import java.util.ArrayList;
 
-import com.kmj.empire.client.ActionException;
+import com.kmj.empire.client.controller.ActionException;
 import com.kmj.empire.common.exceptions.AuthenticationFailedException;
 import com.kmj.empire.common.exceptions.BadDestinationException;
 import com.kmj.empire.common.exceptions.ConnectionFailedException;
 import com.kmj.empire.common.exceptions.InvalidGameFileException;
+
 
 public interface GameService {
 	

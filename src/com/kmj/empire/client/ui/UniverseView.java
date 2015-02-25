@@ -1,4 +1,4 @@
-package com.kmj.empire.client;
+package com.kmj.empire.client.ui;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -10,58 +10,66 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import com.kmj.empire.client.controller.Configuration;
+import com.kmj.empire.client.controller.Session;
+import com.kmj.empire.client.controller.SessionObserver;
 import com.kmj.empire.common.Base;
 import com.kmj.empire.common.Game;
-import com.kmj.empire.common.GameService;
 import com.kmj.empire.common.Ship;
 import com.kmj.empire.common.exceptions.BadDestinationException;
 import com.kmj.empire.common.exceptions.ConnectionFailedException;
 
-public class UniverseView extends JPanel implements MouseListener {
+public class UniverseView extends JPanel implements SessionObserver, MouseListener {
 	
-	private static final long serialVersionUID = -1877850654997600073L;
+	private static final long serialVersionUID = -757496235041650510L;
 	
-	protected Game game;
-	protected GameService server;
-	protected GameWindow parent;
-	protected int sessionId;
 	protected int selectedSectorX;
 	protected int selectedSectorY;
-	protected SectorView sectorView;
+
 	protected JLabel status;
-	
-	protected int mode;
+	protected GameWindow parent;
+	protected SectorView sectorView;
 	
 	protected static final int PADDING = 5;
 	
+	// The mode of the UniverseView decides what actions the view
+	// will take when an element is selected.
+	protected int mode;
+	
+	/*
+	 * UNIVERSE VIEW MODES
+	 * ===================
+	 * MODE_SCANNER		Enables the player to view the contents of another sector.
+	 * MODE_WARP		Enables the player to move to another sector.
+	 */
 	protected static final int MODE_SCANNER = 0;
 	protected static final int MODE_WARP = 1;
 
 	public UniverseView() {
 		super();
 		selectedSectorX = selectedSectorY = 1;
-		addMouseListener(this);
 		mode = MODE_SCANNER;
+		addMouseListener(this);
+		Session.getInstance().addObserver(this);
 	}
 	
-	public UniverseView(GameWindow parent, Game game, GameService server, int sessionId) {
+	public UniverseView(GameWindow parent) {
 		super();
 		this.parent = parent;
-		this.game = game;
-		this.server = server;
-		this.sessionId = sessionId;
 		selectedSectorX = selectedSectorY = 1;
+		mode = MODE_SCANNER;
 		addMouseListener(this);
+		Session.getInstance().addObserver(this);
 		
 		// Focus on sector player is in.
-		Ship ship = game.getPlayerShip(Configuration.getInstance().getUsername());
+		Ship ship = Session.getInstance().getGame().getPlayerShip(Configuration.getInstance().getUsername());
 		selectedSectorX = ship.getSector().getX();
 		selectedSectorY = ship.getSector().getY();
 	}
 	
 	public void setSectorView(SectorView sectorView) {
 		this.sectorView = sectorView;
-		sectorView.setSector(game.getSector(selectedSectorX, selectedSectorY));
+		sectorView.setSector(Session.getInstance().getGame().getSector(selectedSectorX, selectedSectorY));
 	}
 	
 	public void setMode(int mode) {
@@ -111,10 +119,15 @@ public class UniverseView extends JPanel implements MouseListener {
 		g.drawLine(bottomLeft.width, bottomLeft.height, bottomRight.width, bottomRight.height);
 		g.drawLine(bottomRight.width, bottomRight.height, topRight.width, topRight.height);
 		
+		// Quit at this point if the player is dead.
+		if(Session.getInstance().isGameOver()) return;
+		
 		// Display information.
 		g.setColor(Color.WHITE);
 		for(int y = 0; y < 8; y++) {
 			for(int x = 0; x < 8; x++) {
+				Game game = Session.getInstance().getGame();
+				
 				// Calculate figures.
 				int planets = game.getSector(x + 1, y + 1).getPlanets().size();
 				
@@ -138,21 +151,33 @@ public class UniverseView extends JPanel implements MouseListener {
 			}
 		}
 	}
+	
+	@Override
+	public void onIdChanged(int newId) {
+		
+	}
+	
+	@Override
+	public void onGameChanged(Game newGame) {
+		repaint();
+	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		Game game = Session.getInstance().getGame();
 		selectedSectorX = (e.getX() / (getWidth() / 8)) + 1;
 		selectedSectorY = (e.getY() / (getHeight() / 8)) + 1;
 		
 		// Notify the sector view of the new sector selection.
 		if(mode == MODE_SCANNER) {
 			sectorView.setSector(game.getSector(selectedSectorX, selectedSectorY));
+			repaint();
 		}
 		
 		// Move to a new sector.
 		if(mode == MODE_WARP) {
 			try {
-				server.warp(sessionId, game.getSector(selectedSectorX, selectedSectorY));
+				Session.getInstance().warp(game.getSector(selectedSectorX, selectedSectorY));
 			} catch (BadDestinationException b) {
 				JOptionPane.showMessageDialog(this, b.getMessage(), "Warp Error", JOptionPane.ERROR_MESSAGE);
 			} catch (ConnectionFailedException c) {
@@ -162,7 +187,6 @@ public class UniverseView extends JPanel implements MouseListener {
 			mode = MODE_SCANNER;
 			status.setText("Idling");
 		}
-		parent.refresh();
 		
 		return;
 	}

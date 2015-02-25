@@ -1,4 +1,4 @@
-package com.kmj.empire.client;
+package com.kmj.empire.client.controller;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -31,6 +31,7 @@ public class GameServiceProxy implements GameService {
 			e.printStackTrace();
 		}
 	}
+	
 	
 	@Override
 	public int restoreGame(String gameData) throws InvalidGameFileException, ConnectionFailedException {

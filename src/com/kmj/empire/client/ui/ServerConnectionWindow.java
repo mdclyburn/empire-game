@@ -1,4 +1,4 @@
-package com.kmj.empire.client;
+package com.kmj.empire.client.ui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,13 +11,15 @@ import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import com.kmj.empire.common.GameService;
+import com.kmj.empire.client.controller.BadConfigurationException;
+import com.kmj.empire.client.controller.Configuration;
+import com.kmj.empire.client.controller.Session;
 import com.kmj.empire.common.exceptions.AuthenticationFailedException;
 import com.kmj.empire.common.exceptions.ConnectionFailedException;
 
 public class ServerConnectionWindow extends JFrame implements ActionListener {
 	
-	GameService server;
+	private static final long serialVersionUID = 5821121765325368439L;
 	
 	// =======================
 	// ===== TEXT FIELDS =====
@@ -54,8 +56,6 @@ public class ServerConnectionWindow extends JFrame implements ActionListener {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(null);
 		setResizable(false);
-		
-		server = new DummyServerConnectionProxy();
 		
 		// =======================
 		// ===== LABEL SETUP =====
@@ -134,11 +134,6 @@ public class ServerConnectionWindow extends JFrame implements ActionListener {
 		setVisible(true);
 	}
 	
-	public ServerConnectionWindow(GameService server) {
-		this();
-		this.server = server;
-	}
-	
 	public void actionPerformed(ActionEvent e) {
 		String s = e.getActionCommand();
 		
@@ -162,9 +157,15 @@ public class ServerConnectionWindow extends JFrame implements ActionListener {
 			}
 			
 			try {
-				int id = server.authenticate(Configuration.getInstance().getUsername(),
-						Configuration.getInstance().getPassword());
-				ServerListWindow serverListWindow = new ServerListWindow(id, server);
+				Configuration config = Configuration.getInstance();
+				String username = config.getUsername();
+				String password = config.getPassword();
+				
+				// Get the session ID provided to us and hand it to the Session.
+				Session session = Session.getInstance();
+				int id = session.getProvider().authenticate(username, password);
+				session.setId(id);
+				ServerListWindow serverListWindow = new ServerListWindow();
 				dispose();
 			}
 			catch(AuthenticationFailedException a) {

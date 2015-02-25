@@ -1,4 +1,4 @@
-package com.kmj.empire.client;
+package com.kmj.empire.client.controller;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
+import com.kmj.empire.client.ui.NewPlayerDialog;
 import com.kmj.empire.common.AlertLevel;
 import com.kmj.empire.common.Base;
 import com.kmj.empire.common.EmpireType;
@@ -30,7 +31,7 @@ import com.kmj.empire.common.exceptions.ConnectionFailedException;
 // with actual connection to the server soon.
 
 public class DummyServerConnectionProxy implements GameService {
-	
+
 	int idCounter;
 	ArrayList<Game> gameList;
 	HashMap<Integer, String> users;
@@ -39,24 +40,7 @@ public class DummyServerConnectionProxy implements GameService {
 	public DummyServerConnectionProxy() {
 		idCounter = 0;
 		gameList = new ArrayList<Game>();
-		
-//		UniverseType startrek = new UniverseType("Star Trek");
-//		EmpireType klingon = new EmpireType("KLI", "Klingon", "Aggression");
-//		startrek.getEmpireList().add(new EmpireType("FED", "Federation", "Exploration"));
-//		startrek.getEmpireList().add(klingon);
-//		startrek.getWeaponTypes().add(new EnergyWeaponType("PCAN", "Pulse Cannon", 150));
-//		startrek.getWeaponTypes().add(new MissleWeaponType("GTOR", "Gravimetric Torpedo", 800));
-//		startrek.getEmpire("Klingon").getShipTypes().add(
-//				new ShipType("BOP", "Bird of Prey", "D-12", startrek.getEmpire("Klingon"), 3000, 10, 500, 10, 
-//				startrek.getWeapon("PCAN"), startrek.getWeapon("GTOR")));
-//		startrek.getWeaponTypes().add(new EnergyWeaponType("PHAS", "Phaser", 100));
-//		startrek.getWeaponTypes().add(new MissleWeaponType("PTOR", "Photon Torpedo", 300));
-//		startrek.getEmpire("Federation").getShipTypes().add(new ShipType("STC", "Starship", "Constitution", startrek.getEmpire("Federation"), 2500, 10, 500, 10,
-//				startrek.getWeapon("PHAS"), startrek.getWeapon("PTOR")));
-//		
-//		gameList.add(new Game("Trekkie's Delight", startrek));
-//		addSampleData();
-		
+
 		users = new HashMap<Integer, String>();
 		sessions = new HashMap<Integer, Game>();
 	}
@@ -84,7 +68,7 @@ public class DummyServerConnectionProxy implements GameService {
 			br.readLine();
 			br.readLine();
 			UniverseType universe = new UniverseType(title);
-			
+
 			//read empires
 			line = br.readLine();
 			while (!line.equals("")) {
@@ -97,7 +81,7 @@ public class DummyServerConnectionProxy implements GameService {
 				universe.getEmpireList().add(empire);
 				line = br.readLine();
 			}
-		
+
 			//read weapons
 			br.readLine();
 			line = br.readLine();
@@ -113,7 +97,7 @@ public class DummyServerConnectionProxy implements GameService {
 				universe.getWeaponTypes().add(weapon);
 				line = br.readLine();
 			}
-			
+
 			//read shiptypes
 			br.readLine();
 			line = br.readLine();
@@ -142,10 +126,10 @@ public class DummyServerConnectionProxy implements GameService {
 				universe.getEmpire(empire).getShipTypes().add(ship);
 				line = br.readLine();
 			}
-			
+
 			//universe complete; create game
 			Game restoredGame = new Game(title, universe);
-			
+
 			//read bases
 			br.readLine();
 			line = br.readLine();
@@ -166,7 +150,7 @@ public class DummyServerConnectionProxy implements GameService {
 				restoredGame.addBase(base);
 				line = br.readLine();
 			}
-			
+
 			//read ships
 			br.readLine();
 			line = br.readLine();
@@ -202,7 +186,7 @@ public class DummyServerConnectionProxy implements GameService {
 				restoredGame.addShip(ship);
 				line = br.readLine();
 			}
-			
+
 			//read players
 			br.readLine();
 			line = br.readLine();
@@ -219,9 +203,9 @@ public class DummyServerConnectionProxy implements GameService {
 				line = br.readLine();
 			}
 			br.close();
-			
+
 			restoredGame.setStardate(stardate);
-			
+
 			gameList.add(restoredGame);
 			int gameId = idCounter++;
 			restoredGame.setId(gameId);
@@ -238,9 +222,6 @@ public class DummyServerConnectionProxy implements GameService {
 		return new GameState(sessions.get(sessionId));
 	}
 
-	// Hand over the list of active Games. The list is prefabricated for
-	// the purposes of this class and do not represent actual, live
-	// Games.
 	@Override
 	public ArrayList<Game> getGamesList(int sessionId) throws AuthenticationFailedException, ConnectionFailedException {
 		return gameList;
@@ -248,7 +229,7 @@ public class DummyServerConnectionProxy implements GameService {
 
 	@Override
 	public int createGame() throws ConnectionFailedException {
-		
+
 		// TODO Auto-generated method stub
 		return 0;
 	}
@@ -258,10 +239,10 @@ public class DummyServerConnectionProxy implements GameService {
 		for(Game g : gameList) {
 			if(g.getId() == id) {
 				System.out.println("Session " + sessionId + " joining " + g.getName() + "(" + g.getId() + ").");
-				
+
 				String username = users.get(sessionId);
 				sessions.put(sessionId, g);
-				
+
 				if(g.hasPlayed(username)) {
 					Ship ship = g.getPlayerShip(username);
 					Player player = new Player(username, ship.getType().getEmpire(), ship);
@@ -272,7 +253,7 @@ public class DummyServerConnectionProxy implements GameService {
 					NewPlayerDialog d = new NewPlayerDialog(null, "New Player", g);
 					d.setVisible(true);
 					if(d.getSelectedEmpire().length() == 0) throw new ConnectionFailedException("");
-					
+
 					// Find a random spot.
 					Random r = new Random();
 					Sector sector = null;
@@ -293,7 +274,7 @@ public class DummyServerConnectionProxy implements GameService {
 						for(Planet p : sector.getPlanets()) {
 							if(p.getX() == x && p.getY() == y) continue;
 						}
-						
+
 						break;
 					}
 					System.out.println("Placing ship in " + sx + "-" + sy + ", " + x + "-" + y);
@@ -306,37 +287,37 @@ public class DummyServerConnectionProxy implements GameService {
 			}
 		}
 	}
-	
+
 	@Override
 	public void disconnect(int sessionId) throws ConnectionFailedException {
 		Game game = sessions.get(sessionId);
 		game.removePlayer(users.get(sessionId));
 	}
-	
+
 	@Override
 	public void setAlertLevel(int sessionId, AlertLevel level) throws ConnectionFailedException {
 		sessions.get(sessionId).getPlayerShip(users.get(sessionId)).setAlert(level);
-		
+
 		// Log entry.
 		sessions.get(sessionId).getLog().add(0, sessions.get(sessionId).getStardate() + ": " + users.get(sessionId) +
 				" is on " + level.toString().toLowerCase() + " alert.");
 		advance(sessions.get(sessionId));
 		sessions.get(sessionId).nextStardate();
 	}
-	
+
 	@Override
 	public void navigate(int sessionId, int x, int y) throws BadDestinationException, ConnectionFailedException {
 		String username = users.get(sessionId);
 		Game game = sessions.get(sessionId);
 		Ship playerShip = game.getPlayerShip(username);
-		
+
 		// Make sure the distance is navigable.
 		int distance = Math.abs(playerShip.getX() - x) + Math.abs(playerShip.getY() - y);
-		
+
 		// Make sure energy level is sufficient.
 		if((10 * distance) > playerShip.getEnergy())
 			throw new BadDestinationException("There is not enough energy to go there.");
-		
+
 		// Check if there is something at the destination.
 		Sector currentSector = playerShip.getSector();
 		for(Base b : currentSector.getBases())
@@ -345,30 +326,30 @@ public class DummyServerConnectionProxy implements GameService {
 			if(s.getX() == x && s.getY() == y) throw new BadDestinationException("A ship is located here.");
 		for(Planet p : currentSector.getPlanets())
 			if(p.getX() == x && p.getY() == y) throw new BadDestinationException("A planet is located here.");
-		
+
 		// Move player.
 		playerShip.setLocation(x, y);
 		playerShip.consumeImpulseEnergy(distance);
 		advance(game);
 		game.nextStardate();
 	}
-	
+
 	@Override
 	public void warp(int sessionId, Sector sector) throws BadDestinationException, ConnectionFailedException {
 		String username = users.get(sessionId);
 		Game game = sessions.get(sessionId);
 		Ship playerShip = game.getPlayerShip(username);
-		
+
 		// Make sure distance is navigable.
 		int distance = Math.abs(sector.getX() - playerShip.getSector().getX()) + Math.abs(sector.getY() - playerShip.getSector().getY());
 		int max = playerShip.getType().getMaxSpeed();
 		if(distance > max)
 			throw new BadDestinationException("The distance is " + (distance - max) + " sectors too far.");
-		
+
 		// Make sure energy level is sufficient.
 		if((100 * distance) > playerShip.getEnergy())
 			throw new BadDestinationException("There is not enough energy to warp that far.");
-		
+
 		// Find a place in that sector to warp to.
 		for(int y = 1; y <= 8; y++) {
 			for(int x = 1; x <= 8; x++) {
@@ -395,7 +376,7 @@ public class DummyServerConnectionProxy implements GameService {
 						}
 					}
 				}
-				
+
 				// If no other entity is in this position, then the player can be
 				// warped here.
 				if(!containsEntity) {
@@ -411,20 +392,20 @@ public class DummyServerConnectionProxy implements GameService {
 				}
 			}
 		}
-		
+
 		// If this is reached, then the sector is full.
 		throw new BadDestinationException("The sector is full.");
 	}
-	
+
 	public void fireTorpedo(int sessionId, Sector sector, int x, int y) throws ActionException, ConnectionFailedException {
 		String username = users.get(sessionId);
 		Game game = sessions.get(sessionId);
 		Ship playerShip = game.getPlayerShip(username);
-		
+
 		// Make sure that the player has torpedoes left.
 		if(playerShip.getMissles() == 0)
 			throw new ActionException("There are no missiles left.");
-		
+
 		// Make sure that a ship is at that location.
 		Ship target = null;
 		for(Ship s : sector.getShips()) {
@@ -435,15 +416,15 @@ public class DummyServerConnectionProxy implements GameService {
 		}
 		if(target == null)
 			throw new ActionException("There is no ship at the specified location.");
-		
+
 		// Disallow self-destruction.
 		if(playerShip == target)
 			throw new ActionException("Don't blow yourself up.");
-		
+
 		// Disallow betrayal.
 		if(playerShip.getType().getEmpire().getName().equals(target.getType().getEmpire().getName()))
 			throw new ActionException("You are on the same side.");
-		
+
 		// Get source and destination names.
 		String source = "";
 		String dest = "";
@@ -451,12 +432,12 @@ public class DummyServerConnectionProxy implements GameService {
 			source = playerShip.getType().getName();
 		else
 			source = game.getOwner(playerShip);
-		
+
 		if(game.getOwner(target) == null)
 			dest = target.getType().getName();
 		else
 			dest = game.getOwner(target);
-		
+
 		// At this time, a torpedo never misses.
 		if(target.getAlert() == AlertLevel.GREEN) {
 			// The ship is immediately destroyed.
@@ -473,26 +454,26 @@ public class DummyServerConnectionProxy implements GameService {
 			target.setShield(target.getShield() - playerShip.getType().getMissileWeapon().getMaxYield());
 			if(target.getShield() < 0) game.destroy(target);
 		}
-		
+
 		// Remove a missile.
 		playerShip.setMissles(playerShip.getMissles() - 1);
-		
+
 		// Log the event.
 		String entry = game.getStardate() + ": " + source + " at (" +
 				playerShip.getX() + ", " + playerShip.getY() + ") fired " +
 				playerShip.getType().getMissileWeapon().getName() + " at " + dest +
 				" at (" + target.getX() + ", " + target.getY() + "); ";
-		
+
 		if(target.getShield() > 0)
 			entry += "target's shields now at " + target.getShield();
 		else
 			entry += "target destroyed.";
 		game.getLog().add(0, entry);
-		
+
 		advance(game);
 		game.nextStardate();
 	}
-	
+
 	private void advance(Game game) {
 		ArrayList<Ship> ships = game.getShips();
 		for(int i = 0; i < ships.size(); i++) {
@@ -508,7 +489,7 @@ public class DummyServerConnectionProxy implements GameService {
 					if(!possEnemyShip.getType().getEmpire().getName().equals(ship.getType().getEmpire().getName()))
 						enemies.add(possEnemyShip);
 				}
-				
+
 				// Continue search if enemy ships are in the sector.
 				if(enemies.size() > 0) {
 					// Find the closest.
@@ -525,7 +506,7 @@ public class DummyServerConnectionProxy implements GameService {
 							if(newDistance < oldDistance) closest = enemyShip;
 						}
 					}
-					
+
 					// Attack.
 					String dest = "";
 					if(game.getOwner(closest) == null) dest = closest.getType().getName();
@@ -545,16 +526,16 @@ public class DummyServerConnectionProxy implements GameService {
 						closest.setShield(closest.getShield() - ship.getType().getMissileWeapon().getMaxYield());
 						if(closest.getShield() < 0) game.destroy(closest);
 					}
-					
+
 					// Remove a missile.
 					ship.setMissles(ship.getMissles() - 1);
-					
+
 					// Log the event.
 					String entry = game.getStardate() + ": " + ship.getType().getName() + " at (" +
 							ship.getX() + ", " + ship.getY() + ") fired " +
 							ship.getType().getMissileWeapon().getName() + " at " + dest +
 							" at (" + closest.getX() + ", " + closest.getY() + "); ";
-					
+
 					if(closest.getShield() > 0)
 						entry += "target's shields now at " + closest.getShield();
 					else
@@ -564,22 +545,22 @@ public class DummyServerConnectionProxy implements GameService {
 			}
 		}
 	}
-	
+
 	private void addSampleData() {
-		
+
 		Planet planet = new Planet(gameList.get(0), gameList.get(0).getSector(1, 1), 3, 2);
 		gameList.get(0).addPlanet(planet);
-		
+
 		Base base = new Base(gameList.get(0).getUniverse().getEmpire("Klingon"), gameList.get(0), gameList.get(0).getSector(1, 1), 3, 4);
 		gameList.get(0).addBase(base);
-		
+
 		base = new Base(gameList.get(0).getUniverse().getEmpire("Federation"), gameList.get(0), gameList.get(0).getSector(1, 1), 2, 5);
 		gameList.get(0).addBase(base);
-		
+
 		// AI ship
 		Ship ship = new Ship(gameList.get(0).getUniverse().getEmpire("Klingon").getShip("Bird of Prey"), gameList.get(0), gameList.get(0).getSector(1, 1), 7, 4);
 		ship.setAlert(AlertLevel.RED);
-		
+
 		gameList.get(0).addShip(ship);
 	}
 }
