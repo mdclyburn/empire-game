@@ -1,0 +1,39 @@
+\chapter{Proof-of-Concept}
+
+\section{Links}
+
+\subsection{JUnit}
+Screencast: http://youtu.be/KxB\_-UK33tw
+
+\subsection{Client}
+Screencast: http://youtu.be/2otiff2r3fA
+
+\subsection{Issue Tracker ZIP}
+
+(Space at line break)
+
+https://sites.google.com/a/g.clemson.edu/c320-s2t1-class-project/downloads/\ \\ \indent issuetracker-final.zip?attredirects=0\&d=1
+
+\section{Instructions}
+
+\subsection{Server}
+
+java -jar server.jar <port number>
+
+\subsection{Client}
+
+java -jar client.jar
+
+\subsection{JUnit}
+
+Ensure that there is no server save data file, 'save.dat', start the server on port 8080, and run the following command (space at line break):
+
+\vspace{10pt}
+
+java -cp .:lib/gson.jar:lib/hamcrest.jar:lib/junit-4.12.jar\ \\ \indent \indent org.junit.runner.JUnitCore com.kjmw.issuetracker.testing.ServerJUnitTest
+
+\section{List of Known Bugs}
+
+\begin{itemize}
+	\item None
+\end{itemize}

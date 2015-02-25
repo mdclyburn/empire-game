@@ -1,0 +1,34 @@
+\documentclass[11pt,openany]{report}
+\usepackage{bera}
+\usepackage{changepage}
+\usepackage{color}
+\usepackage[top=1in,bottom=1in, left=1.05in,right=1.05in]{geometry}
+\usepackage{hyperref}
+\usepackage{makeidx}
+\usepackage{titlesec}
+\usepackage{tocloft}
+\usepackage{graphicx}
+
+\setlength{\cftchapnumwidth}{10mm}
+
+\titleformat
+{\chapter}[display]{\Huge}
+{{\color[RGB]{230, 230, 230}\rule{4.35in}{2.5mm}}\vspace{0.25in}}
+{0.3ex}{}[\vspace{1in}]
+
+\setlength\parindent{0pt}
+
+\makeindex
+
+\begin{document}
+
+% Title Page
+\title{{\Huge CpSc 3720 Team 1 - Project Phase 3}}
+\author{}
+\date{March 5, 2015}
+\maketitle
+
+\include{issues}
+
+\end{document}
+

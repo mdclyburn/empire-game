@@ -1,0 +1,82 @@
+\chapter{Vision}
+
+\section{Introduction}
+
+Into the Grid is a turn-based exploration and conquest game in which players connect to multiplayer universes, control a ship, and explore the various sectors of their universe.
+
+\section{Problem Statement}
+The current game market doesn't offer any turn-by-turn games that allow users to create and play on multiple modded universes.
+Into the Grid will fill this gap in the market through its turn-by-turn format and use of user generated content.
+
+\section{Stakeholder Descriptions}
+
+\subsection{Stakeholder (Non-User) Summary}
+
+\begin{description}
+	\item[Project Sponsor] Jim, Green River Games
+	\item[Technical Contact] Wanda, Green River Games
+\end{description}
+
+\section{User Summary}
+
+The following classes of users will use the IT system:
+
+\begin{itemize}
+	\item User - Joins a universe and plays a game
+	\item Designer - Creates a universe, define attributes, and packages and deploys for use by Users
+	\item Administrator - Select a universe template and start a game
+\end{itemize}
+
+\section{Key High-Level Goals}
+
+The following are some key goals for the system:
+
+\begin{itemize}
+	\item Provide interface for user generated content
+	\item Allow up to 500 concurrent users to be playing on various universes with at most 1 second delay
+	\item Synchronized universes in which multiple users can interact
+\end{itemize}
+
+\section{User-Level Goals (''Use Cases'')}
+
+The users need a system to fulfill these goals:
+
+\begin{itemize}
+	\item User
+	\begin{itemize}
+		\item Select and join a game
+		\item Play the game
+	\end{itemize}
+	\item Designer
+	\begin{itemize}
+		\item Create a universe
+		\item Edit a universe
+		\item Package and deploy a universe
+	\end{itemize}
+	\item Administrator
+	\begin{itemize}
+		\item Select a template
+		\item Start a game
+	\end{itemize}
+\end{itemize}
+
+\section{Assumptions and Dependencies}
+
+The following are important assumptions and dependencies:
+
+\begin{itemize}
+	\item The universe creating software will be independent of the core game
+	\item The project will be dependent on the Gson library
+\end{itemize}
+
+\section{Scope}
+
+The system will include features needed to support the goals listed above.
+
+The system will not include the following:
+
+\begin{itemize}
+	\item Multiple computer AI's
+	\item Multiple languages
+	\item The ability to control more than one ship at a time
+\end{itemize}

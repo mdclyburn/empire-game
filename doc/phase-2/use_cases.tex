@@ -1,0 +1,153 @@
+\chapter{Use Cases}
+
+\section{Connect To Server}
+\subsection{Actors}
+\begin{itemize}
+	\item Player
+\end{itemize}
+
+\subsection{Preconditions}
+\begin{itemize}
+	\item Player has started up the game and is viewing the "Connect to Server" screen.
+\end{itemize}
+
+\subsection{Postconditions}
+\begin{itemize}
+	\item The player gains access to the server's games.
+\end{itemize}
+
+\subsection{Main Success Scenario}
+\begin{enumerate}
+	\item Player enters valid information.
+	\item System validates the information entered by the user and gives the user access to server's games.
+\end{enumerate}
+
+\subsection{Extensions}
+2a. System detects a missing or invalid username.
+\begin{enumerate}
+	\item System displays an error and informs the player.
+	\item Player enters their username.
+\end{enumerate}
+
+2b. System detects a missing or invalid password.
+\begin{enumerate}
+	\item System displays an error and informs the player.
+	\item Player enters their password.
+\end{enumerate}
+
+2c. System detects a missing or invalid server address.
+\begin{enumerate}
+	\item System displays an error and informs the player.
+	\item Player enters a server address.
+\end{enumerate}
+
+2d. System detects a missing or invalid port number.
+\begin{enumerate}
+	\item System displays an error and informs the player.
+	\item Player enters a port number.
+\end{enumerate}
+
+\section{Restore Game}
+
+\subsection{Preconditions}
+\begin{itemize}
+	\item The player has logged in to the system.
+\end{itemize}
+
+\subsection{Postconditions}
+\begin{itemize}
+	\item The game is restored.
+\end{itemize}
+
+\subsection{Main Success Scenario}
+\begin{enumerate}
+	\item The player requests to restore a game.
+	\item The system prompts the player for the file the saved game resides in.
+	\item The player selects the file the saved game resides in.
+	\item The system restores the game and adds it to the list of games.
+\end{enumerate}
+
+\subsection{Extensions}
+3a. The system detects that the file is not valid.
+\begin{enumerate}
+	\item The system notifies the user that the file is not valid.
+\end{enumerate}
+
+\section{Join Game}
+
+\subsection{Actors}
+\begin{itemize}
+	\item{Player}
+\end{itemize}
+
+\subsection{Preconditions}
+\begin{itemize}
+	\item Player has connected to the server and is viewing the list of available games to join.
+\end{itemize}
+
+\subsection{Postconditions}
+\begin{itemize}
+	\item Player joins an available game.
+\end{itemize}
+
+\subsection{Main Success Scenario}
+\begin{enumerate}
+	\item The player selects a game from the list of current games.
+	\item The system prompts the player for an empire and ship type.
+	\item The player provides their desired empire and ship type.
+	\item The system joins the player to the game.
+\end{enumerate}
+
+\subsection{Extensions}
+1a. System detects that the user is returning to the game.
+\begin{enumerate}
+	\item The player resumes their game.
+\end{enumerate}
+
+\section{Execute Command}
+
+\subsection{Actor}
+\begin{itemize}
+	\item Player
+\end{itemize}
+
+\subsection{Preconditions}
+\begin{itemize}
+	\item The player's command is executed.
+\end{itemize}
+
+\subsection{Main Success Scenario}
+\begin{enumerate}
+	\item The player chooses a command to execute.
+	\item The system processes the command entered by the player and relays the result of the command.
+\end{enumerate}
+
+\subsection{Extensions}
+1a. The player selects the ''Navigate'' action.
+\begin{enumerate}
+	\item The system prompts the player for a destination.
+	\item The player selects a desired destination.
+		\begin{enumerate}
+			\item No energy remains:
+				\begin{enumerate}
+					\item The action is not executed.
+				\end{enumerate}
+		\end{enumerate}
+\end{enumerate}
+
+1b. The player selects the ''Set Alert'' action.
+\begin{enumerate}
+	\item The system prompts the user for the desired alert level.
+	\item The player selects the desired alert level.
+\end{enumerate}
+
+1c. The player selects the ''Fire Torpedo'' action.
+\begin{enumerate}
+	\item The system prompts the player for a target.
+	\item The player selects a desired target.
+\end{enumerate}
+
+1 - 2a. The player selects the ''Refresh'' action.
+\begin{enumerate}
+	\item The system gets the latest information from the server.
+\end{enumerate}
