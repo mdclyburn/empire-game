@@ -8,10 +8,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 import com.kmj.empire.common.AlertLevel;
-import com.kmj.empire.common.AuthenticationFailedException;
-import com.kmj.empire.common.BadDestinationException;
 import com.kmj.empire.common.Base;
-import com.kmj.empire.common.ConnectionFailedException;
 import com.kmj.empire.common.EmpireType;
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.GameService;
@@ -23,6 +20,9 @@ import com.kmj.empire.common.Ship;
 import com.kmj.empire.common.ShipType;
 import com.kmj.empire.common.UniverseType;
 import com.kmj.empire.common.WeaponType;
+import com.kmj.empire.common.exceptions.AuthenticationFailedException;
+import com.kmj.empire.common.exceptions.BadDestinationException;
+import com.kmj.empire.common.exceptions.ConnectionFailedException;
 
 // A dummy connection service to get the client-side prototype
 // to proceed to show off functionality. All instances of its use

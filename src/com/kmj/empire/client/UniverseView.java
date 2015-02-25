@@ -10,12 +10,12 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import com.kmj.empire.common.BadDestinationException;
 import com.kmj.empire.common.Base;
-import com.kmj.empire.common.ConnectionFailedException;
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.GameService;
 import com.kmj.empire.common.Ship;
+import com.kmj.empire.common.exceptions.BadDestinationException;
+import com.kmj.empire.common.exceptions.ConnectionFailedException;
 
 public class UniverseView extends JPanel implements MouseListener {
 	

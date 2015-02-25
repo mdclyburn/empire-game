@@ -4,14 +4,16 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
 
 import com.google.gson.Gson;
-import com.kmj.empire.common.AuthenticationFailedException;
-import com.kmj.empire.common.ConnectionFailedException;
+import com.kmj.empire.common.Game;
 import com.kmj.empire.common.GameService;
 import com.kmj.empire.common.GameState;
-import com.kmj.empire.common.InvalidGameFileException;
 import com.kmj.empire.common.Player;
+import com.kmj.empire.common.exceptions.AuthenticationFailedException;
+import com.kmj.empire.common.exceptions.ConnectionFailedException;
+import com.kmj.empire.common.exceptions.InvalidGameFileException;
 
 class User implements Runnable {
 
@@ -82,11 +84,11 @@ class User implements Runnable {
 					int gameId = getGameService().restoreGame(gameData);
 					out.writeInt(gameId);
 				} catch (ConnectionFailedException e2) {
-					e2.printStackTrace();
+					disconnected = true;
 				} catch (IOException e) {
-					e.printStackTrace();
+					disconnected = true;
 				} catch (InvalidGameFileException e) {
-					e.printStackTrace();
+					disconnected = true;
 				} break;
 				
 				case 2: try {
@@ -94,42 +96,48 @@ class User implements Runnable {
 					GameState gameState = getGameService().getGameState(gameId);
 					out.writeUTF(new Gson().toJson(gameState));
 				} catch (ConnectionFailedException e1) {
-					e1.printStackTrace();
+					disconnected = true;
 				} catch (IOException e) {
-					e.printStackTrace();
+					disconnected = true;
 				} break;
 				
 				case 3: try {
-					getGameService().getGamesList(code);
-				} catch (AuthenticationFailedException
-						| ConnectionFailedException e) {
-					e.printStackTrace();
+					for (Game g : getGameService().getGamesList(code)) {
+						out.writeUTF(new Gson().toJson(new GameState(g)));
+					}
+					out.writeUTF(null);
+				} catch (ConnectionFailedException e) {
+					disconnected = true;
+				} catch (AuthenticationFailedException e) {
+					System.err.println(username+" attempted unauthorized action.");
+					disconnected = true;
+				} catch (IOException e) {
+					disconnected = true;
 				} break;
 				
 				case 4: try {
 					username = in.readUTF();
 					password = in.readUTF();
 					getGameService().authenticate(username, password);
-				} catch (AuthenticationFailedException
-						| ConnectionFailedException e) {
-					e.printStackTrace();
+				} catch (AuthenticationFailedException e) {
+					disconnected = true;
+				} catch (ConnectionFailedException e) {
+					disconnected = true;
 				} catch (IOException e) {
 					System.err.println("Failed to read username and password.");
-					System.exit(1);
+					disconnected = true;
 				} break;
 				
 				case 5: try {
 					getGameService().createGame();
 				} catch (ConnectionFailedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					disconnected = true;
 				} break;
 				
 				case 6: try {
 					getGameService().joinGame(code, 0);
 				} catch (ConnectionFailedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					disconnected = true;
 				} break;
 			}
 		}

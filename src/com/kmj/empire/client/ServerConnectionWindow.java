@@ -11,9 +11,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import com.kmj.empire.common.AuthenticationFailedException;
-import com.kmj.empire.common.ConnectionFailedException;
 import com.kmj.empire.common.GameService;
+import com.kmj.empire.common.exceptions.AuthenticationFailedException;
+import com.kmj.empire.common.exceptions.ConnectionFailedException;
 
 public class ServerConnectionWindow extends JFrame implements ActionListener {
 	

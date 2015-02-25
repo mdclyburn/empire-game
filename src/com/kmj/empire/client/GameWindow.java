@@ -14,10 +14,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 import com.kmj.empire.common.AlertLevel;
-import com.kmj.empire.common.ConnectionFailedException;
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.GameService;
 import com.kmj.empire.common.Player;
+import com.kmj.empire.common.exceptions.ConnectionFailedException;
 
 // The GameWindow is where the user will spend most of their time
 // during gameplay. It will consist of a canvas handled by a custom

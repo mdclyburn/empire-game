@@ -1,4 +1,4 @@
-package com.kmj.empire.common;
+package com.kmj.empire.common.exceptions;
 
 public class InvalidGameFileException extends Exception {
 

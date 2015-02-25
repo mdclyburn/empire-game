@@ -8,14 +8,14 @@ import java.util.ArrayList;
 
 import com.google.gson.Gson;
 import com.kmj.empire.common.AlertLevel;
-import com.kmj.empire.common.AuthenticationFailedException;
-import com.kmj.empire.common.BadDestinationException;
-import com.kmj.empire.common.ConnectionFailedException;
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.GameService;
 import com.kmj.empire.common.GameState;
-import com.kmj.empire.common.InvalidGameFileException;
 import com.kmj.empire.common.Sector;
+import com.kmj.empire.common.exceptions.AuthenticationFailedException;
+import com.kmj.empire.common.exceptions.BadDestinationException;
+import com.kmj.empire.common.exceptions.ConnectionFailedException;
+import com.kmj.empire.common.exceptions.InvalidGameFileException;
 
 public class GameServiceProxy implements GameService {
 
@@ -66,20 +66,47 @@ public class GameServiceProxy implements GameService {
 	}
 
 	@Override
-	public int authenticate(String user, String password) {
-		
-		return 0;
+	public int authenticate(String user, String password) throws AuthenticationFailedException, ConnectionFailedException {
+		try {
+			out.writeInt(4);
+			out.writeUTF(user);
+			out.writeUTF(password);
+			int sessionId = in.readInt();
+			if (sessionId == -1) throw new AuthenticationFailedException();
+			return sessionId;
+		} catch(IOException e) {
+			throw new ConnectionFailedException();
+		}
 	}
 
 	@Override
-	public int createGame() {
-		
-		return 0;
+	public int createGame() throws ConnectionFailedException {
+		try {
+			out.writeInt(5);
+			int gameId = in.readInt();
+			return gameId;
+		} catch (IOException e) {
+			throw new ConnectionFailedException();
+		}
 	}
 
 	@Override
 	public ArrayList<Game> getGamesList(int sessionId)
 			throws AuthenticationFailedException, ConnectionFailedException {
+		try {
+			out.writeInt(3);
+			out.writeInt(sessionId);
+			ArrayList<Game> gamesList = new ArrayList<Game>();
+			String gameString;
+			while ((gameString = in.readUTF()) != null) {
+				Game game = null;
+				new Gson().fromJson(gameString, GameState.class).toGame(game);
+				gamesList.add(game);
+				gameString = in.readUTF();
+			}
+		} catch (IOException e) {
+			throw new ConnectionFailedException();
+		}
 		return null;
 	}
 

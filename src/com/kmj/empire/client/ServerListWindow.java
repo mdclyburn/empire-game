@@ -19,11 +19,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-import com.kmj.empire.common.AuthenticationFailedException;
-import com.kmj.empire.common.ConnectionFailedException;
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.GameService;
-import com.kmj.empire.common.InvalidGameFileException;
+import com.kmj.empire.common.exceptions.AuthenticationFailedException;
+import com.kmj.empire.common.exceptions.ConnectionFailedException;
+import com.kmj.empire.common.exceptions.InvalidGameFileException;
 
 // A window that displays a list of games present
 // on a server. The session ID should be set before

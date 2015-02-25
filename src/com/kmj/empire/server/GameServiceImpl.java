@@ -5,12 +5,10 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 
+import com.google.gson.Gson;
 import com.kmj.empire.client.ActionException;
 import com.kmj.empire.common.AlertLevel;
-import com.kmj.empire.common.AuthenticationFailedException;
-import com.kmj.empire.common.BadDestinationException;
 import com.kmj.empire.common.Base;
-import com.kmj.empire.common.ConnectionFailedException;
 import com.kmj.empire.common.EmpireType;
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.GameService;
@@ -21,6 +19,9 @@ import com.kmj.empire.common.Ship;
 import com.kmj.empire.common.ShipType;
 import com.kmj.empire.common.UniverseType;
 import com.kmj.empire.common.WeaponType;
+import com.kmj.empire.common.exceptions.AuthenticationFailedException;
+import com.kmj.empire.common.exceptions.BadDestinationException;
+import com.kmj.empire.common.exceptions.ConnectionFailedException;
 
 public class GameServiceImpl implements GameService {
 	
@@ -132,7 +133,7 @@ public class GameServiceImpl implements GameService {
 	@Override
 	public ArrayList<Game> getGamesList(int sessionId)
 			throws AuthenticationFailedException, ConnectionFailedException {
-		return null;
+		return server.getGamesList();
 	}
 
 	@Override
