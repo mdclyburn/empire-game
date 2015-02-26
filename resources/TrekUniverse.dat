@@ -1,0 +1,38 @@
+Title	Stardate
+Star Trek Forever	2236
+
+Empire Id	Name	MissionType
+FED	Federation	Exploration
+KLI	Klingon	Aggression
+BAJ	Bajoran	Exploration
+CAR	Cardassian	Aggression
+
+Weapon Id	Name	Type	Max Yield
+PHAS	Phaser	ENERGY	100
+PTOR	Photon Torpedo	MISSILE	300
+ATOR	Antimatter Torpedo	MISSILE	10000
+GTOR	Gravimetric Torpedo	MISSILE	800
+PCAN	Pulse Cannon	ENERGY	150
+
+ShipType Id	Name	Class	Empire	Max Energy	Max Speed	Max Shields	EnWepType	MisWepType	Max Missile
+STC	Starship	Constitution	FED	3000	9	500	PHAS	PTOR	10
+STM	Starship	Miranda	FED	4000	4	400	PHAS	ATOR	2
+BOP	Bird of Prey	D-12	KLI	2500	5	600	PCAN	GTOR	5
+CWS	Cruiser	Galor	CAR	2000	6	300	PHAS	PTOR	12
+BWS	Starship	Antares	BAJ	2500	4	300	PHAS	PTOR	6
+
+Base Id	Empire	SX	SY	PX	PY
+0	FED	2	4	3	2
+1	FED	2	5	6	7
+2	KLI	1	1	2	1
+
+Ship ID	Type	SX	SY	PX	PY	Energy	Missile Qty	Alert	Shield
+0	STC	2	4	6	5	2800	8	RED	300
+1	BOP	2	5	4	4	1900	7	YELLOW	400
+2	STM	2	5	2	2	3000	2	YELLOW	300
+3	BOP	3	6	1	5	1500	1	RED	5
+
+Player ID	Affiliation	Ship
+kirk	FED	0
+dax	KLI	1
+
