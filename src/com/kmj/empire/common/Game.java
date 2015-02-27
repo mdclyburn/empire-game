@@ -3,6 +3,10 @@ package com.kmj.empire.common;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/*
+ * Model object representing a single game a host of players
+ * can join.
+ */
 public class Game {
 
 	private int id;

@@ -17,6 +17,11 @@ import com.kmj.empire.client.controller.Session;
 import com.kmj.empire.common.exceptions.AuthenticationFailedException;
 import com.kmj.empire.common.exceptions.ConnectionFailedException;
 
+/*
+ * The window presented to the user when the application
+ * is first launched. This allows the user to connect to
+ * a server that is running.
+ */
 public class ServerConnectionWindow extends JFrame implements ActionListener {
 	
 	private static final long serialVersionUID = 5821121765325368439L;
@@ -134,6 +139,7 @@ public class ServerConnectionWindow extends JFrame implements ActionListener {
 		setVisible(true);
 	}
 	
+	// Responses for ActionListener.
 	public void actionPerformed(ActionEvent e) {
 		String s = e.getActionCommand();
 		

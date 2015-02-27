@@ -1,5 +1,9 @@
 package com.kmj.empire.common;
 
+/*
+ * Model object representing the base the player is
+ * currently at.
+ */
 public class Base extends MapEntity {
 	
 	protected EmpireType empireType;
@@ -30,6 +34,7 @@ public class Base extends MapEntity {
 		return baseString;
 	}
 	
+	// Updates the object's variables from a string.
 	public static Base fromString(String line, Game game) {
 		int id = Integer.valueOf(line.substring(0, line.indexOf('\t')));
 		line = line.substring(line.indexOf('\t')+1);

@@ -24,9 +24,11 @@ import com.kmj.empire.common.exceptions.AuthenticationFailedException;
 import com.kmj.empire.common.exceptions.ConnectionFailedException;
 import com.kmj.empire.common.exceptions.InvalidGameFileException;
 
-// A window that displays a list of games present
-// on a server. The session ID should be set before
-// the client queries the server.
+/*
+ * A window that displays a list of games present
+ * on a server. The session ID should be set before
+ * the client queries the server.
+ */
 
 public class ServerListWindow extends JFrame implements ActionListener, MouseListener, WindowListener {
 	
@@ -59,6 +61,8 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 		launch();
 	}
 	
+	// Set up the window to be presented to the
+	// user.
 	protected void launch() {
 		setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		setResizable(false);
@@ -120,6 +124,8 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 		return;
 	}
 	
+	// Refresh the list of games available
+	// on the server.
 	protected void refresh() {
 		// Get new list from server.
 		try {
@@ -139,11 +145,14 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 		return;
 	}
 	
+	// Convenience function to close the window. It's much
+	// shorter than writing out the dispatchEvent.
 	public void close() {
 		dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 		return;
 	}
 	
+	// Responses for ActionListener.
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String s = e.getActionCommand();
@@ -214,16 +223,25 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 		return;
 	}
 	
+	// Custom function to make the window visible. When
+	// the window becomes visible, go ahead and refresh
+	// the list of games. It seems that it would logically follow
+	// that the list would be up to date when the user arrived
+	// back at this screen.
 	@Override public void setVisible(boolean b) {
 		super.setVisible(b);
 		if(b && (model != null)) refresh();
 	}
 	
+	// Keep the 'join' button disabled until the user clicks
+	// a game. Some UI polish.
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		joinButton.setEnabled(true);
 	}
 
+	// Custom function to close the window. When this window
+	// closes, the connection window should reappear.
 	@Override
 	public void windowClosing(WindowEvent e) {
 		// Reopen the server connection window.
@@ -234,6 +252,8 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 		
 		return;
 	}
+	
+	// Unused Functions =========================
 
 	@Override
 	public void windowOpened(WindowEvent e) {}

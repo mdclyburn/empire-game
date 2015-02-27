@@ -1,5 +1,9 @@
 package com.kmj.empire.common;
 
+/*
+ * Model object representing a type of ship. This describes all
+ * of the specifications for a given ship.
+ */
 public class ShipType {
 
 	private String name;

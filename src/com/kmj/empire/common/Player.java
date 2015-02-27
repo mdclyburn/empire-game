@@ -1,5 +1,9 @@
 package com.kmj.empire.common;
 
+/*
+ * Model object representing a single player. Contains everything
+ * that the player is linked to.
+ */
 public class Player {
 	
 	private String username;
