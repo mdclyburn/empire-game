@@ -45,7 +45,7 @@ public class GameServiceProxy implements GameService {
 		//send info to server
 		try {
 			//send game to server
-			out.writeInt(1);
+			out.writeInt(RESTORE_GAME);
 			out.writeUTF(gameData);
 			gameId = in.readInt();
 			if (gameId == -1)
@@ -63,7 +63,7 @@ public class GameServiceProxy implements GameService {
 	public GameState getGameState(int gameId) throws ConnectionFailedException {
 		GameState gameState = null;
 		try {
-			out.writeInt(2);
+			out.writeInt(GET_GAME_STATE);
 			out.writeInt(gameId);
 			String gameData = in.readUTF();
 			gameState = new Gson().fromJson(gameData, GameState.class);
@@ -78,7 +78,7 @@ public class GameServiceProxy implements GameService {
 	@Override
 	public int authenticate(String user, String password) throws AuthenticationFailedException, ConnectionFailedException {
 		try {
-			out.writeInt(4);
+			out.writeInt(AUTHENTICATE);
 			out.writeUTF(user);
 			out.writeUTF(password);
 			int sessionId = in.readInt();
@@ -94,7 +94,7 @@ public class GameServiceProxy implements GameService {
 	@Override
 	public int createGame() throws ConnectionFailedException {
 		try {
-			out.writeInt(5);
+			out.writeInt(CREATE_GAME);
 			int gameId = in.readInt();
 			return gameId;
 		} catch (IOException e) {
@@ -108,7 +108,7 @@ public class GameServiceProxy implements GameService {
 	public ArrayList<Game> getGamesList(int sessionId)
 			throws AuthenticationFailedException, ConnectionFailedException {
 		try {
-			out.writeInt(3);
+			out.writeInt(GET_GAMES_LIST);
 			ArrayList<Game> gamesList = new ArrayList<Game>();
 			String gameString;
 			while (!(gameString = in.readUTF()).equals("")) {
@@ -126,44 +126,79 @@ public class GameServiceProxy implements GameService {
 
 	// Add a user to the game they request.
 	@Override
-	public void joinGame(int sessionId, int id)
-			throws ConnectionFailedException {
+	public void joinGame(int sessionId, int id) throws ConnectionFailedException {
+		try {
+			out.writeInt(JOIN_GAME);
+			out.writeInt(id);
+		} catch (IOException e) {
+			throw new ConnectionFailedException("Connection failed while joining game.");
+		}
 	}
 
 	// Remove the user from the game they've connected to.
 	@Override
 	public void disconnect(int sessionId) throws ConnectionFailedException {
-		// TODO Auto-generated method stub
-		
+		try {
+			out.writeInt(DISCONNECT);
+		} catch (IOException e) {
+			throw new ConnectionFailedException("Connection failed while disconnecting.");
+		}
 	}
 
 	// Allow the user to navigate within their current sector.
 	@Override
-	public void navigate(int sessionId, int x, int y)
-			throws BadDestinationException, ConnectionFailedException {
-		// TODO Auto-generated method stub
-		
+	public void navigate(int sessionId, int x, int y) throws BadDestinationException, ConnectionFailedException {
+		try {
+			out.writeInt(NAVIGATE);
+			out.writeInt(x);
+			out.writeInt(y);
+			boolean success = in.readBoolean();
+			if (!success) throw new BadDestinationException("Bad navigate destination");
+		} catch (IOException e) {
+			throw new ConnectionFailedException("Connection failed while navigating.");
+		}
 	}
 
 	// Allow the user to warp to other sectors in the universe.
 	@Override
-	public void warp(int sessionId, Sector sector)
-			throws BadDestinationException, ConnectionFailedException {
-		// TODO Auto-generated method stub
-		
+	public void warp(int sessionId, Sector sector) throws BadDestinationException, ConnectionFailedException {
+		try {
+			out.writeInt(WARP);
+			out.writeInt(sector.getX());
+			out.writeInt(sector.getY());
+			boolean success = in.readBoolean();
+			if (!success) throw new BadDestinationException("Bad navigate destination");
+		} catch (IOException e) {
+			throw new ConnectionFailedException("Connection failed while warping.");
+		}
 	}
 
 	// Send a request to the server to set the user's ship's alert
 	// level.
 	@Override
-	public void setAlertLevel(int sessionId, AlertLevel level)
-			throws ConnectionFailedException {
+	public void setAlertLevel(int sessionId, AlertLevel level) throws ConnectionFailedException {
+		try {
+			out.writeInt(SET_ALERT_LEVEL);
+			out.writeUTF(level.toString());
+		} catch (IOException e) {
+			throw new ConnectionFailedException("Connection failed while setting alert level.");
+		}
 	}
 
 	// Fire a torpedo at another ship within the same sector.
 	@Override
-	public void fireTorpedo(int sessionId, Sector sector, int x, int y)
-			throws ActionException, ConnectionFailedException {
+	public void fireTorpedo(int sessionId, Sector sector, int x, int y) throws ActionException, ConnectionFailedException {
+		try {
+			out.writeInt(FIRE_TORPEDO);
+			out.writeInt(sector.getX());
+			out.writeInt(sector.getY());
+			out.writeInt(x);
+			out.writeInt(y);
+			boolean success = in.readBoolean();
+			if (!success) throw new ActionException("Fire torpedo failed.");
+		} catch (IOException e) {
+			throw new ConnectionFailedException("Connection failed while firing torpedo.");
+		}
 	}
 
 }

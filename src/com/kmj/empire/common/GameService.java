@@ -14,6 +14,17 @@ import com.kmj.empire.common.exceptions.InvalidGameFileException;
  */
 public interface GameService {
 	
+	public static final int RESTORE_GAME = 1;
+	public static final int GET_GAME_STATE = 2;
+	public static final int GET_GAMES_LIST = 3;
+	public static final int AUTHENTICATE = 4;
+	public static final int CREATE_GAME = 5;
+	public static final int JOIN_GAME = 6;
+	public static final int DISCONNECT = 7;
+	public static final int NAVIGATE = 8;
+	public static final int SET_ALERT_LEVEL = 9;
+	public static final int WARP = 10;
+	public static final int FIRE_TORPEDO = 11;
 	
 	/* Restore a saved game to the server */
 	public int restoreGame(String gameData) throws InvalidGameFileException, ConnectionFailedException;
