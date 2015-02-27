@@ -1,5 +1,9 @@
 package com.kmj.empire.common;
 
+/*
+ * Model object representing an object that can be
+ * placed onto the map.
+ */
 public class MapEntity {
 	
 	private Game game;

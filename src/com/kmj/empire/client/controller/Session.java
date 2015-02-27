@@ -16,7 +16,10 @@ import com.kmj.empire.common.exceptions.InvalidGameFileException;
 
 /*
  * Singleton object that will hold often-used objects
- * and update observers when they change.
+ * and update observers when they change. The main purpose
+ * of Session is to provide easy access to communication
+ * with a GameService. This can be flexibly set to different
+ * providers to change the behavior of the client.
  */
 
 public class Session {
@@ -49,7 +52,6 @@ public class Session {
 
 	// Getters
 	public static Session getInstance() { return session; }
-	
 	public int getId() { return id; }
 	public Game getGame() { return game; }
 	public GameService getProvider() { return provider; }

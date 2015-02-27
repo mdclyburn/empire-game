@@ -17,6 +17,10 @@ import com.kmj.empire.common.exceptions.BadDestinationException;
 import com.kmj.empire.common.exceptions.ConnectionFailedException;
 import com.kmj.empire.common.exceptions.InvalidGameFileException;
 
+/*
+ * The object the client will interact with to send and
+ * receive information to and from the server.
+ */
 public class GameServiceProxy implements GameService {
 
 	private DataInputStream in;
@@ -32,7 +36,8 @@ public class GameServiceProxy implements GameService {
 		}
 	}
 	
-	
+	// Send data for a game to the server for restoration. The
+	// client is given the ID of the game in return.
 	@Override
 	public int restoreGame(String gameData) throws InvalidGameFileException, ConnectionFailedException {
 		int gameId = -1; 
@@ -52,6 +57,8 @@ public class GameServiceProxy implements GameService {
 		return gameId;
 	}
 
+	// Get the GameState of the Game the user is currently
+	// playing.
 	@Override
 	public GameState getGameState(int gameId) throws ConnectionFailedException {
 		GameState gameState = null;
@@ -66,6 +73,8 @@ public class GameServiceProxy implements GameService {
 		return gameState;
 	}
 
+	// Send authentication details to the server the user
+	// is connecting to.
 	@Override
 	public int authenticate(String user, String password) throws AuthenticationFailedException, ConnectionFailedException {
 		try {
@@ -80,6 +89,8 @@ public class GameServiceProxy implements GameService {
 		}
 	}
 
+	// Add a new game to the server the user is currently connected
+	// to.
 	@Override
 	public int createGame() throws ConnectionFailedException {
 		try {
@@ -91,6 +102,8 @@ public class GameServiceProxy implements GameService {
 		}
 	}
 
+	// Retrieves a list of currently loaded games on the server
+	// for displaying to the user.
 	@Override
 	public ArrayList<Game> getGamesList(int sessionId)
 			throws AuthenticationFailedException, ConnectionFailedException {
@@ -111,17 +124,20 @@ public class GameServiceProxy implements GameService {
 		}
 	}
 
+	// Add a user to the game they request.
 	@Override
 	public void joinGame(int sessionId, int id)
 			throws ConnectionFailedException {
 	}
 
+	// Remove the user from the game they've connected to.
 	@Override
 	public void disconnect(int sessionId) throws ConnectionFailedException {
 		// TODO Auto-generated method stub
 		
 	}
 
+	// Allow the user to navigate within their current sector.
 	@Override
 	public void navigate(int sessionId, int x, int y)
 			throws BadDestinationException, ConnectionFailedException {
@@ -129,6 +145,7 @@ public class GameServiceProxy implements GameService {
 		
 	}
 
+	// Allow the user to warp to other sectors in the universe.
 	@Override
 	public void warp(int sessionId, Sector sector)
 			throws BadDestinationException, ConnectionFailedException {
@@ -136,11 +153,14 @@ public class GameServiceProxy implements GameService {
 		
 	}
 
+	// Send a request to the server to set the user's ship's alert
+	// level.
 	@Override
 	public void setAlertLevel(int sessionId, AlertLevel level)
 			throws ConnectionFailedException {
 	}
 
+	// Fire a torpedo at another ship within the same sector.
 	@Override
 	public void fireTorpedo(int sessionId, Sector sector, int x, int y)
 			throws ActionException, ConnectionFailedException {

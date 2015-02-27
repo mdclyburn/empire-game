@@ -2,6 +2,10 @@ package com.kmj.empire.common;
 
 import java.util.ArrayList;
 
+/*
+ * Model object representing the empire the player
+ * is a part of.
+ */
 public class EmpireType {
 	
 	private String id;
@@ -45,11 +49,13 @@ public class EmpireType {
 		return null;
 	}
 	
+	// Returns a string representation of the object.
 	public String toString() {
 		String empireString = id + "\t" + name + "\t" + missionType;
 		return empireString; 
 	}
 	
+	// Updates the object from a string representation of the object.
 	public static EmpireType fromString(String empireString) {
 		String id = empireString.substring(0, empireString.indexOf('\t'));
 		empireString = empireString.substring(empireString.indexOf('\t')+1);

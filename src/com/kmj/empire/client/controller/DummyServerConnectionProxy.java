@@ -57,6 +57,7 @@ public class DummyServerConnectionProxy implements GameService {
 		return id;
 	}
 
+	// Restore a game from a string.
 	@Override
 	public int restoreGame(String gameData) {
 		BufferedReader br = new BufferedReader(new StringReader(gameData));
@@ -217,16 +218,21 @@ public class DummyServerConnectionProxy implements GameService {
 		}
 	}
 
+	// Return the GameState object for the user's
+	// current game.
 	@Override
 	public GameState getGameState(int sessionId) throws ConnectionFailedException {
 		return new GameState(sessions.get(sessionId));
 	}
 
+	// Return a list of games that are currently active
+	// on the server.
 	@Override
 	public ArrayList<Game> getGamesList(int sessionId) throws AuthenticationFailedException, ConnectionFailedException {
 		return gameList;
 	}
 
+	// Create a new game.
 	@Override
 	public int createGame() throws ConnectionFailedException {
 
@@ -234,6 +240,7 @@ public class DummyServerConnectionProxy implements GameService {
 		return 0;
 	}
 
+	// Add a user to a given game they have requested.
 	@Override
 	public void joinGame(int sessionId, int id) throws ConnectionFailedException {
 		for(Game g : gameList) {

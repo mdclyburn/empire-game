@@ -22,6 +22,12 @@ import com.kmj.empire.common.Ship;
 import com.kmj.empire.common.exceptions.BadDestinationException;
 import com.kmj.empire.common.exceptions.ConnectionFailedException;
 
+/*
+ * The view presented to the user that shows the user
+ * the currently selected sector (one they have chosen).
+ * It's initial sector is the sector the user is currently
+ * in.
+ */
 public class SectorView extends JPanel implements SessionObserver, MouseListener {
 	
 	private static final long serialVersionUID = 5870003383765058290L;
@@ -33,8 +39,18 @@ public class SectorView extends JPanel implements SessionObserver, MouseListener
 	
 	protected ShipAttributeTableModel model;
 	
+	// The mode the sector view is currently in. This decides
+	// what actions are to be taken when the player selects
+	// something inside the view.
 	protected int mode;
 	
+	/*
+	 * SECTOR VIEW MODES
+	 * =================
+	 * MODE_SCANNER		Enables the player to get information about enties in a sector.
+	 * MODE_NAVIGATE	Enables the player to move around the sector.
+	 * MODE_MISSILE		Enables the player to shoot a missile at a target.
+	 */
 	public static final int MODE_SCANNER = 0;
 	public static final int MODE_NAVIGATE = 1;
 	public static final int MODE_MISSILE = 2;
@@ -50,6 +66,10 @@ public class SectorView extends JPanel implements SessionObserver, MouseListener
 		this.parent = parent;
 	}
 	
+	// Setter Functions
+	
+	// Sets the sector for displaying. Afterwards, the view will
+	// repaint itself to show the new view.
 	public void setSector(Sector sector) {
 		this.sector = sector;
 		repaint();
@@ -67,6 +87,7 @@ public class SectorView extends JPanel implements SessionObserver, MouseListener
 		this.status = status;
 	}
 	
+	// Custom painting method to show the user the sector.
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -134,11 +155,16 @@ public class SectorView extends JPanel implements SessionObserver, MouseListener
 		
 	}
 	
+	// When the Game changes, the sector needs to be able
+	// to repaint itself on cue.
 	@Override
 	public void onGameChanged(Game newGame) {
 		repaint();
 	}
 
+	// Function called when the user clicks inside the
+	// sector view. The action performed depends on the
+	// 'mode' the sector view is in.
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		int x = (e.getX() / (getWidth() / 8)) + 1;
@@ -187,6 +213,7 @@ public class SectorView extends JPanel implements SessionObserver, MouseListener
 		}
 	}
 
+	// Unused Functions =======================
 	@Override
 	public void mousePressed(MouseEvent e) {}
 

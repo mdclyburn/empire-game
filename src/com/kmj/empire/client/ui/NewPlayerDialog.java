@@ -11,6 +11,10 @@ import javax.swing.WindowConstants;
 
 import com.kmj.empire.common.Game;
 
+/*
+ * Dialog that is presented to the user when he or she joings
+ * a game in which they do not have a ship.
+ */
 public class NewPlayerDialog extends JDialog implements ActionListener {
 	
 	private static final int DIALOG_WIDTH = 300;
@@ -43,10 +47,14 @@ public class NewPlayerDialog extends JDialog implements ActionListener {
 	private String allianceChoice;
 	private String shipChoice;
 	
+	// The default constructor should not be used when constructing
+	// this object.
 	public NewPlayerDialog() {
 		
 	}
 	
+	// The constructor that will be used to build the dialog
+	// that will be shown to the user.
 	public NewPlayerDialog(JFrame parent, String title, Game game) {
 		super(parent, title, true);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -56,6 +64,7 @@ public class NewPlayerDialog extends JDialog implements ActionListener {
 		allianceChoice = "";
 		shipChoice = "";
 		
+		// Build the initial combo boxes.
 		arrAlliance = new String[game.getUniverse().getEmpireList().size()];
 		for(int i = 0; i < game.getUniverse().getEmpireList().size(); i++) {
 			arrAlliance[i] = game.getUniverse().getEmpireList().get(i).getName();
@@ -75,6 +84,7 @@ public class NewPlayerDialog extends JDialog implements ActionListener {
 		ship.setBounds(SHIP_SELECTION_X, SHIP_SELECTION_Y, COMBOBOX_WIDTH, COMBOBOX_HEIGHT);
 		add(ship);
 		
+		// Add button.
 		JButton button = new JButton("OK");
 		button.setActionCommand(ACTION_OK);
 		button.setBounds(OK_BUTTON_X, OK_BUTTON_Y, OK_BUTTON_WIDTH, button.getPreferredSize().height);
@@ -82,6 +92,8 @@ public class NewPlayerDialog extends JDialog implements ActionListener {
 		add(button);
 	}
 	
+	// Get the user's input if they have selected OK and close
+	// this dialog box. The parent component will handle things after code finishes.
 	public void actionPerformed(ActionEvent e) {
 		String s = e.getActionCommand();
 
@@ -93,6 +105,7 @@ public class NewPlayerDialog extends JDialog implements ActionListener {
 		}
 	}
 	
+	// Set up the combo-box depending on what the user has selected.
 	private void buildCombo() {
 		String sel = arrAlliance[alliance.getSelectedIndex()];
 		arrShips = new String[game.getUniverse().getEmpire(sel).getShipTypes().size()];
@@ -103,6 +116,7 @@ public class NewPlayerDialog extends JDialog implements ActionListener {
 		for(int i = 0; i < arrShips.length; i++) ship.addItem(arrShips[i]);
 	}
 	
+	// Getters for the parent window to read the user's selections.
 	public String getSelectedEmpire() { return allianceChoice; }
 	public String getSelectedShip() { return shipChoice; }
 	

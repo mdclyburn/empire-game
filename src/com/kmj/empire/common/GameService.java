@@ -8,7 +8,10 @@ import com.kmj.empire.common.exceptions.BadDestinationException;
 import com.kmj.empire.common.exceptions.ConnectionFailedException;
 import com.kmj.empire.common.exceptions.InvalidGameFileException;
 
-
+/*
+ * Common API shared to facilitate communication between the
+ * client and the server.
+ */
 public interface GameService {
 	
 	

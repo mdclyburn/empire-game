@@ -2,6 +2,10 @@ package com.kmj.empire.common;
 
 import java.util.ArrayList;
 
+/*
+ * Model object representing a type of universe. This contains all
+ * of the specifications for a given universe.
+ */
 public class UniverseType {
 	
 	private String name;

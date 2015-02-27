@@ -96,12 +96,14 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 				"session ID was given. Correct this.");
 	}
 
+	// The constructor that should be used when creating the GameWindow.
 	public GameWindow(String name, ServerListWindow serverListWindow) {
 		super(name);
 		this.serverListWindow = serverListWindow;
 		launch();
 	}
 
+	// Set up the GameWindow interface.
 	protected void launch() {
 		setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		setResizable(false);
@@ -220,6 +222,7 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 		setVisible(true);
 	}
 	
+	// Action to be taken when the 
 	@Override
 	public void onIdChanged(int newId) {}
 	
@@ -241,10 +244,15 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 		}
 	}
 
+	// Code to be executed when an ActionEvent is sent to the GameWindow. The
+	// only thing the GameWindow is responsible for here is setting the action
+	// string to let the user know what they're doing and setting the mode in the
+	// scanner views.
 	public void actionPerformed(ActionEvent e) {
 		String s = e.getActionCommand();
 		Game game = Session.getInstance().getGame();
 
+		// Impulse movment.
 		if(s.equals(ACTION_IMPULSE)) {
 			actionStatus.setText("Impulse Movement");
 			// Switch view to current sector.
@@ -252,10 +260,12 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 
 			sectorView.setMode(SectorView.MODE_NAVIGATE);
 		}
+		// Warp movement.
 		else if(s.equals(ACTION_WARP)) {
 			actionStatus.setText("Warping...");
 			universeView.setMode(UniverseView.MODE_WARP);
 		}
+		// Firing a missile.
 		else if(s.equals(ACTION_MISSILE)) {
 			actionStatus.setText("Readying Missile...");
 			// Switch view to current sector.
@@ -263,6 +273,7 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 
 			sectorView.setMode(SectorView.MODE_MISSILE);
 		}
+		// Setting the alert level.
 		else if(s.equals(ACTION_ALERT)) {
 			actionStatus.setText("Going on Alert...");
 			SetAlertDialog sad = new SetAlertDialog(this, "Set Alert Level", game.getPlayerShip(Configuration.getInstance().getUsername()));
@@ -284,6 +295,7 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 			}
 			actionStatus.setText("Idling");
 		}
+		// Refereshing the display.
 		else if(s.equals(ACTION_REFRESH)) {
 			actionStatus.setText("Refreshing...");
 			try {
@@ -298,6 +310,8 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 		return;
 	}
 
+	// Custom action to occur when the user closes the window. The
+	// application should bring the user back to the list window.
 	@Override
 	public void windowClosing(WindowEvent e) {
 		try {
@@ -315,6 +329,7 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 		return;
 	}
 
+	// Unused Actions ==============================
 	@Override
 	public void windowOpened(WindowEvent e) {}
 

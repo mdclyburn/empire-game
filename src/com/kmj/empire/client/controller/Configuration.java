@@ -31,13 +31,15 @@ public class Configuration implements Serializable {
 		serverPort = 0;
 	}
 
+	// Initialize the Configuration object.
 	static {
 		configuration = new Configuration();
 	}
 
 	public static Configuration getInstance() { return configuration; }
 
-	// Getters
+	// ===== Setters
+	// These functions also implement some checking for invalid input.
 	public void setUsername(String username) throws BadConfigurationException {
 		// The username:
 		// - cannot be blank
@@ -72,6 +74,7 @@ public class Configuration implements Serializable {
 		this.serverPort = serverPort;
 	}
 
+	// ===== Getters
 	public String getUsername() { return username; }
 	public String getPassword() { return password; }
 	public String getServerAddress() { return serverAddress; }
@@ -103,6 +106,7 @@ public class Configuration implements Serializable {
 		}
 	}
 
+	// Save the user's configuration to disk.
 	public void save() {
 		File configurationFile = new File(CONFIGURATION_FILE);
 

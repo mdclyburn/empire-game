@@ -1,5 +1,9 @@
 package com.kmj.empire.common;
 
+/*
+ * Model object representing a type of weapon. Contains all
+ * of the specifications for a given weapon.
+ */
 public class WeaponType {
 	
 	protected String id;

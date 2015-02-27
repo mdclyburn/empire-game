@@ -10,6 +10,11 @@ package com.kmj.empire.common;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/*
+ * String representation of the Game model object used when
+ * returning a Game back to a client to avoid cycling calls
+ * with Gson.
+ */
 public class GameState {
 
 	private int id;

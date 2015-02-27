@@ -9,6 +9,10 @@ import com.kmj.empire.client.controller.Session;
 import com.kmj.empire.client.controller.SessionObserver;
 import com.kmj.empire.common.Game;
 
+/*
+ * Managing class for the list of games a player can join. Provides
+ * backend support for the game list in the ServerListWindow class.
+ */
 public class GameListTableModel extends AbstractTableModel {
 
 	private static final long serialVersionUID = 8136003534138739190L;
@@ -26,6 +30,7 @@ public class GameListTableModel extends AbstractTableModel {
 		header[1] = "Players";
 	}
 
+	// The list from which the model will provide a list of games.
 	public void setTableSource(ArrayList<Game> games) { this.games = games; }
 
 	@Override
