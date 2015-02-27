@@ -125,7 +125,6 @@ public class GameServiceProxy implements GameService {
 	public void disconnect(int sessionId) throws ConnectionFailedException {
 		try {
 			out.writeInt(DISCONNECT);
-			//TODO handle disconnect
 		} catch (IOException e) {
 			throw new ConnectionFailedException("Connection failed while disconnecting.");
 		}
@@ -135,7 +134,10 @@ public class GameServiceProxy implements GameService {
 	public void navigate(int sessionId, int x, int y) throws BadDestinationException, ConnectionFailedException {
 		try {
 			out.writeInt(NAVIGATE);
-			//TODO handle navigate
+			out.writeInt(x);
+			out.writeInt(y);
+			boolean success = in.readBoolean();
+			if (!success) throw new BadDestinationException("Bad navigate destination");
 		} catch (IOException e) {
 			throw new ConnectionFailedException("Connection failed while navigating.");
 		}
@@ -145,7 +147,10 @@ public class GameServiceProxy implements GameService {
 	public void warp(int sessionId, Sector sector) throws BadDestinationException, ConnectionFailedException {
 		try {
 			out.writeInt(WARP);
-			//TODO handle warp
+			out.writeInt(sector.getX());
+			out.writeInt(sector.getY());
+			boolean success = in.readBoolean();
+			if (!success) throw new BadDestinationException("Bad navigate destination");
 		} catch (IOException e) {
 			throw new ConnectionFailedException("Connection failed while warping.");
 		}
@@ -155,7 +160,7 @@ public class GameServiceProxy implements GameService {
 	public void setAlertLevel(int sessionId, AlertLevel level) throws ConnectionFailedException {
 		try {
 			out.writeInt(SET_ALERT_LEVEL);
-			//TODO handle setAlertLevel()
+			out.writeUTF(level.toString());
 		} catch (IOException e) {
 			throw new ConnectionFailedException("Connection failed while setting alert level.");
 		}
@@ -165,7 +170,12 @@ public class GameServiceProxy implements GameService {
 	public void fireTorpedo(int sessionId, Sector sector, int x, int y) throws ActionException, ConnectionFailedException {
 		try {
 			out.writeInt(FIRE_TORPEDO);
-			//TODO handle fireTorpedo()
+			out.writeInt(sector.getX());
+			out.writeInt(sector.getY());
+			out.writeInt(x);
+			out.writeInt(y);
+			boolean success = in.readBoolean();
+			if (!success) throw new ActionException("Fire torpedo failed.");
 		} catch (IOException e) {
 			throw new ConnectionFailedException("Connection failed while firing torpedo.");
 		}

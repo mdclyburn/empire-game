@@ -17,6 +17,7 @@ import java.awt.event.KeyListener;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 import javax.swing.JFrame;
@@ -46,6 +47,7 @@ public class Server extends JFrame {
 	private ServerSocket serverSocket;
 	private Socket socket;
 	private static User user[] = new User[MAX_USERS];
+	private HashMap<Integer, Game> playerGameMapping;
 	
 	private JPanel chatWindow;
 	private JTextPane chatPane;
@@ -149,6 +151,7 @@ public class Server extends JFrame {
 	/* initialize server logic */
 	private void initServer() {
 		gameList = new ArrayList<Game>();
+		playerGameMapping =  new HashMap<Integer, Game>();
 	}
 
 	
@@ -243,6 +246,14 @@ public class Server extends JFrame {
 	
 	public ArrayList<Game> getGamesList() {
 		return gameList;
+	}
+	
+	public void setPlayerGame(int playerId, Game game) {
+		playerGameMapping.put(playerId, game);
+	}
+	
+	public Game getPlayerGame(int playerId) {
+		return playerGameMapping.get(playerId);
 	}
 	
 	public int addGame(Game game) {
