@@ -93,8 +93,7 @@ class User implements Runnable {
 				
 				/* getGameState() request received */
 				case GameService.GET_GAME_STATE: try {
-						int gameId = in.readInt();
-						GameState gameState = getGameService().getGameState(gameId);
+						GameState gameState = getGameService().getGameState(server.getPlayerGame(sessionId).getId());
 						out.writeUTF(new Gson().toJson(gameState));
 					} catch (ConnectionFailedException e1) {
 						disconnected = true;

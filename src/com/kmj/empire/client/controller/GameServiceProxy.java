@@ -53,11 +53,10 @@ public class GameServiceProxy implements GameService {
 	}
 
 	@Override
-	public GameState getGameState(int gameId) throws ConnectionFailedException {
+	public GameState getGameState(int sessionId) throws ConnectionFailedException {
 		GameState gameState = null;
 		try {
 			out.writeInt(GET_GAME_STATE);
-			out.writeInt(gameId);
 			String gameData = in.readUTF();
 			gameState = new Gson().fromJson(gameData, GameState.class);
 		} catch (IOException e) {
