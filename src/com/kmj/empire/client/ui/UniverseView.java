@@ -20,6 +20,10 @@ import com.kmj.empire.common.exceptions.ActionException;
 import com.kmj.empire.common.exceptions.BadDestinationException;
 import com.kmj.empire.common.exceptions.ConnectionFailedException;
 
+/*
+ * The view that is presented to the user that allows them to
+ * get a summary of the contents of each sector.
+ */
 public class UniverseView extends JPanel implements SessionObserver, MouseListener {
 	
 	private static final long serialVersionUID = -757496235041650510L;

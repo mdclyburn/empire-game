@@ -1,5 +1,9 @@
 package com.kmj.empire.common;
 
+/*
+ * Model object representing a ship in-game. This includes
+ * both player-controlled and AI-controlled ships.
+ */
 public class Ship extends MapEntity {
 
 	private int id;
@@ -29,6 +33,7 @@ public class Ship extends MapEntity {
 	public AlertLevel getAlertLevel() { return alert; }
 	public int getShieldLevel() { return shield; }
 	
+	// Deplete the energy of a ship depending on its alert level.
 	public void consumeEnergy() {
 		// Deplete energy by 2% if on yellow; 5% if on red
 		if(alert == AlertLevel.YELLOW)
@@ -37,10 +42,12 @@ public class Ship extends MapEntity {
 			energy -= (shipType.getMaxEnergy() / 20);
 	}
 	
+	// Deplete the energy of a ship on impulse movement.
 	public void consumeImpulseEnergy(int mvmt) {
 		energy -= (10 * mvmt);
 	}
 	
+	// Deplete the energy of a ship on warp movement.
 	public void consumeWarpEnergy(int mvmt) {
 		energy -= (100 * mvmt);
 	}

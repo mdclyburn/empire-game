@@ -9,6 +9,10 @@ import com.kmj.empire.client.controller.SessionObserver;
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.Player;
 
+/*
+ * The model class for the table containing a list of
+ * active players.
+ */
 public class PlayerListTableModel extends AbstractTableModel implements SessionObserver {
 	
 	private static final long serialVersionUID = -2458706180159928665L;

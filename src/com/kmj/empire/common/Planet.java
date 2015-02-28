@@ -1,5 +1,9 @@
 package com.kmj.empire.common;
 
+/*
+ * Model object representing a planet that a player can
+ * visit in-game.
+ */
 public class Planet extends MapEntity {
 	
 	public Planet() {}

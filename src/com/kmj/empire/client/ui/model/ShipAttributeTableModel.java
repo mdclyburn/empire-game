@@ -6,6 +6,9 @@ import com.kmj.empire.client.controller.SessionObserver;
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.Ship;
 
+/*
+ * Model class showing the attributes for a selected ship.
+ */
 public class ShipAttributeTableModel extends AbstractTableModel implements SessionObserver {
 	
 	private static final long serialVersionUID = 5037957514446943337L;

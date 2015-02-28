@@ -7,9 +7,8 @@ public class Main {
 
 	public static void main(String[] args) {
 		
-		// Prepare the Session, load the configuration from
-		// file (if it's there), and start the GUI. That's all
-		// that should be needed here.
+		// Load the user's configuration from file
+		// and start the server connection window.
 		Configuration.getInstance().load();
 		ServerConnectionWindow d = new ServerConnectionWindow();
 	}

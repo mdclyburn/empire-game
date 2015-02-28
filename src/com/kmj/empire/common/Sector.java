@@ -2,6 +2,10 @@ package com.kmj.empire.common;
 
 import java.util.ArrayList;
 
+/*
+ * Model object representing one of 64 sectors. Can contain a number
+ * of ships, planets and bases. Each sector has 64 sub-sectors.
+ */
 public class Sector {
 	
 	protected int x, y;

@@ -1,5 +1,8 @@
 package com.kmj.empire.common;
 
+/*
+ * Model object representing an energy weapon type.
+ */
 public class EnergyWeaponType extends WeaponType {
 
 	public EnergyWeaponType(String id, String name, int maxYield) {

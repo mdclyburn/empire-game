@@ -8,6 +8,10 @@ import com.kmj.empire.client.controller.Session;
 import com.kmj.empire.client.controller.SessionObserver;
 import com.kmj.empire.common.Game;
 
+/*
+ * Managing class for the in-game log a player sees. Provides
+ * backend support for the game log in the GameWindow class.
+ */
 public class GameLogTableModel extends AbstractTableModel implements SessionObserver{
 
 	private static final long serialVersionUID = 4610467740584913440L;
