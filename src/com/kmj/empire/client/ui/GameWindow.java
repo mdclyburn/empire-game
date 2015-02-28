@@ -5,10 +5,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
@@ -87,7 +89,9 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 	protected static final String ACTION_IMPULSE = "impulse";
 	protected static final String ACTION_WARP = "warp";
 	protected static final String ACTION_MISSILE = "missile";
-	protected static final String ACTION_ALERT = "alert";
+	protected static final String ACTION_ALERT_GREEN = "green_alert";
+	protected static final String ACTION_ALERT_YELLOW = "yellow_alert";
+	protected static final String ACTION_ALERT_RED = "red_alert";
 	protected static final String ACTION_REFRESH = "refresh";
 
 	public GameWindow() {
@@ -198,17 +202,33 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 		missileButton.setActionCommand(ACTION_MISSILE);
 		missileButton.addActionListener(this);
 		add(missileButton);
+		
+		// Set Alert selections
+		ButtonGroup group = new ButtonGroup();
+		JRadioButton green_alert = new JRadioButton("Green");
+		green_alert.setBounds(OTHER_ACTION_X, OTHER_ACTION_Y, OTHER_ACTION_WIDTH, missileButton.getPreferredSize().height);
+		green_alert.setActionCommand(ACTION_ALERT_RED);
+		green_alert.addActionListener(this);
+		group.add(green_alert);
+		add(green_alert);
 
-		// Set Alert button
-		JButton alertButton = new JButton("Alert...");
-		alertButton.setBounds(OTHER_ACTION_X, OTHER_ACTION_Y, OTHER_ACTION_WIDTH, alertButton.getPreferredSize().height);
-		alertButton.setActionCommand(ACTION_ALERT);
-		alertButton.addActionListener(this);
-		add(alertButton);
+		JRadioButton yellow_alert = new JRadioButton("Yellow");
+		yellow_alert.setBounds(OTHER_ACTION_X + green_alert.getWidth(), OTHER_ACTION_Y, OTHER_ACTION_WIDTH, missileButton.getPreferredSize().height);
+		yellow_alert.setActionCommand(ACTION_ALERT_RED);
+		yellow_alert.addActionListener(this);
+		group.add(yellow_alert);
+		add(yellow_alert);
 
+		JRadioButton red_alert = new JRadioButton("Red");
+		red_alert.setBounds(OTHER_ACTION_X, yellow_alert.getY() + yellow_alert.getWidth(), OTHER_ACTION_WIDTH, missileButton.getPreferredSize().height);
+		red_alert.setActionCommand(ACTION_ALERT_RED);
+		red_alert.addActionListener(this);
+		group.add(red_alert);
+		add(red_alert);
+		
 		// Refresh button
 		JButton refreshButton = new JButton("Refresh");
-		refreshButton.setBounds(OTHER_ACTION_X, alertButton.getY() + alertButton.getHeight() + 5, OTHER_ACTION_WIDTH, refreshButton.getPreferredSize().height);
+		refreshButton.setBounds(OTHER_ACTION_X, missileButton.getY() + missileButton.getHeight() + 5, OTHER_ACTION_WIDTH, refreshButton.getPreferredSize().height);
 		refreshButton.setActionCommand(ACTION_REFRESH);
 		refreshButton.addActionListener(this);
 		add(refreshButton);
@@ -284,26 +304,29 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 			sectorView.setMode(SectorView.MODE_MISSILE);
 		}
 		// Setting the alert level.
-		else if(s.equals(ACTION_ALERT)) {
-			actionStatus.setText("Going on Alert...");
-			SetAlertDialog sad = new SetAlertDialog(this, "Set Alert Level", game.getPlayerShip(Configuration.getInstance().getUsername()));
-			sad.setVisible(true);
-			AlertLevel level;
-			String result = sad.getChoice();
-			if(result.equals("Green"))
-				level = AlertLevel.GREEN;
-			else if(result.equals("Yellow"))
-				level = AlertLevel.YELLOW;
-			else if(result.equals("Red"))
-				level = AlertLevel.RED;
-			else return;
-
+		else if(s.equals(ACTION_ALERT_GREEN)) {
 			try {
-				Session.getInstance().setAlertLevel(level);
-			} catch (ConnectionFailedException c) {
+				Session.getInstance().setAlertLevel(AlertLevel.GREEN);
+			}
+			catch(ConnectionFailedException c) {
 				JOptionPane.showMessageDialog(this, c.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
 			}
-			actionStatus.setText("Idling");
+		}
+		else if(s.equals(ACTION_ALERT_YELLOW)) {
+			try {
+				Session.getInstance().setAlertLevel(AlertLevel.YELLOW);
+			}
+			catch(ConnectionFailedException c) {
+				JOptionPane.showMessageDialog(this, c.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
+			}
+		}
+		else if(s.equals(ACTION_ALERT_RED)) {
+			try {
+				Session.getInstance().setAlertLevel(AlertLevel.RED);
+			}
+			catch(ConnectionFailedException c) {
+				JOptionPane.showMessageDialog(this, c.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
+			}
 		}
 		// Refereshing the display.
 		else if(s.equals(ACTION_REFRESH)) {
