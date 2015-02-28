@@ -49,6 +49,7 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 	protected UniverseView universeView;
 	protected SectorView sectorView;
 
+	//Setting bounds and commands that are to be used later.
 	protected static final int WINDOW_WIDTH = 800;
 	protected static final int WINDOW_HEIGHT = 700;
 	protected static final int PADDING = 15;

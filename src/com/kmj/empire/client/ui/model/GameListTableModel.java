@@ -54,6 +54,7 @@ public class GameListTableModel extends AbstractTableModel {
 			JOptionPane.showMessageDialog(null, "No game selected.", "Error", JOptionPane.ERROR_MESSAGE);
 			return null;
 		}
+		// Returns the requested values.
 		switch(column) {
 		case COLUMN_NAME: System.out.println(games); return games.get(row).getName();
 		case COLUMN_PLAYERS: return games.get(row).getActivePlayers().size();

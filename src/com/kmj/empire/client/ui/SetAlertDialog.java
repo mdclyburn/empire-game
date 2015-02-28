@@ -37,6 +37,8 @@ public class SetAlertDialog extends JDialog implements ActionListener {
 		
 		ButtonGroup group = new ButtonGroup();
 		
+		
+		// Creates the options that are shown up for setting the alert level.
 		JRadioButton radio = new JRadioButton("Green");
 		radio.addActionListener(this);
 		radio.setBounds(PADDING, PADDING, 200, 30);
@@ -63,6 +65,7 @@ public class SetAlertDialog extends JDialog implements ActionListener {
 	}
 	
 	public void actionPerformed(ActionEvent e) {
+		// Checks which action was performed.
 		String s = e.getActionCommand();
 		if(s.equals("Green") || s.equals("Yellow") || s.equals("Red"))
 			result = s;

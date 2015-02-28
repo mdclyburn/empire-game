@@ -72,6 +72,7 @@ public class UniverseView extends JPanel implements SessionObserver, MouseListen
 		selectedSectorY = ship.getSector().getY();
 	}
 	
+	// Sets the view, mode, and status.
 	public void setSectorView(SectorView sectorView) {
 		this.sectorView = sectorView;
 		sectorView.setSector(Session.getInstance().getGame().getSector(selectedSectorX, selectedSectorY));

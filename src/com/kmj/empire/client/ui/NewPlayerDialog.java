@@ -13,13 +13,14 @@ import com.kmj.empire.common.Game;
 import com.kmj.empire.common.ShipType;
 
 /*
- * Dialog that is presented to the user when he or she joings
+ * Dialog that is presented to the user when he or she joins
  * a game in which they do not have a ship.
  */
 public class NewPlayerDialog extends JDialog implements ActionListener {
 	
 	private static final long serialVersionUID = 3018401234719456282L;
 	
+	//Setting bounds and commands that are to be used later.
 	private static final int DIALOG_WIDTH = 300;
 	private static final int DIALOG_HEIGHT = 200;
 	private static final int PADDING = 20;

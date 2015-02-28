@@ -149,7 +149,8 @@ public class Session {
 		provider.fireTorpedo(id, sector, x, y);
 		refresh();
 	}
-
+	
+	// Connects to the server using the Singleton instance and the socket
 	public void connect() throws ConnectionFailedException {
 		try {
 			Socket socket = new Socket(Configuration.getInstance().getServerAddress(), Configuration.getInstance().getServerPort());
