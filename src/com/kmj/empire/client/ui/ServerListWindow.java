@@ -121,6 +121,8 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 		table.setModel(model);
 		refresh();
 		
+		Session.getInstance().setServerListWindow(this);
+		
 		return;
 	}
 	

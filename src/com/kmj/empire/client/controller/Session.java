@@ -5,6 +5,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
+import com.kmj.empire.client.ui.ServerListWindow;
 import com.kmj.empire.common.AlertLevel;
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.GameService;
@@ -39,6 +40,9 @@ public class Session {
 	// Observers of changes to the state of this object.
 	private ArrayList<SessionObserver> observers;
 	
+	// Server List Window
+	private ServerListWindow serverListWindow;
+	
 	private static Session session;
 	static { session = new Session(); }
 
@@ -58,6 +62,7 @@ public class Session {
 	public int getId() { return id; }
 	public Game getGame() { return game; }
 	public GameService getProvider() { return provider; }
+	public ServerListWindow getServerListWindow() { return serverListWindow; }
 	
 	public ArrayList<Game> getLocalGamesList() {
 		return gamesList;
@@ -82,6 +87,10 @@ public class Session {
 
 	public void setProvider(GameService provider) {
 		this.provider = provider;
+	}
+	
+	public void setServerListWindow(ServerListWindow w) {
+		serverListWindow = w;
 	}
 	
 	public void addObserver(SessionObserver o) {

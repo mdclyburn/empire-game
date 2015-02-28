@@ -140,7 +140,12 @@ public class GameServiceProxy implements GameService {
 						break;
 					}
 				}
-				NewPlayerDialog d = new NewPlayerDialog(null, "New Player", game);
+				int x = Session.getInstance().getServerListWindow().getX() +
+						(Session.getInstance().getServerListWindow().getWidth() / 2);
+				int y = Session.getInstance().getServerListWindow().getY() +
+						(Session.getInstance().getServerListWindow().getHeight() / 2);
+				NewPlayerDialog d = new NewPlayerDialog(Session.getInstance().getServerListWindow(), "New Player", game);
+				d.setBounds(x - (d.getWidth() / 2), y - (d.getHeight() / 2), d.getWidth(), d.getHeight());
 				d.setVisible(true);
 				
 				out.writeUTF(d.getSelectedShip());
