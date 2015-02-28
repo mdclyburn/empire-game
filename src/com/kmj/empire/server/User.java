@@ -50,7 +50,7 @@ class User implements Runnable {
 	
 	public void run()
 	{
-		System.out.println("User thread started...");
+		server.printMessage("User thread started...");
 		
 		//server loop
 		while (!Thread.interrupted()) {
@@ -63,41 +63,32 @@ class User implements Runnable {
 				server.printMessage(username+" has disconnected");
 				disconnected = true;
 			}
-		
-			/*/respond with whether or not the user can take an action
-			try {
-				out.writeBoolean(canMove);
-			} catch (IOException e) {
-				disconnect();
-			}//*/
 			
-			System.out.println("code: "+code);
+			server.printMessage("code: "+code);
 			
 			//if unauthenticated user attempts prohibited action
 			if (disconnected || (!authenticated && code != GameService.AUTHENTICATE)) {
-				System.out.println("ending user thread...");
+				server.printMessage("ending user thread...");
 				break;
 			}
 			
-			canMove = false;
-			
 			switch(code) {
 				case -1: 
-					System.err.println("Failed to read code"); 
+					server.printMessage("Failed to read code"); 
 					System.exit(1); 
 
 				/* restoreGame() request received */
 				case GameService.RESTORE_GAME: try {
-						System.out.println("restore game, reading utf");
+						server.printMessage("restore game, reading utf");
 						String gameData = in.readUTF();
 						int gameId = getGameService().restoreGame(gameData);
 						out.writeInt(gameId);
 					} catch (ConnectionFailedException e2) {
-						disconnected = true;
+						disconnect();
 					} catch (IOException e) {
-						disconnected = true;
+						disconnect();
 					} catch (InvalidGameFileException e) {
-						disconnected = true;
+						disconnect();
 					} break;
 				
 				/* getGameState() request received */
@@ -105,28 +96,28 @@ class User implements Runnable {
 						GameState gameState = getGameService().getGameState(server.getPlayerGame(sessionId).getId());
 						out.writeUTF(new Gson().toJson(gameState));
 					} catch (ConnectionFailedException e1) {
-						disconnected = true;
+						disconnect();
 					} catch (IOException e) {
-						disconnected = true;
+						disconnect();
 					} break;
 
 				/* getGamesList() request received */
 				case GameService.GET_GAMES_LIST: try {
-						System.out.println("sending game list");
+						server.printMessage("sending game list");
 						for (Game g : getGameService().getGamesList(code)) {
 							out.writeUTF(new Gson().toJson(new GameState(g)));
 	
-							System.out.println("sending game");
+							server.printMessage("sending game");
 						}
 						out.writeUTF("");
-						System.out.println("sent game list");
+						server.printMessage("sent game list");
 					} catch (ConnectionFailedException e) {
-						disconnected = true;
+						disconnect();
 					} catch (AuthenticationFailedException e) {
 						System.err.println(username+" attempted unauthorized action.");
-						disconnected = true;
+						disconnect();
 					} catch (IOException e) {
-						disconnected = true;
+						disconnect();
 					} break;
 
 				/* authenticate() request received */
@@ -139,36 +130,38 @@ class User implements Runnable {
 						}
 						else {
 							out.writeInt(-1);
-							disconnected = true;
+							disconnect();
 						}
 					} catch (AuthenticationFailedException e) {
-						disconnected = true;
+						disconnect();
 					} catch (ConnectionFailedException e) {
-						disconnected = true;
+						disconnect();
 					} catch (IOException e) {
-						System.err.println("Failed to read username and password.");
-						disconnected = true;
+						server.printMessage("Failed to read username and password.");
+						disconnect();
 					} break;
 
 				/* createGame() request received */
 				case GameService.CREATE_GAME: try {
 						getGameService().createGame();
 					} catch (ConnectionFailedException e) {
-						disconnected = true;
+						disconnect();
 					} break;
 				
 				/* Received join request */
 				case GameService.JOIN_GAME: try {
 						int gameId = in.readInt();
-						System.out.println("Joining gameid: "+gameId);
+						server.printMessage("Joining gameid: "+gameId);
 						getGameService().joinGame(sessionId, gameId);
 					} catch (ConnectionFailedException e) {
-						disconnected = true;
+						disconnect();
 					} catch (IOException e) {
-						disconnected = true;
+						disconnect();
 					} break;
 				
 				case GameService.NAVIGATE: try {
+						out.writeBoolean(canMove);
+						if (!canMove) continue;
 						int x = in.readInt();
 						int y = in.readInt();
 						try {
@@ -178,12 +171,16 @@ class User implements Runnable {
 							out.writeBoolean(false);
 						}
 					} catch (ConnectionFailedException e) {
-						disconnected = true;
+						disconnect();
 					} catch (IOException e) {
-						disconnected = true;
+						disconnect();
+					} catch (ActionException e) {
+						disconnect();
 					} break;
 					
 				case GameService.WARP: try {
+						out.writeBoolean(canMove);
+						if (!canMove) continue;
 						int x = in.readInt();
 						int y = in.readInt();
 						Sector sector = server.getPlayerGame(sessionId).getSector(x,y);
@@ -194,12 +191,16 @@ class User implements Runnable {
 							out.writeBoolean(false);
 						}
 					} catch (IOException e) {
-						disconnected = true;
-					}  catch (ConnectionFailedException e) {
-						disconnected = true;
+						disconnect();
+					} catch (ConnectionFailedException e) {
+						disconnect();
+					} catch (ActionException e) {
+						disconnect();
 					} break;
 					
 				case GameService.SET_ALERT_LEVEL: try {
+						out.writeBoolean(canMove);
+						if (!canMove) continue;
 						String alertString = in.readUTF();
 						if (alertString.equals("GREEN"))
 							getGameService().setAlertLevel(sessionId, AlertLevel.GREEN);
@@ -208,12 +209,16 @@ class User implements Runnable {
 						if (alertString.equals("RED"))
 							getGameService().setAlertLevel(sessionId, AlertLevel.RED);
 					} catch (IOException e) {
-						disconnected = true;
+						disconnect();
 					} catch (ConnectionFailedException e) {
-						disconnected = true;
+						disconnect();
+					} catch (ActionException e) {
+						disconnect();
 					} break;
 					
 				case GameService.FIRE_TORPEDO: try {
+						out.writeBoolean(canMove);
+						if (!canMove) continue;
 						int sx = in.readInt();
 						int sy = in.readInt();
 						Sector sector = server.getPlayerGame(sessionId).getSector(sx, sy);
@@ -226,13 +231,13 @@ class User implements Runnable {
 							out.writeBoolean(false);
 						}
 					} catch (IOException e) {
-						disconnected = true;
+						disconnect();
 					}  catch (ConnectionFailedException e) {
-						disconnected = true;
+						disconnect();
 					} break;
 					
 				case GameService.DISCONNECT:
-					disconnected = true;
+					disconnect();
 					break;
 			}
 		}

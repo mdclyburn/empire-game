@@ -45,13 +45,13 @@ public interface GameService {
 	public void disconnect(int sessionId) throws ConnectionFailedException;
 	
 	/* Move a ship via the impulse mechanism. */
-	public void navigate(int sessionId, int x, int y) throws BadDestinationException, ConnectionFailedException;
+	public void navigate(int sessionId, int x, int y) throws ActionException, BadDestinationException, ConnectionFailedException;
 	
 	/* Set the alert level. */
-	public void setAlertLevel(int sessionId, AlertLevel level) throws ConnectionFailedException;
+	public void setAlertLevel(int sessionId, AlertLevel level) throws ActionException, ConnectionFailedException;
 	
 	/* Move a ship via the warp mechanism. */
-	public void warp(int sessionId, Sector sector) throws BadDestinationException, ConnectionFailedException;
+	public void warp(int sessionId, Sector sector) throws ActionException, BadDestinationException, ConnectionFailedException;
 	
 	/* Fire a torpedo at target. */
 	public void fireTorpedo(int sessionId, Sector sector, int x, int y) throws ActionException, ConnectionFailedException;

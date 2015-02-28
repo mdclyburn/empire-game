@@ -119,17 +119,17 @@ public class Session {
 		provider.joinGame(id, gameId);
 	}
 	
-	public void setAlertLevel(AlertLevel level) throws ConnectionFailedException {
+	public void setAlertLevel(AlertLevel level) throws ConnectionFailedException, ActionException {
 		provider.setAlertLevel(id, level);
 		refresh();
 	}
 	
-	public void warp(Sector sector) throws BadDestinationException, ConnectionFailedException {
+	public void warp(Sector sector) throws BadDestinationException, ConnectionFailedException, ActionException {
 		provider.warp(id, sector);
 		refresh();
 	}
 	
-	public void navigate(int x, int y) throws BadDestinationException, ConnectionFailedException {
+	public void navigate(int x, int y) throws BadDestinationException, ConnectionFailedException, ActionException {
 		provider.navigate(id, x, y);
 		refresh();
 	}

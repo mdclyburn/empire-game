@@ -146,9 +146,12 @@ public class GameServiceProxy implements GameService {
 	}
 
 	@Override
-	public void navigate(int sessionId, int x, int y) throws BadDestinationException, ConnectionFailedException {
+	public void navigate(int sessionId, int x, int y) throws BadDestinationException, ConnectionFailedException, ActionException {
 		try {
 			out.writeInt(NAVIGATE);
+			boolean canMove = in.readBoolean();
+			System.out.println(canMove);
+			if (!canMove) throw new ActionException("Cannot navigate at this time.");
 			out.writeInt(x);
 			out.writeInt(y);
 			boolean success = in.readBoolean();
@@ -159,9 +162,12 @@ public class GameServiceProxy implements GameService {
 	}
 
 	@Override
-	public void warp(int sessionId, Sector sector) throws BadDestinationException, ConnectionFailedException {
+	public void warp(int sessionId, Sector sector) throws BadDestinationException, ConnectionFailedException, ActionException {
 		try {
 			out.writeInt(WARP);
+			boolean canMove = in.readBoolean();
+			System.out.println(canMove);
+			if (!canMove) throw new ActionException("Cannot warp at this time.");
 			out.writeInt(sector.getX());
 			out.writeInt(sector.getY());
 			boolean success = in.readBoolean();
@@ -172,9 +178,12 @@ public class GameServiceProxy implements GameService {
 	}
 
 	@Override
-	public void setAlertLevel(int sessionId, AlertLevel level) throws ConnectionFailedException {
+	public void setAlertLevel(int sessionId, AlertLevel level) throws ConnectionFailedException, ActionException {
 		try {
 			out.writeInt(SET_ALERT_LEVEL);
+			boolean canMove = in.readBoolean();
+			System.out.println(canMove);
+			if (!canMove) throw new ActionException("Cannot set alert level at this time.");
 			out.writeUTF(level.toString());
 		} catch (IOException e) {
 			throw new ConnectionFailedException("Connection failed while setting alert level.");
@@ -185,6 +194,9 @@ public class GameServiceProxy implements GameService {
 	public void fireTorpedo(int sessionId, Sector sector, int x, int y) throws ActionException, ConnectionFailedException {
 		try {
 			out.writeInt(FIRE_TORPEDO);
+			boolean canMove = in.readBoolean();
+			System.out.println(canMove);
+			if (!canMove) throw new ActionException("Cannot fire torpedo at this time.");
 			out.writeInt(sector.getX());
 			out.writeInt(sector.getY());
 			out.writeInt(x);

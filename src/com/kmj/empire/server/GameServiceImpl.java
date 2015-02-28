@@ -111,14 +111,14 @@ public class GameServiceImpl implements GameService {
 			int gameId = server.addGame(restoredGame);
 			return gameId;
 		} catch (IOException ioe) {
-			System.err.println("Failed to read .dat file, inproper format.");
+			server.printMessage("Failed to read .dat file, inproper format.");
 			return -1;
 		}
 	}
 
 	@Override
 	public GameState getGameState(int gameId) {
-		System.out.println("Game id of server is: "+gameId);
+		server.printMessage("Game id of server is: "+gameId);
 		Game game = server.getGame(gameId);
 		return new GameState(game);
 	}
@@ -320,7 +320,7 @@ public class GameServiceImpl implements GameService {
 	public void joinGame(int sessionId, int id) throws ConnectionFailedException {
 		for(Game g : server.getGamesList()) {
 			if(g.getId() == id) {
-				System.out.println("Session " + sessionId + " joining " + g.getName() + "(" + g.getId() + ").");
+				server.printMessage("Session " + sessionId + " joining " + g.getName() + "(" + g.getId() + ").");
 
 				String username = user.getUsername();
 				
@@ -336,7 +336,7 @@ public class GameServiceImpl implements GameService {
 					g.addPlayer(player);
 				}
 				else {
-					System.out.println("Adding new player to game.");
+					server.printMessage("Adding new player to game.");
 					// Get information from user
 					String shipType = "";
 					try {
@@ -344,9 +344,9 @@ public class GameServiceImpl implements GameService {
 					} catch (IOException e) {
 						throw new ConnectionFailedException("");
 					}
-					System.out.println("shipType String: "+shipType);
+					server.printMessage("shipType String: "+shipType);
 					shipType = shipType.substring(shipType.indexOf('(')+1,shipType.indexOf(')'));
-					System.out.println("id : "+shipType);
+					server.printMessage("id : "+shipType);
 					
 					// Find a random spot.
 					Random r = new Random();
@@ -371,7 +371,7 @@ public class GameServiceImpl implements GameService {
 
 						break;
 					}
-					System.out.println("Placing ship in " + sx + "-" + sy + ", " + x + "-" + y);
+					server.printMessage("Placing ship in " + sx + "-" + sy + ", " + x + "-" + y);
 					Ship ship = new Ship(g.getUniverse().getShip(shipType), g, sector, x, y);
 					Player player = new Player(username, ship.getType().getEmpire(), ship);
 					g.addPlayer(player);
