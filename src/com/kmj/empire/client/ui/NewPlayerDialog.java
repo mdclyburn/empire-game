@@ -10,8 +10,11 @@ import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
 import com.kmj.empire.common.Game;
+import com.kmj.empire.common.ShipType;
 
 public class NewPlayerDialog extends JDialog implements ActionListener {
+	
+	private static final long serialVersionUID = 3018401234719456282L;
 	
 	private static final int DIALOG_WIDTH = 300;
 	private static final int DIALOG_HEIGHT = 200;
@@ -65,11 +68,12 @@ public class NewPlayerDialog extends JDialog implements ActionListener {
 		alliance.addActionListener(this);
 		alliance.setActionCommand(ACTION_ALLIANCE);
 		add(alliance);
-		
+
 		String sel = arrAlliance[alliance.getSelectedIndex()];
 		arrShips = new String[game.getUniverse().getEmpire(sel).getShipTypes().size()];
 		for(int i = 0; i < game.getUniverse().getEmpire(sel).getShipTypes().size(); i++) {
-			arrShips[i] = game.getUniverse().getEmpire(sel).getShipTypes().get(i).getName();
+			ShipType ship = game.getUniverse().getEmpire(sel).getShipTypes().get(i);
+			arrShips[i] = "("+ship.getId()+") " + ship.getName();
 		}
 		ship = new JComboBox(arrShips);
 		ship.setBounds(SHIP_SELECTION_X, SHIP_SELECTION_Y, COMBOBOX_WIDTH, COMBOBOX_HEIGHT);
@@ -89,6 +93,9 @@ public class NewPlayerDialog extends JDialog implements ActionListener {
 		if(s.equals(ACTION_OK)) {
 			allianceChoice = game.getUniverse().getEmpireList().get(alliance.getSelectedIndex()).getName();
 			shipChoice = game.getUniverse().getEmpireList().get(alliance.getSelectedIndex()).getShipTypes().get(ship.getSelectedIndex()).getName();
+
+			ShipType newship = game.getUniverse().getEmpireList().get(alliance.getSelectedIndex()).getShipTypes().get(ship.getSelectedIndex());
+			shipChoice = "("+newship.getId()+") " + newship.getName();
 			dispose();
 		}
 	}
@@ -97,7 +104,8 @@ public class NewPlayerDialog extends JDialog implements ActionListener {
 		String sel = arrAlliance[alliance.getSelectedIndex()];
 		arrShips = new String[game.getUniverse().getEmpire(sel).getShipTypes().size()];
 		for(int i = 0; i < game.getUniverse().getEmpire(sel).getShipTypes().size(); i++) {
-			arrShips[i] = game.getUniverse().getEmpire(sel).getShipTypes().get(i).getName();
+			ShipType ship = game.getUniverse().getEmpire(sel).getShipTypes().get(i);
+			arrShips[i] = "("+ship.getId()+") " + ship.getName();
 		}
 		ship.removeAllItems();
 		for(int i = 0; i < arrShips.length; i++) ship.addItem(arrShips[i]);

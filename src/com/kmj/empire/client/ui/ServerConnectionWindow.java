@@ -11,10 +11,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import com.kmj.empire.client.controller.BadConfigurationException;
 import com.kmj.empire.client.controller.Configuration;
 import com.kmj.empire.client.controller.Session;
 import com.kmj.empire.common.exceptions.AuthenticationFailedException;
+import com.kmj.empire.common.exceptions.BadConfigurationException;
 import com.kmj.empire.common.exceptions.ConnectionFailedException;
 
 public class ServerConnectionWindow extends JFrame implements ActionListener {

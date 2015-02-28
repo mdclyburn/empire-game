@@ -13,6 +13,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
+import com.kmj.empire.common.exceptions.BadConfigurationException;
+
 public class Configuration implements Serializable {
 
 	private String username;

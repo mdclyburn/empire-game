@@ -7,11 +7,13 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 import com.google.gson.Gson;
+import com.kmj.empire.client.ui.NewPlayerDialog;
 import com.kmj.empire.common.AlertLevel;
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.GameService;
 import com.kmj.empire.common.GameState;
 import com.kmj.empire.common.Sector;
+import com.kmj.empire.common.exceptions.ActionException;
 import com.kmj.empire.common.exceptions.AuthenticationFailedException;
 import com.kmj.empire.common.exceptions.BadDestinationException;
 import com.kmj.empire.common.exceptions.ConnectionFailedException;
@@ -91,8 +93,7 @@ public class GameServiceProxy implements GameService {
 	}
 
 	@Override
-	public ArrayList<Game> getGamesList(int sessionId)
-			throws AuthenticationFailedException, ConnectionFailedException {
+	public ArrayList<Game> getGamesList(int sessionId) throws ConnectionFailedException {
 		try {
 			out.writeInt(GET_GAMES_LIST);
 			ArrayList<Game> gamesList = new ArrayList<Game>();
@@ -115,6 +116,21 @@ public class GameServiceProxy implements GameService {
 		try {
 			out.writeInt(JOIN_GAME);
 			out.writeInt(id);
+			boolean hasPlayed = in.readBoolean();
+			if (!hasPlayed) {
+				Game game = null;
+				for (Game g : Session.getInstance().getLocalGamesList()) {
+					if (g.getId() == id) {
+						System.out.println("Found game: "+g.getName());
+						game = g;
+						break;
+					}
+				}
+				NewPlayerDialog d = new NewPlayerDialog(null, "New Player", game);
+				d.setVisible(true);
+				
+				out.writeUTF(d.getSelectedShip());
+			}
 		} catch (IOException e) {
 			throw new ConnectionFailedException("Connection failed while joining game.");
 		}
