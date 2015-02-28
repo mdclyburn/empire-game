@@ -236,8 +236,11 @@ class User implements Runnable {
 						disconnect();
 					} break;
 					
-				case GameService.DISCONNECT:
+				case GameService.DISCONNECT: try {
+					getGameService().disconnect(sessionId);
+				} catch (ConnectionFailedException e) {
 					disconnect();
+				}
 					break;
 			}
 		}

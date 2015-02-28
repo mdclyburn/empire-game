@@ -118,7 +118,6 @@ public class GameServiceImpl implements GameService {
 
 	@Override
 	public GameState getGameState(int gameId) {
-		server.printMessage("Game id of server is: "+gameId);
 		Game game = server.getGame(gameId);
 		return new GameState(game);
 	}
@@ -143,6 +142,7 @@ public class GameServiceImpl implements GameService {
 
 	@Override
 	public void disconnect(int sessionId) throws ConnectionFailedException {
+		server.getPlayerGame(sessionId).removePlayer(user.getUsername());
 	}
 
 	@Override
