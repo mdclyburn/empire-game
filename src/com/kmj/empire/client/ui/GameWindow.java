@@ -234,6 +234,16 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 		// Set the stardate.
 		stardate.setText("Stardate " + Integer.toString(Session.getInstance().getGame().getStardate()));
 	}
+	
+	// Controls whether UI is enabled or disabled.
+	void setUIEnabled(boolean b) {
+		if(b) { // Allow input in all buttons.
+			
+		}
+		else { // Disallow input in all buttons.
+			
+		}
+	}
 
 	// Update statuses.
 	private void checkGameOver() {
