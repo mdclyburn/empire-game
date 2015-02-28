@@ -105,6 +105,7 @@ public class SectorView extends JPanel implements SessionObserver, MouseListener
 		
 		// Draw sector contents.
 		Game game = Session.getInstance().getGame();
+		sector = game.getSector(sector.getX(), sector.getY());
 		if(sector == null) return;
 		else {
 			// Draw planets.
