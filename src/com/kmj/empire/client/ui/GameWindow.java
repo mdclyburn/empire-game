@@ -212,14 +212,14 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 		ButtonGroup group = new ButtonGroup();
 		JRadioButton green_alert = new JRadioButton("Green");
 		green_alert.setBounds(ALERT_ACTION_X, ALERT_ACTION_Y, OTHER_ACTION_WIDTH, missileButton.getPreferredSize().height);
-		green_alert.setActionCommand(ACTION_ALERT_RED);
+		green_alert.setActionCommand(ACTION_ALERT_GREEN);
 		green_alert.addActionListener(this);
 		group.add(green_alert);
 		add(green_alert);
 
 		JRadioButton yellow_alert = new JRadioButton("Yellow");
 		yellow_alert.setBounds(ALERT_ACTION_X, green_alert.getY() + green_alert.getHeight(), OTHER_ACTION_WIDTH, missileButton.getPreferredSize().height);
-		yellow_alert.setActionCommand(ACTION_ALERT_RED);
+		yellow_alert.setActionCommand(ACTION_ALERT_YELLOW);
 		yellow_alert.addActionListener(this);
 		group.add(yellow_alert);
 		add(yellow_alert);
