@@ -6,7 +6,6 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Random;
 
-import com.kmj.empire.client.ui.NewPlayerDialog;
 import com.kmj.empire.common.AlertLevel;
 import com.kmj.empire.common.Base;
 import com.kmj.empire.common.EmpireType;

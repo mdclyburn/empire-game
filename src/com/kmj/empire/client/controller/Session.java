@@ -122,21 +122,29 @@ public class Session {
 	}
 	
 	public void setAlertLevel(AlertLevel level) throws ConnectionFailedException, ActionException {
+		refresh();
+		if (!isGameOver())
 		provider.setAlertLevel(id, level);
 		refresh();
 	}
 	
 	public void warp(Sector sector) throws BadDestinationException, ConnectionFailedException, ActionException {
+		refresh();
+		if (!isGameOver())
 		provider.warp(id, sector);
 		refresh();
 	}
 	
 	public void navigate(int x, int y) throws BadDestinationException, ConnectionFailedException, ActionException {
+		refresh();
+		if (!isGameOver())
 		provider.navigate(id, x, y);
 		refresh();
 	}
 	
 	public void fireTorpedo(Sector sector, int x, int y) throws ActionException, ConnectionFailedException {
+		refresh();
+		if (!isGameOver())
 		provider.fireTorpedo(id, sector, x, y);
 		refresh();
 	}

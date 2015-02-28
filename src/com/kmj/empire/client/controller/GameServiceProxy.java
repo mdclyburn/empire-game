@@ -163,7 +163,11 @@ public class GameServiceProxy implements GameService {
 		try {
 			out.writeInt(NAVIGATE);
 			boolean canMove = in.readBoolean();
-			if (!canMove) throw new ActionException("Cannot navigate at this time.");
+			if (!canMove) {
+				boolean dead = in.readBoolean();
+				if (dead) new ActionException("You are dead.");
+				throw new ActionException("Cannot navigate at this time.");
+			}
 			out.writeInt(x);
 			out.writeInt(y);
 			boolean success = in.readBoolean();
@@ -179,7 +183,11 @@ public class GameServiceProxy implements GameService {
 		try {
 			out.writeInt(WARP);
 			boolean canMove = in.readBoolean();
-			if (!canMove) throw new ActionException("Cannot warp at this time.");
+			if (!canMove) {
+				boolean dead = in.readBoolean();
+				if (dead) new ActionException("You are dead.");
+				throw new ActionException("Cannot navigate at this time.");
+			}
 			out.writeInt(sector.getX());
 			out.writeInt(sector.getY());
 			boolean success = in.readBoolean();
@@ -196,7 +204,11 @@ public class GameServiceProxy implements GameService {
 		try {
 			out.writeInt(SET_ALERT_LEVEL);
 			boolean canMove = in.readBoolean();
-			if (!canMove) throw new ActionException("Cannot set alert level at this time.");
+			if (!canMove) {
+				boolean dead = in.readBoolean();
+				if (dead) new ActionException("You are dead.");
+				throw new ActionException("Cannot navigate at this time.");
+			}
 			out.writeUTF(level.toString());
 		} catch (IOException e) {
 			throw new ConnectionFailedException("Connection failed while setting alert level.");
@@ -209,7 +221,11 @@ public class GameServiceProxy implements GameService {
 		try {
 			out.writeInt(FIRE_TORPEDO);
 			boolean canMove = in.readBoolean();
-			if (!canMove) throw new ActionException("Cannot fire torpedo at this time.");
+			if (!canMove) {
+				boolean dead = in.readBoolean();
+				if (dead) new ActionException("You are dead.");
+				throw new ActionException("Cannot navigate at this time.");
+			}
 			out.writeInt(sector.getX());
 			out.writeInt(sector.getY());
 			out.writeInt(x);
