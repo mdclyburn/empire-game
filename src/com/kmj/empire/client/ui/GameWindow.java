@@ -231,6 +231,9 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 		group.add(red_alert);
 		add(red_alert);
 		
+		// The player starts on green alert.
+		group.setSelected(green_alert.getModel(), true);
+		
 		// Refresh button
 		JButton refreshButton = new JButton("Refresh");
 		refreshButton.setBounds(OTHER_ACTION_X, OTHER_ACTION_Y, OTHER_ACTION_WIDTH, refreshButton.getPreferredSize().height);
