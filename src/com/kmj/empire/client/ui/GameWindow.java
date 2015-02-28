@@ -86,6 +86,10 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 	protected static final int OTHER_ACTION_X = WEAPON_ACTION_X + WEAPON_ACTION_WIDTH + PADDING;
 	protected static final int OTHER_ACTION_Y = SHIP_ATTR_Y;
 	protected static final int OTHER_ACTION_WIDTH = DISPLAY_WIDTH / 3;
+	
+	protected static final int ALERT_ACTION_X = OTHER_ACTION_X + OTHER_ACTION_WIDTH + PADDING;
+	protected static final int ALERT_ACTION_Y = SHIP_ATTR_Y;
+	protected static final int ALERT_ACTION_WIDTH = DISPLAY_WIDTH / 3;
 
 	protected static final String ACTION_IMPULSE = "impulse";
 	protected static final String ACTION_WARP = "warp";
@@ -207,21 +211,21 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 		// Set Alert selections
 		ButtonGroup group = new ButtonGroup();
 		JRadioButton green_alert = new JRadioButton("Green");
-		green_alert.setBounds(OTHER_ACTION_X, OTHER_ACTION_Y, OTHER_ACTION_WIDTH, missileButton.getPreferredSize().height);
+		green_alert.setBounds(ALERT_ACTION_X, ALERT_ACTION_Y, OTHER_ACTION_WIDTH, missileButton.getPreferredSize().height);
 		green_alert.setActionCommand(ACTION_ALERT_RED);
 		green_alert.addActionListener(this);
 		group.add(green_alert);
 		add(green_alert);
 
 		JRadioButton yellow_alert = new JRadioButton("Yellow");
-		yellow_alert.setBounds(OTHER_ACTION_X + green_alert.getWidth(), OTHER_ACTION_Y, OTHER_ACTION_WIDTH, missileButton.getPreferredSize().height);
+		yellow_alert.setBounds(ALERT_ACTION_X, green_alert.getY() + green_alert.getHeight(), OTHER_ACTION_WIDTH, missileButton.getPreferredSize().height);
 		yellow_alert.setActionCommand(ACTION_ALERT_RED);
 		yellow_alert.addActionListener(this);
 		group.add(yellow_alert);
 		add(yellow_alert);
 
 		JRadioButton red_alert = new JRadioButton("Red");
-		red_alert.setBounds(OTHER_ACTION_X, yellow_alert.getY() + yellow_alert.getWidth(), OTHER_ACTION_WIDTH, missileButton.getPreferredSize().height);
+		red_alert.setBounds(ALERT_ACTION_X, yellow_alert.getY() + yellow_alert.getHeight(), OTHER_ACTION_WIDTH, missileButton.getPreferredSize().height);
 		red_alert.setActionCommand(ACTION_ALERT_RED);
 		red_alert.addActionListener(this);
 		group.add(red_alert);
