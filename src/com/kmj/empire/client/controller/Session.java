@@ -9,6 +9,7 @@ import com.kmj.empire.common.AlertLevel;
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.GameService;
 import com.kmj.empire.common.Sector;
+import com.kmj.empire.common.exceptions.ActionException;
 import com.kmj.empire.common.exceptions.AuthenticationFailedException;
 import com.kmj.empire.common.exceptions.BadDestinationException;
 import com.kmj.empire.common.exceptions.ConnectionFailedException;
@@ -29,6 +30,7 @@ public class Session {
 
 	// The state of the game the user is currently playing.
 	private Game game;
+	private ArrayList<Game> gamesList;
 
 	// The server connection proxy. This is used to communicate
 	// with the server.
@@ -42,6 +44,7 @@ public class Session {
 
 	private Session() {
 		observers = new ArrayList<SessionObserver>();
+		gamesList = new ArrayList<Game>();
 	}
 
 	private Session(int id, Game game, GameService provider) {
@@ -55,6 +58,10 @@ public class Session {
 	public int getId() { return id; }
 	public Game getGame() { return game; }
 	public GameService getProvider() { return provider; }
+	
+	public ArrayList<Game> getLocalGamesList() {
+		return gamesList;
+	}
 
 	// Setters. Some are augmented for observers.
 	public void setId(int id) {
@@ -98,7 +105,8 @@ public class Session {
 	}
 	
 	public ArrayList<Game> getGamesList() throws AuthenticationFailedException, ConnectionFailedException {
-		return provider.getGamesList(id);
+		gamesList = provider.getGamesList(id);
+		return gamesList;
 	}
 	
 	public void refresh() throws ConnectionFailedException {

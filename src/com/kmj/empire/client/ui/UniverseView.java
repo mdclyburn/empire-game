@@ -84,6 +84,12 @@ public class UniverseView extends JPanel implements SessionObserver, MouseListen
 		this.status = status;
 	}
 	
+	public void setSelectedSector(int x, int y) {
+		selectedSectorX = x;
+		selectedSectorY = y;
+		repaint();
+	}
+	
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);

@@ -14,6 +14,8 @@ import com.kmj.empire.common.Player;
  * active players.
  */
 public class PlayerListTableModel extends AbstractTableModel implements SessionObserver {
+	
+	private static final long serialVersionUID = -2458706180159928665L;
 
 	public static final int COLUMN_NAME = 0;
 	

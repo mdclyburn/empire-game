@@ -22,6 +22,7 @@ import com.kmj.empire.client.ui.model.PlayerListTableModel;
 import com.kmj.empire.client.ui.model.ShipAttributeTableModel;
 import com.kmj.empire.common.AlertLevel;
 import com.kmj.empire.common.Game;
+import com.kmj.empire.common.Ship;
 import com.kmj.empire.common.exceptions.ConnectionFailedException;
 
 // The GameWindow is where the user will spend most of their time
@@ -286,7 +287,9 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 		if(s.equals(ACTION_IMPULSE)) {
 			actionStatus.setText("Impulse Movement");
 			// Switch view to current sector.
-			sectorView.setSector(game.getPlayerShip(Configuration.getInstance().getUsername()).getSector());
+			Ship playerShip = game.getPlayerShip(Configuration.getInstance().getUsername());
+			sectorView.setSector(playerShip.getSector());
+			universeView.setSelectedSector(playerShip.getSector().getX(), playerShip.getSector().getY());
 
 			sectorView.setMode(SectorView.MODE_NAVIGATE);
 		}

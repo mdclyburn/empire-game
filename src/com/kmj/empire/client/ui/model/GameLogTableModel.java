@@ -14,6 +14,8 @@ import com.kmj.empire.common.Game;
  */
 public class GameLogTableModel extends AbstractTableModel implements SessionObserver{
 
+	private static final long serialVersionUID = 4610467740584913440L;
+
 	protected static final int COLUMN_ENTRY = 0;
 
 	protected String[] header;
