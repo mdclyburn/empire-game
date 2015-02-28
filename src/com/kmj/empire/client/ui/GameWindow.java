@@ -82,14 +82,14 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 	protected static final int WEAPON_ACTION_X = NAVIGATE_ACTION_X + NAVIGATE_ACTION_WIDTH + PADDING;
 	protected static final int WEAPON_ACTION_Y = SHIP_ATTR_Y;
 	protected static final int WEAPON_ACTION_WIDTH = DISPLAY_WIDTH / 3;
+	
+	protected static final int ALERT_ACTION_X = WEAPON_ACTION_X + WEAPON_ACTION_WIDTH + PADDING;
+	protected static final int ALERT_ACTION_Y = SHIP_ATTR_Y;
+	protected static final int ALERT_ACTION_WIDTH = DISPLAY_WIDTH / 5;
 
-	protected static final int OTHER_ACTION_X = WEAPON_ACTION_X + WEAPON_ACTION_WIDTH + PADDING;
+	protected static final int OTHER_ACTION_X = ALERT_ACTION_X + ALERT_ACTION_WIDTH + PADDING;
 	protected static final int OTHER_ACTION_Y = SHIP_ATTR_Y;
 	protected static final int OTHER_ACTION_WIDTH = DISPLAY_WIDTH / 3;
-	
-	protected static final int ALERT_ACTION_X = OTHER_ACTION_X + OTHER_ACTION_WIDTH + PADDING;
-	protected static final int ALERT_ACTION_Y = SHIP_ATTR_Y;
-	protected static final int ALERT_ACTION_WIDTH = DISPLAY_WIDTH / 3;
 
 	protected static final String ACTION_IMPULSE = "impulse";
 	protected static final String ACTION_WARP = "warp";
@@ -233,7 +233,7 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 		
 		// Refresh button
 		JButton refreshButton = new JButton("Refresh");
-		refreshButton.setBounds(OTHER_ACTION_X, missileButton.getY() + missileButton.getHeight() + 5, OTHER_ACTION_WIDTH, refreshButton.getPreferredSize().height);
+		refreshButton.setBounds(OTHER_ACTION_X, OTHER_ACTION_Y, OTHER_ACTION_WIDTH, refreshButton.getPreferredSize().height);
 		refreshButton.setActionCommand(ACTION_REFRESH);
 		refreshButton.addActionListener(this);
 		add(refreshButton);
