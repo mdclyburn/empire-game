@@ -170,6 +170,7 @@ class User implements Runnable {
 						} catch (BadDestinationException e) { 
 							out.writeBoolean(false);
 						}
+						setCanMove(false);
 					} catch (ConnectionFailedException e) {
 						disconnect();
 					} catch (IOException e) {
@@ -190,6 +191,7 @@ class User implements Runnable {
 						} catch (BadDestinationException e) {
 							out.writeBoolean(false);
 						}
+						setCanMove(false);
 					} catch (IOException e) {
 						disconnect();
 					} catch (ConnectionFailedException e) {
@@ -208,6 +210,7 @@ class User implements Runnable {
 							getGameService().setAlertLevel(sessionId, AlertLevel.YELLOW);
 						if (alertString.equals("RED"))
 							getGameService().setAlertLevel(sessionId, AlertLevel.RED);
+						setCanMove(false);
 					} catch (IOException e) {
 						disconnect();
 					} catch (ConnectionFailedException e) {
@@ -230,6 +233,7 @@ class User implements Runnable {
 						} catch (ActionException e) {
 							out.writeBoolean(false);
 						}
+						setCanMove(false);
 					} catch (IOException e) {
 						disconnect();
 					}  catch (ConnectionFailedException e) {
@@ -268,6 +272,10 @@ class User implements Runnable {
 	
 	public void setPlayer(Player player) {
 		this.player = player;
+	}
+	
+	public void setCanMove(boolean canMove) {
+		this.canMove = canMove;
 	}
 	
 	public DataOutputStream getOut() {

@@ -60,6 +60,7 @@ public class Server extends JFrame {
 		super("Server");
 		initGui();
 		initServer();
+		initGameWatch();
 		
 		//Run Server
 		printMessage("Server Starting...");
@@ -154,6 +155,30 @@ public class Server extends JFrame {
 		playerGameMapping =  new HashMap<Integer, Game>();
 	}
 
+	/* changes stardate every 10 seconds */
+	private void initGameWatch() {
+		Thread gameWatch = new Thread() {
+			public void run() {
+				while (!this.isInterrupted()) {
+					try {
+						Thread.sleep(10000);
+					} catch (InterruptedException e) {
+						printMessage("Game Watch Interrupted, server shutting down...");
+						System.exit(1);
+					}
+					printMessage("Games Advancing...");
+					for (Game g : gameList) {
+						g.nextStardate();
+						g.advance();
+					}
+					for (User u : user) {
+						if (u != null) u.setCanMove(true);
+					}
+				}
+			}
+		};
+		gameWatch.start();
+	}
 	
 	public static void main(String args[]) throws Exception
 	{

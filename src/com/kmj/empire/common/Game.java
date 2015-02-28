@@ -217,6 +217,78 @@ public class Game {
 		for(Ship s : ships) s.consumeEnergy();
 	}
 	
+	public void advance() {
+		ArrayList<Ship> ships = getShips();
+		for(int i = 0; i < ships.size(); i++) {
+			Ship ship = ships.get(i);
+			// See if this is an AI ship.
+			if(getPropertyMapping().get(ship) == null) {
+				Sector sector = ship.getSector();
+				// Search the sector for an enemy ship.
+				ArrayList<Ship> enemies = new ArrayList<Ship>();
+				ArrayList<Ship> sectorShips = sector.getShips();
+				for(int j = 0; j < sectorShips.size(); j++) {
+					Ship possEnemyShip = sectorShips.get(j);
+					if(!possEnemyShip.getType().getEmpire().getName().equals(ship.getType().getEmpire().getName()))
+						enemies.add(possEnemyShip);
+				}
+
+				// Continue search if enemy ships are in the sector.
+				if(enemies.size() > 0) {
+					// Find the closest.
+					Ship closest = null;
+					for(int k = 0; k < enemies.size(); k++) {
+						Ship enemyShip = enemies.get(k);
+						if(closest == null) {
+							closest = enemyShip;
+						}
+						else {
+							// Calculate its distance.
+							int newDistance = Math.abs(ship.getX() - enemyShip.getX()) + Math.abs(ship.getY() - enemyShip.getY());
+							int oldDistance = Math.abs(ship.getX() - closest.getX()) + Math.abs(ship.getY() - closest.getY());
+							if(newDistance < oldDistance) closest = enemyShip;
+						}
+					}
+
+					// Attack.
+					String dest = "";
+					if(getOwner(closest) == null) dest = closest.getType().getName();
+					else dest = getOwner(closest);
+					if(closest.getAlert() == AlertLevel.GREEN) {
+						// The ship is immediately destroyed.
+						closest.setShield(-1);
+						destroy(closest);
+					}
+					else if(closest.getAlert() == AlertLevel.YELLOW) {
+						// Damaged by 50% of the missile's yield.
+						closest.setShield(closest.getShield() - (ship.getType().getMissileWeapon().getMaxYield() / 2));
+						if(closest.getShield() < 0) destroy(closest);
+					}
+					else {
+						// Damaged by 100% of the missile's yield.
+						closest.setShield(closest.getShield() - ship.getType().getMissileWeapon().getMaxYield());
+						if(closest.getShield() < 0) destroy(closest);
+					}
+
+					// Remove a missile.
+					ship.setMissles(ship.getMissles() - 1);
+
+					// Log the event.
+					String entry = getStardate() + ": " + ship.getType().getName() + " at (" +
+							ship.getX() + ", " + ship.getY() + ") fired " +
+							ship.getType().getMissileWeapon().getName() + " at " + dest +
+							" at (" + closest.getX() + ", " + closest.getY() + "); ";
+
+					if(closest.getShield() > 0)
+						entry += "target's shields now at " + closest.getShield();
+					else
+						entry += "target destroyed.";
+					getLog().add(0, entry);
+				}
+			}
+		}
+	}
+	
 	public void empty() {
 		players.removeAll(players);
 		ships.removeAll(ships);
