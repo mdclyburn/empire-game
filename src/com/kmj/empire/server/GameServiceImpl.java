@@ -6,7 +6,6 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Random;
 
-import com.kmj.empire.client.controller.ActionException;
 import com.kmj.empire.client.ui.NewPlayerDialog;
 import com.kmj.empire.common.AlertLevel;
 import com.kmj.empire.common.Base;
@@ -21,6 +20,7 @@ import com.kmj.empire.common.Ship;
 import com.kmj.empire.common.ShipType;
 import com.kmj.empire.common.UniverseType;
 import com.kmj.empire.common.WeaponType;
+import com.kmj.empire.common.exceptions.ActionException;
 import com.kmj.empire.common.exceptions.AuthenticationFailedException;
 import com.kmj.empire.common.exceptions.BadDestinationException;
 import com.kmj.empire.common.exceptions.ConnectionFailedException;
@@ -323,6 +323,12 @@ public class GameServiceImpl implements GameService {
 				System.out.println("Session " + sessionId + " joining " + g.getName() + "(" + g.getId() + ").");
 
 				String username = user.getUsername();
+				
+				try {
+					user.getOut().writeBoolean(g.hasPlayed(username));
+				} catch (IOException e) {
+					throw new ConnectionFailedException("");
+				}
 
 				if(g.hasPlayed(username)) {
 					Ship ship = g.getPlayerShip(username);
@@ -332,10 +338,16 @@ public class GameServiceImpl implements GameService {
 				else {
 					System.out.println("Adding new player to game.");
 					// Get information from user
-					NewPlayerDialog d = new NewPlayerDialog(null, "New Player", g);
-					d.setVisible(true);
-					if(d.getSelectedEmpire().length() == 0) throw new ConnectionFailedException("");
-
+					String shipType = "";
+					try {
+						shipType = user.getIn().readUTF();
+					} catch (IOException e) {
+						throw new ConnectionFailedException("");
+					}
+					System.out.println("shipType String: "+shipType);
+					shipType = shipType.substring(shipType.indexOf('(')+1,shipType.indexOf(')'));
+					System.out.println("id : "+shipType);
+					
 					// Find a random spot.
 					Random r = new Random();
 					Sector sector = null;
@@ -360,7 +372,7 @@ public class GameServiceImpl implements GameService {
 						break;
 					}
 					System.out.println("Placing ship in " + sx + "-" + sy + ", " + x + "-" + y);
-					Ship ship = new Ship(g.getUniverse().getShip(d.getSelectedShip()), g, sector, x, y);
+					Ship ship = new Ship(g.getUniverse().getShip(shipType), g, sector, x, y);
 					Player player = new Player(username, ship.getType().getEmpire(), ship);
 					g.addPlayer(player);
 					user.setPlayer(player);

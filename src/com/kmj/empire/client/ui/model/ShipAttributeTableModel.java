@@ -3,7 +3,6 @@ package com.kmj.empire.client.ui.model;
 import javax.swing.table.AbstractTableModel;
 
 import com.kmj.empire.client.controller.SessionObserver;
-import com.kmj.empire.common.AlertLevel;
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.Ship;
 
@@ -11,6 +10,8 @@ import com.kmj.empire.common.Ship;
  * Model class showing the attributes for a selected ship.
  */
 public class ShipAttributeTableModel extends AbstractTableModel implements SessionObserver {
+	
+	private static final long serialVersionUID = 5037957514446943337L;
 	
 	protected Ship ship;
 	protected String[] header;

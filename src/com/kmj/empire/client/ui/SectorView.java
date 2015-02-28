@@ -9,7 +9,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import com.kmj.empire.client.controller.ActionException;
 import com.kmj.empire.client.controller.Configuration;
 import com.kmj.empire.client.controller.Session;
 import com.kmj.empire.client.controller.SessionObserver;
@@ -19,6 +18,7 @@ import com.kmj.empire.common.Game;
 import com.kmj.empire.common.Planet;
 import com.kmj.empire.common.Sector;
 import com.kmj.empire.common.Ship;
+import com.kmj.empire.common.exceptions.ActionException;
 import com.kmj.empire.common.exceptions.BadDestinationException;
 import com.kmj.empire.common.exceptions.ConnectionFailedException;
 
