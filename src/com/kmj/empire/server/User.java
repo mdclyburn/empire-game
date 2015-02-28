@@ -6,13 +6,13 @@ import java.io.IOException;
 import java.net.Socket;
 
 import com.google.gson.Gson;
-import com.kmj.empire.client.controller.ActionException;
 import com.kmj.empire.common.AlertLevel;
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.GameService;
 import com.kmj.empire.common.GameState;
 import com.kmj.empire.common.Player;
 import com.kmj.empire.common.Sector;
+import com.kmj.empire.common.exceptions.ActionException;
 import com.kmj.empire.common.exceptions.AuthenticationFailedException;
 import com.kmj.empire.common.exceptions.BadDestinationException;
 import com.kmj.empire.common.exceptions.ConnectionFailedException;
@@ -27,8 +27,8 @@ class User implements Runnable {
 	private GameService gameService;
 	
 	private boolean disconnected = false;
-	//will be false what autheniticated is truely implemented
 	private boolean authenticated = false;
+	private boolean canMove = true;
 	private String username, password;
 	private int sessionId;
 	private Player player;
@@ -63,6 +63,13 @@ class User implements Runnable {
 				server.printMessage(username+" has disconnected");
 				disconnected = true;
 			}
+		
+			/*/respond with whether or not the user can take an action
+			try {
+				out.writeBoolean(canMove);
+			} catch (IOException e) {
+				disconnect();
+			}//*/
 			
 			System.out.println("code: "+code);
 			
@@ -71,6 +78,8 @@ class User implements Runnable {
 				System.out.println("ending user thread...");
 				break;
 			}
+			
+			canMove = false;
 			
 			switch(code) {
 				case -1: 
@@ -93,8 +102,7 @@ class User implements Runnable {
 				
 				/* getGameState() request received */
 				case GameService.GET_GAME_STATE: try {
-						int gameId = in.readInt();
-						GameState gameState = getGameService().getGameState(gameId);
+						GameState gameState = getGameService().getGameState(server.getPlayerGame(sessionId).getId());
 						out.writeUTF(new Gson().toJson(gameState));
 					} catch (ConnectionFailedException e1) {
 						disconnected = true;
@@ -252,5 +260,13 @@ class User implements Runnable {
 	
 	public void setPlayer(Player player) {
 		this.player = player;
+	}
+	
+	public DataOutputStream getOut() {
+		return out;
+	}
+	
+	public DataInputStream getIn() {
+		return in;
 	}
 }
