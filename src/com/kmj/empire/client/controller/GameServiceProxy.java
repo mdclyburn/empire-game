@@ -53,7 +53,7 @@ public class GameServiceProxy implements GameService {
 			if (gameId == -1)
 				throw new InvalidGameFileException();
 		} catch (IOException e) {
-			throw new ConnectionFailedException();
+			throw new ConnectionFailedException("Could not connect to server.");
 		}
 		
 		return gameId;
@@ -69,7 +69,7 @@ public class GameServiceProxy implements GameService {
 			String gameData = in.readUTF();
 			gameState = new Gson().fromJson(gameData, GameState.class);
 		} catch (IOException e) {
-			throw new ConnectionFailedException();
+			throw new ConnectionFailedException("Failed to connect to server.");
 		}
 		return gameState;
 	}
@@ -86,7 +86,7 @@ public class GameServiceProxy implements GameService {
 			if (sessionId == -1) throw new AuthenticationFailedException();
 			return sessionId;
 		} catch(IOException e) {
-			throw new ConnectionFailedException();
+			throw new ConnectionFailedException("Failed to connect to server.");
 		}
 	}
 
@@ -99,7 +99,7 @@ public class GameServiceProxy implements GameService {
 			int gameId = in.readInt();
 			return gameId;
 		} catch (IOException e) {
-			throw new ConnectionFailedException();
+			throw new ConnectionFailedException("Failed to connect to server.");
 		}
 	}
 
@@ -118,7 +118,7 @@ public class GameServiceProxy implements GameService {
 			}
 			return gamesList;
 		} catch (IOException e) {
-			throw new ConnectionFailedException();
+			throw new ConnectionFailedException("Failed to connect to server.");
 		}
 	}
 
@@ -148,7 +148,7 @@ public class GameServiceProxy implements GameService {
 				out.writeUTF(d.getSelectedShip());
 			}
 		} catch (IOException e) {
-			throw new ConnectionFailedException("Connection failed while joining game.");
+			throw new ConnectionFailedException("Failed to connect to server.");
 		}
 	}
 
@@ -158,7 +158,7 @@ public class GameServiceProxy implements GameService {
 		try {
 			out.writeInt(DISCONNECT);
 		} catch (IOException e) {
-			throw new ConnectionFailedException("Connection failed while disconnecting.");
+			throw new ConnectionFailedException("Failed to connect to server.");
 		}
 	}
 
@@ -174,7 +174,7 @@ public class GameServiceProxy implements GameService {
 			boolean success = in.readBoolean();
 			if (!success) throw new BadDestinationException("Bad navigate destination");
 		} catch (IOException e) {
-			throw new ConnectionFailedException("Connection failed while navigating.");
+			throw new ConnectionFailedException("Failed to connect to server.");
 		}
 	}
 
@@ -190,7 +190,7 @@ public class GameServiceProxy implements GameService {
 			boolean success = in.readBoolean();
 			if (!success) throw new BadDestinationException("Bad navigate destination");
 		} catch (IOException e) {
-			throw new ConnectionFailedException("Connection failed while warping.");
+			throw new ConnectionFailedException("Failed to connect to server.");
 		}
 	}
 
@@ -204,7 +204,7 @@ public class GameServiceProxy implements GameService {
 			if (!canMove) throw new ActionException("Cannot set alert level at this time.");
 			out.writeUTF(level.toString());
 		} catch (IOException e) {
-			throw new ConnectionFailedException("Connection failed while setting alert level.");
+			throw new ConnectionFailedException("Failed to connect to server.");
 		}
 	}
 
@@ -222,7 +222,7 @@ public class GameServiceProxy implements GameService {
 			boolean success = in.readBoolean();
 			if (!success) throw new ActionException("Fire torpedo failed.");
 		} catch (IOException e) {
-			throw new ConnectionFailedException("Connection failed while firing torpedo.");
+			throw new ConnectionFailedException("Failed to connect to server.");
 		}
 	}
 
