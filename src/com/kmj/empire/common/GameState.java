@@ -72,8 +72,6 @@ public class GameState {
 	
 	public Game toGame(Game game) {
 		//empty game
-		System.out.println("Updating game state");
-		
 		UniverseType universe = new UniverseType(universeName);
 		for (String s : empires) universe.getEmpireList().add(EmpireType.fromString(s));
 		for (String s : weapons) universe.getWeaponTypes().add(WeaponType.fromString(s));

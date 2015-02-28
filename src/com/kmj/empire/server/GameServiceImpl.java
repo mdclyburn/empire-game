@@ -106,6 +106,7 @@ public class GameServiceImpl implements GameService {
 			}
 			br.close();
 			
+			//set the stardate of the game
 			restoredGame.setStardate(stardate);
 			
 			int gameId = server.addGame(restoredGame);
@@ -116,35 +117,41 @@ public class GameServiceImpl implements GameService {
 		}
 	}
 
+	/* gets a GameState object from the server of the desired game */
 	@Override
 	public GameState getGameState(int gameId) {
 		Game game = server.getGame(gameId);
 		return new GameState(game);
 	}
 
+	/* send a username and password and return 0 if successfully authenticated */
 	@Override
 	public int authenticate(String user, String password) throws AuthenticationFailedException {
 		if (password.equals("p")) return 0;
 		else return -1;
 	}
 
+	/* not yet implemented */
 	@Override
 	public int createGame() {
 		
 		return 0;
 	}
 	
+	/* returns a list of active games */
 	@Override
 	public ArrayList<Game> getGamesList(int sessionId)
 			throws AuthenticationFailedException, ConnectionFailedException {
 		return server.getGamesList();
 	}
 
+	/* removes the player from their current game */
 	@Override
 	public void disconnect(int sessionId) throws ConnectionFailedException {
 		server.getPlayerGame(sessionId).removePlayer(user.getUsername());
 	}
 
+	/* if the player is in a game, moves them to a point within the sector */
 	@Override
 	public void navigate(int sessionId, int x, int y) throws BadDestinationException, ConnectionFailedException {
 		Game game = server.getPlayerGame(sessionId);
@@ -169,10 +176,9 @@ public class GameServiceImpl implements GameService {
 		// Move player.
 		playerShip.setLocation(x, y);
 		playerShip.consumeImpulseEnergy(distance);
-		//advance(game);
-		//game.nextStardate();
 	}
 
+	/* moves a ship to a sector within 1 square away */
 	@Override
 	public void warp(int sessionId, Sector sector) throws BadDestinationException, ConnectionFailedException {
 		Game game = server.getPlayerGame(sessionId);
@@ -233,6 +239,7 @@ public class GameServiceImpl implements GameService {
 		throw new BadDestinationException("The sector is full.");
 	}
 
+	/* sets the ships alert level */
 	@Override
 	public void setAlertLevel(int sessionId, AlertLevel level) throws ConnectionFailedException {
 		user.getPlayer().getShip().setAlert(level);
@@ -341,6 +348,7 @@ public class GameServiceImpl implements GameService {
 					String shipType = "";
 					try {
 						shipType = user.getIn().readUTF();
+						if (shipType.equals("")) return;
 					} catch (IOException e) {
 						throw new ConnectionFailedException("");
 					}

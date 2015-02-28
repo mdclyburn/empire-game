@@ -252,6 +252,7 @@ class User implements Runnable {
 	
 	public void disconnect() {
 		disconnected = true;
+		user[sessionId] = null;
 	}
 	
 	public String getUsername() {

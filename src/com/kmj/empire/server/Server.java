@@ -166,6 +166,7 @@ public class Server extends JFrame {
 						printMessage("Game Watch Interrupted, server shutting down...");
 						System.exit(1);
 					}
+					if (gameList.size() == 0) continue;
 					printMessage("Games Advancing...");
 					for (Game g : gameList) {
 						g.nextStardate();
