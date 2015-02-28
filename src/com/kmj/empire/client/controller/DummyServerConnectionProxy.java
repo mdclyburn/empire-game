@@ -309,7 +309,7 @@ public class DummyServerConnectionProxy implements GameService {
 		// Log entry.
 		sessions.get(sessionId).getLog().add(0, sessions.get(sessionId).getStardate() + ": " + users.get(sessionId) +
 				" is on " + level.toString().toLowerCase() + " alert.");
-		advance(sessions.get(sessionId));
+		//advance(sessions.get(sessionId));
 		sessions.get(sessionId).nextStardate();
 	}
 
@@ -338,7 +338,7 @@ public class DummyServerConnectionProxy implements GameService {
 		// Move player.
 		playerShip.setLocation(x, y);
 		playerShip.consumeImpulseEnergy(distance);
-		advance(game);
+		//advance(game);
 		game.nextStardate();
 	}
 
@@ -394,7 +394,7 @@ public class DummyServerConnectionProxy implements GameService {
 					playerShip.setX(x);
 					playerShip.setY(y);
 					playerShip.consumeWarpEnergy(distance);
-					advance(game);
+					//advance(game);
 					game.nextStardate();
 					return;
 				}
@@ -478,80 +478,8 @@ public class DummyServerConnectionProxy implements GameService {
 			entry += "target destroyed.";
 		game.getLog().add(0, entry);
 
-		advance(game);
+		//advance(game);
 		game.nextStardate();
-	}
-
-	private void advance(Game game) {
-		ArrayList<Ship> ships = game.getShips();
-		for(int i = 0; i < ships.size(); i++) {
-			Ship ship = ships.get(i);
-			// See if this is an AI ship.
-			if(game.getPropertyMapping().get(ship) == null) {
-				Sector sector = ship.getSector();
-				// Search the sector for an enemy ship.
-				ArrayList<Ship> enemies = new ArrayList<Ship>();
-				ArrayList<Ship> sectorShips = sector.getShips();
-				for(int j = 0; j < sectorShips.size(); j++) {
-					Ship possEnemyShip = sectorShips.get(j);
-					if(!possEnemyShip.getType().getEmpire().getName().equals(ship.getType().getEmpire().getName()))
-						enemies.add(possEnemyShip);
-				}
-
-				// Continue search if enemy ships are in the sector.
-				if(enemies.size() > 0) {
-					// Find the closest.
-					Ship closest = null;
-					for(int k = 0; k < enemies.size(); k++) {
-						Ship enemyShip = enemies.get(k);
-						if(closest == null) {
-							closest = enemyShip;
-						}
-						else {
-							// Calculate its distance.
-							int newDistance = Math.abs(ship.getX() - enemyShip.getX()) + Math.abs(ship.getY() - enemyShip.getY());
-							int oldDistance = Math.abs(ship.getX() - closest.getX()) + Math.abs(ship.getY() - closest.getY());
-							if(newDistance < oldDistance) closest = enemyShip;
-						}
-					}
-
-					// Attack.
-					String dest = "";
-					if(game.getOwner(closest) == null) dest = closest.getType().getName();
-					else dest = game.getOwner(closest);
-					if(closest.getAlert() == AlertLevel.GREEN) {
-						// The ship is immediately destroyed.
-						closest.setShield(-1);
-						game.destroy(closest);
-					}
-					else if(closest.getAlert() == AlertLevel.YELLOW) {
-						// Damaged by 50% of the missile's yield.
-						closest.setShield(closest.getShield() - (ship.getType().getMissileWeapon().getMaxYield() / 2));
-						if(closest.getShield() < 0) game.destroy(closest);
-					}
-					else {
-						// Damaged by 100% of the missile's yield.
-						closest.setShield(closest.getShield() - ship.getType().getMissileWeapon().getMaxYield());
-						if(closest.getShield() < 0) game.destroy(closest);
-					}
-
-					// Remove a missile.
-					ship.setMissles(ship.getMissles() - 1);
-
-					// Log the event.
-					String entry = game.getStardate() + ": " + ship.getType().getName() + " at (" +
-							ship.getX() + ", " + ship.getY() + ") fired " +
-							ship.getType().getMissileWeapon().getName() + " at " + dest +
-							" at (" + closest.getX() + ", " + closest.getY() + "); ";
-
-					if(closest.getShield() > 0)
-						entry += "target's shields now at " + closest.getShield();
-					else
-						entry += "target destroyed.";
-					game.getLog().add(0, entry);
-				}
-			}
-		}
 	}
 
 	private void addSampleData() {

@@ -191,6 +191,8 @@ public class SectorView extends JPanel implements SessionObserver, MouseListener
 				JOptionPane.showMessageDialog(this, b.getMessage(), "Navigation Error", JOptionPane.ERROR_MESSAGE);
 			} catch (ConnectionFailedException c) {
 				JOptionPane.showMessageDialog(this, c.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
+			} catch (ActionException a) {
+				JOptionPane.showMessageDialog(this, a.getMessage(), "Action Error", JOptionPane.ERROR_MESSAGE);
 			}
 			// Set the mode back to scanner mode.
 			mode = MODE_SCANNER;

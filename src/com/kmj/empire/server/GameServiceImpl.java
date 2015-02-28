@@ -106,45 +106,52 @@ public class GameServiceImpl implements GameService {
 			}
 			br.close();
 			
+			//set the stardate of the game
 			restoredGame.setStardate(stardate);
 			
 			int gameId = server.addGame(restoredGame);
 			return gameId;
 		} catch (IOException ioe) {
-			System.err.println("Failed to read .dat file, inproper format.");
+			server.printMessage("Failed to read .dat file, inproper format.");
 			return -1;
 		}
 	}
 
+	/* gets a GameState object from the server of the desired game */
 	@Override
 	public GameState getGameState(int gameId) {
-		System.out.println("Game id of server is: "+gameId);
 		Game game = server.getGame(gameId);
 		return new GameState(game);
 	}
 
+	/* send a username and password and return 0 if successfully authenticated */
 	@Override
 	public int authenticate(String user, String password) throws AuthenticationFailedException {
 		if (password.equals("p")) return 0;
 		else return -1;
 	}
 
+	/* not yet implemented */
 	@Override
 	public int createGame() {
 		
 		return 0;
 	}
 	
+	/* returns a list of active games */
 	@Override
 	public ArrayList<Game> getGamesList(int sessionId)
 			throws AuthenticationFailedException, ConnectionFailedException {
 		return server.getGamesList();
 	}
 
+	/* removes the player from their current game */
 	@Override
 	public void disconnect(int sessionId) throws ConnectionFailedException {
+		server.getPlayerGame(sessionId).removePlayer(user.getUsername());
 	}
 
+	/* if the player is in a game, moves them to a point within the sector */
 	@Override
 	public void navigate(int sessionId, int x, int y) throws BadDestinationException, ConnectionFailedException {
 		Game game = server.getPlayerGame(sessionId);
@@ -169,10 +176,9 @@ public class GameServiceImpl implements GameService {
 		// Move player.
 		playerShip.setLocation(x, y);
 		playerShip.consumeImpulseEnergy(distance);
-		//advance(game);
-		//game.nextStardate();
 	}
 
+	/* moves a ship to a sector within 1 square away */
 	@Override
 	public void warp(int sessionId, Sector sector) throws BadDestinationException, ConnectionFailedException {
 		Game game = server.getPlayerGame(sessionId);
@@ -233,6 +239,7 @@ public class GameServiceImpl implements GameService {
 		throw new BadDestinationException("The sector is full.");
 	}
 
+	/* sets the ships alert level */
 	@Override
 	public void setAlertLevel(int sessionId, AlertLevel level) throws ConnectionFailedException {
 		user.getPlayer().getShip().setAlert(level);
@@ -320,7 +327,7 @@ public class GameServiceImpl implements GameService {
 	public void joinGame(int sessionId, int id) throws ConnectionFailedException {
 		for(Game g : server.getGamesList()) {
 			if(g.getId() == id) {
-				System.out.println("Session " + sessionId + " joining " + g.getName() + "(" + g.getId() + ").");
+				server.printMessage("Session " + sessionId + " joining " + g.getName() + "(" + g.getId() + ").");
 
 				String username = user.getUsername();
 				
@@ -336,17 +343,18 @@ public class GameServiceImpl implements GameService {
 					g.addPlayer(player);
 				}
 				else {
-					System.out.println("Adding new player to game.");
+					server.printMessage("Adding new player to game.");
 					// Get information from user
 					String shipType = "";
 					try {
 						shipType = user.getIn().readUTF();
+						if (shipType.equals("")) return;
 					} catch (IOException e) {
 						throw new ConnectionFailedException("");
 					}
-					System.out.println("shipType String: "+shipType);
+					server.printMessage("shipType String: "+shipType);
 					shipType = shipType.substring(shipType.indexOf('(')+1,shipType.indexOf(')'));
-					System.out.println("id : "+shipType);
+					server.printMessage("id : "+shipType);
 					
 					// Find a random spot.
 					Random r = new Random();
@@ -371,7 +379,7 @@ public class GameServiceImpl implements GameService {
 
 						break;
 					}
-					System.out.println("Placing ship in " + sx + "-" + sy + ", " + x + "-" + y);
+					server.printMessage("Placing ship in " + sx + "-" + sy + ", " + x + "-" + y);
 					Ship ship = new Ship(g.getUniverse().getShip(shipType), g, sector, x, y);
 					Player player = new Player(username, ship.getType().getEmpire(), ship);
 					g.addPlayer(player);

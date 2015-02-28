@@ -23,6 +23,7 @@ import com.kmj.empire.client.ui.model.ShipAttributeTableModel;
 import com.kmj.empire.common.AlertLevel;
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.Ship;
+import com.kmj.empire.common.exceptions.ActionException;
 import com.kmj.empire.common.exceptions.ConnectionFailedException;
 
 // The GameWindow is where the user will spend most of their time
@@ -320,6 +321,8 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 			}
 			catch(ConnectionFailedException c) {
 				JOptionPane.showMessageDialog(this, c.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
+			} catch (ActionException a) {
+				JOptionPane.showMessageDialog(this, a.getMessage(), "Action Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 		else if(s.equals(ACTION_ALERT_YELLOW)) {
@@ -328,6 +331,8 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 			}
 			catch(ConnectionFailedException c) {
 				JOptionPane.showMessageDialog(this, c.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
+			} catch (ActionException a) {
+				JOptionPane.showMessageDialog(this, a.getMessage(), "Action Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 		else if(s.equals(ACTION_ALERT_RED)) {
@@ -336,6 +341,8 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 			}
 			catch(ConnectionFailedException c) {
 				JOptionPane.showMessageDialog(this, c.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
+			} catch (ActionException a) {
+				JOptionPane.showMessageDialog(this, a.getMessage(), "Action Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 		// Refereshing the display.

@@ -16,6 +16,7 @@ import com.kmj.empire.client.controller.SessionObserver;
 import com.kmj.empire.common.Base;
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.Ship;
+import com.kmj.empire.common.exceptions.ActionException;
 import com.kmj.empire.common.exceptions.BadDestinationException;
 import com.kmj.empire.common.exceptions.ConnectionFailedException;
 
@@ -192,6 +193,8 @@ public class UniverseView extends JPanel implements SessionObserver, MouseListen
 				JOptionPane.showMessageDialog(this, b.getMessage(), "Warp Error", JOptionPane.ERROR_MESSAGE);
 			} catch (ConnectionFailedException c) {
 				JOptionPane.showMessageDialog(this, c.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
+			} catch (ActionException a) {
+				JOptionPane.showMessageDialog(this, a.getMessage(), "Action Error", JOptionPane.ERROR_MESSAGE);
 			}
 			sectorView.setSector(game.getSector(selectedSectorX, selectedSectorY));
 			mode = MODE_SCANNER;
