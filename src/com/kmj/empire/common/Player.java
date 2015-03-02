@@ -38,5 +38,4 @@ public class Player {
 		Player player = new Player(playerid, empire, game.getIdShip(shipId));
 		return player;
 	}
-
 }

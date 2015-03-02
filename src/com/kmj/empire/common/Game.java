@@ -175,6 +175,9 @@ public class Game {
 	}
 	
 	public Ship getPlayerShip(String player) {
+		if (possessionMapping.get(player) == null) {
+			return null;
+		}
 		return getIdShip(possessionMapping.get(player));
 	}
 	
@@ -203,8 +206,9 @@ public class Game {
 
 		for(int i = 0; i < players.size(); i++) {
 			Player p = players.get(i);
-			if(p.getUserame().equals(username))
+			if(p.getUserame().equals(username)) {
 				players.remove(p);
+			}
 		}
 		possessionMapping.remove(username);
 		propertyMapping.remove(ship.getId());
