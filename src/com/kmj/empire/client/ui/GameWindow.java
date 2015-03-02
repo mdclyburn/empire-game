@@ -214,21 +214,21 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 		// Set Alert selections
 		alertGroup = new ButtonGroup();
 		JRadioButton green_alert = new JRadioButton("Green");
-		green_alert.setBounds(ALERT_ACTION_X, ALERT_ACTION_Y, OTHER_ACTION_WIDTH, missileButton.getPreferredSize().height);
+		green_alert.setBounds(ALERT_ACTION_X, ALERT_ACTION_Y, ALERT_ACTION_WIDTH, missileButton.getPreferredSize().height);
 		green_alert.setActionCommand(ACTION_ALERT_GREEN);
 		green_alert.addActionListener(this);
 		alertGroup.add(green_alert);
 		add(green_alert);
 
 		JRadioButton yellow_alert = new JRadioButton("Yellow");
-		yellow_alert.setBounds(ALERT_ACTION_X, green_alert.getY() + green_alert.getHeight(), OTHER_ACTION_WIDTH, missileButton.getPreferredSize().height);
+		yellow_alert.setBounds(ALERT_ACTION_X, green_alert.getY() + green_alert.getHeight(), ALERT_ACTION_WIDTH, missileButton.getPreferredSize().height);
 		yellow_alert.setActionCommand(ACTION_ALERT_YELLOW);
 		yellow_alert.addActionListener(this);
 		alertGroup.add(yellow_alert);
 		add(yellow_alert);
 
 		JRadioButton red_alert = new JRadioButton("Red");
-		red_alert.setBounds(ALERT_ACTION_X, yellow_alert.getY() + yellow_alert.getHeight(), OTHER_ACTION_WIDTH, missileButton.getPreferredSize().height);
+		red_alert.setBounds(ALERT_ACTION_X, yellow_alert.getY() + yellow_alert.getHeight(), ALERT_ACTION_WIDTH, missileButton.getPreferredSize().height);
 		red_alert.setActionCommand(ACTION_ALERT_RED);
 		red_alert.addActionListener(this);
 		alertGroup.add(red_alert);
