@@ -29,6 +29,7 @@ class User implements Runnable {
 	private boolean disconnected = false;
 	private boolean authenticated = false;
 	private boolean canMove = true;
+	private boolean dead = false;
 	private String username, password;
 	private int sessionId;
 	private Player player;
@@ -161,7 +162,10 @@ class User implements Runnable {
 				
 				case GameService.NAVIGATE: try {
 						out.writeBoolean(canMove);
-						if (!canMove) continue;
+						if (!canMove) {
+							out.writeBoolean(dead);
+							continue;
+						}
 						int x = in.readInt();
 						int y = in.readInt();
 						try {
@@ -181,7 +185,10 @@ class User implements Runnable {
 					
 				case GameService.WARP: try {
 						out.writeBoolean(canMove);
-						if (!canMove) continue;
+						if (!canMove) {
+							out.writeBoolean(dead);
+							continue;
+						}
 						int x = in.readInt();
 						int y = in.readInt();
 						Sector sector = server.getPlayerGame(sessionId).getSector(x,y);
@@ -202,7 +209,10 @@ class User implements Runnable {
 					
 				case GameService.SET_ALERT_LEVEL: try {
 						out.writeBoolean(canMove);
-						if (!canMove) continue;
+						if (!canMove) {
+							out.writeBoolean(dead);
+							continue;
+						}
 						String alertString = in.readUTF();
 						if (alertString.equals("GREEN"))
 							getGameService().setAlertLevel(sessionId, AlertLevel.GREEN);
@@ -221,7 +231,10 @@ class User implements Runnable {
 					
 				case GameService.FIRE_TORPEDO: try {
 						out.writeBoolean(canMove);
-						if (!canMove) continue;
+						if (!canMove) {
+							out.writeBoolean(dead);
+							continue;
+						}
 						int sx = in.readInt();
 						int sy = in.readInt();
 						Sector sector = server.getPlayerGame(sessionId).getSector(sx, sy);
