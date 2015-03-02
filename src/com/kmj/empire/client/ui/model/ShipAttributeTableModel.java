@@ -2,6 +2,7 @@ package com.kmj.empire.client.ui.model;
 
 import javax.swing.table.AbstractTableModel;
 
+import com.kmj.empire.client.controller.Configuration;
 import com.kmj.empire.client.controller.SessionObserver;
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.Ship;
@@ -63,6 +64,23 @@ public class ShipAttributeTableModel extends AbstractTableModel implements Sessi
 	@Override
 	public void onGameChanged(Game newGame) {
 		fireTableDataChanged();
+		
+		// See if the ship that was being tracked is still in
+		// existence.
+		for(Ship s : newGame.getShips()) {
+			if(s.getId() == ship.getId()) {
+				ship = s;
+				return;
+			}
+		}
+		
+		// If not, lock onto the player's ship.
+		ship = newGame.getPlayerShip(Configuration.getInstance().getUsername());
+		
+		// If not, it shows nothing.
+		ship = null; // Make sure it's null.
+		
+		return;
 	}
 
 }

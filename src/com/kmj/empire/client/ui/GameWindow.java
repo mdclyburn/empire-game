@@ -6,6 +6,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 import javax.swing.ButtonGroup;
+import javax.swing.ButtonModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -42,6 +43,7 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 	protected JTable playerList;
 	protected JTable gameLog;
 	protected JTable shipAttributes;
+	protected ButtonGroup alertGroup;
 	protected PlayerListTableModel playerListModel;
 	protected GameLogTableModel gameLogModel;
 	protected ShipAttributeTableModel shipAttributeModel;
@@ -210,30 +212,30 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 		add(missileButton);
 		
 		// Set Alert selections
-		ButtonGroup group = new ButtonGroup();
+		alertGroup = new ButtonGroup();
 		JRadioButton green_alert = new JRadioButton("Green");
 		green_alert.setBounds(ALERT_ACTION_X, ALERT_ACTION_Y, OTHER_ACTION_WIDTH, missileButton.getPreferredSize().height);
 		green_alert.setActionCommand(ACTION_ALERT_GREEN);
 		green_alert.addActionListener(this);
-		group.add(green_alert);
+		alertGroup.add(green_alert);
 		add(green_alert);
 
 		JRadioButton yellow_alert = new JRadioButton("Yellow");
 		yellow_alert.setBounds(ALERT_ACTION_X, green_alert.getY() + green_alert.getHeight(), OTHER_ACTION_WIDTH, missileButton.getPreferredSize().height);
 		yellow_alert.setActionCommand(ACTION_ALERT_YELLOW);
 		yellow_alert.addActionListener(this);
-		group.add(yellow_alert);
+		alertGroup.add(yellow_alert);
 		add(yellow_alert);
 
 		JRadioButton red_alert = new JRadioButton("Red");
 		red_alert.setBounds(ALERT_ACTION_X, yellow_alert.getY() + yellow_alert.getHeight(), OTHER_ACTION_WIDTH, missileButton.getPreferredSize().height);
 		red_alert.setActionCommand(ACTION_ALERT_RED);
 		red_alert.addActionListener(this);
-		group.add(red_alert);
+		alertGroup.add(red_alert);
 		add(red_alert);
 		
 		// The player starts on green alert.
-		group.setSelected(green_alert.getModel(), true);
+		alertGroup.setSelected(green_alert.getModel(), true);
 		
 		// Refresh button
 		JButton refreshButton = new JButton("Refresh");
@@ -316,33 +318,52 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 		}
 		// Setting the alert level.
 		else if(s.equals(ACTION_ALERT_GREEN)) {
+			ButtonModel prev = alertGroup.getSelection();
+			if(Session.getInstance().getGame().getPlayerShip(Configuration.getInstance().getUsername()).getAlert() == AlertLevel.GREEN) {
+				System.out.println("Alert already selected. Ignoring.");
+				return;
+			}
 			try {
 				Session.getInstance().setAlertLevel(AlertLevel.GREEN);
 			}
 			catch(ConnectionFailedException c) {
 				JOptionPane.showMessageDialog(this, c.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
+				alertGroup.setSelected(prev, true);
 			} catch (ActionException a) {
 				JOptionPane.showMessageDialog(this, a.getMessage(), "Action Error", JOptionPane.ERROR_MESSAGE);
+				alertGroup.setSelected(prev, true);
 			}
 		}
 		else if(s.equals(ACTION_ALERT_YELLOW)) {
+			ButtonModel prev = alertGroup.getSelection();
+			if(Session.getInstance().getGame().getPlayerShip(Configuration.getInstance().getUsername()).getAlert() == AlertLevel.YELLOW) {
+				System.out.println("Alert already selected. Ignoring.");
+			}
 			try {
 				Session.getInstance().setAlertLevel(AlertLevel.YELLOW);
 			}
 			catch(ConnectionFailedException c) {
 				JOptionPane.showMessageDialog(this, c.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
+				alertGroup.setSelected(prev, true);
 			} catch (ActionException a) {
 				JOptionPane.showMessageDialog(this, a.getMessage(), "Action Error", JOptionPane.ERROR_MESSAGE);
+				alertGroup.setSelected(prev, true);
 			}
 		}
 		else if(s.equals(ACTION_ALERT_RED)) {
+			ButtonModel prev = alertGroup.getSelection();
+			if(Session.getInstance().getGame().getPlayerShip(Configuration.getInstance().getUsername()).getAlert() == AlertLevel.RED) {
+				System.out.println("Alert already selected. Ignoring.");
+			}
 			try {
 				Session.getInstance().setAlertLevel(AlertLevel.RED);
 			}
 			catch(ConnectionFailedException c) {
 				JOptionPane.showMessageDialog(this, c.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
+				alertGroup.setSelected(prev, true);
 			} catch (ActionException a) {
 				JOptionPane.showMessageDialog(this, a.getMessage(), "Action Error", JOptionPane.ERROR_MESSAGE);
+				alertGroup.setSelected(prev, true);
 			}
 		}
 		// Refereshing the display.
