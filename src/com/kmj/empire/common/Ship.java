@@ -40,16 +40,19 @@ public class Ship extends MapEntity {
 			energy -= (shipType.getMaxEnergy() / 50);
 		else if(alert == AlertLevel.RED)
 			energy -= (shipType.getMaxEnergy() / 20);
+		if (energy < 0) energy = 0;
 	}
 	
 	// Deplete the energy of a ship on impulse movement.
 	public void consumeImpulseEnergy(int mvmt) {
 		energy -= (10 * mvmt);
+		if (energy < 0) energy = 0;
 	}
 	
 	// Deplete the energy of a ship on warp movement.
 	public void consumeWarpEnergy(int mvmt) {
 		energy -= (100 * mvmt);
+		if (energy < 0) energy = 0;
 	}
 	
 	public int getId() {
