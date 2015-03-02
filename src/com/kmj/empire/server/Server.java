@@ -122,14 +122,6 @@ public class Server extends JFrame {
 					{
 						serverCommand(message);
 					}
-					else {
-						printMessage("Server", message);
-						for (int i = 0; i < MAX_USERS; i++) {
-							if (user[i] != null) {
-								//user[i].chatQueue.add(new String("Server: "+message));
-							}
-						}
-					}
 					chatField.setText("");
 				}
 			}
@@ -160,18 +152,22 @@ public class Server extends JFrame {
 		Thread gameWatch = new Thread() {
 			public void run() {
 				while (!this.isInterrupted()) {
+					//while the thread is running sleep 10 seconds
 					try {
 						Thread.sleep(10000);
 					} catch (InterruptedException e) {
 						printMessage("Game Watch Interrupted, server shutting down...");
 						System.exit(1);
 					}
+					//if no games exists continue
 					if (gameList.size() == 0) continue;
 					printMessage("Games Advancing...");
+					//else advance each game (ai moves, increment stardate, etc)
 					for (Game g : gameList) {
 						g.nextStardate();
 						g.advance();
 					}
+					//give all players another action for this turn
 					for (User u : user) {
 						if (u != null) u.setCanMove(true);
 					}
@@ -187,18 +183,14 @@ public class Server extends JFrame {
 		Server server = new Server(8080);
 	}
 	
+	/* print a string to the server window */
 	public void printMessage(String message)
 	{
 		chatPane.setText(chatPane.getText()+message+"\n");
 		chatPane.setCaretPosition(chatPane.getText().length());
 	}
 	
-	public void printMessage(String name, String message)
-	{
-		chatPane.setText(chatPane.getText()+name+": "+message+"\n");
-		chatPane.setCaretPosition(chatPane.getText().length());
-	}
-	
+	/* issue a command to the server (prefixed by '/') */
 	public void serverCommand(String command)
 	{
 		String action, param = "";
@@ -274,14 +266,17 @@ public class Server extends JFrame {
 		return gameList;
 	}
 	
+	/* set the game associated with a players session id */
 	public void setPlayerGame(int playerId, Game game) {
 		playerGameMapping.put(playerId, game);
 	}
 	
+	/* get the game associated with a player */
 	public Game getPlayerGame(int playerId) {
 		return playerGameMapping.get(playerId);
 	}
 	
+	/* add a game to the active games list */
 	public int addGame(Game game) {
 		int id = nextId;
 		nextId++;
@@ -289,7 +284,8 @@ public class Server extends JFrame {
 		gameList.add(game);
 		return id;
 	}
-	
+
+	/* return a game based on game id */
 	public Game getGame(int gameId) {
 		for (Game g : gameList) {
 			if (g.getId() == gameId)

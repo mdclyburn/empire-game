@@ -1,3 +1,12 @@
+/* User Class
+ * 
+ * This class encapsulates the communication of 1 user to the server.
+ * It begins upon user connection and ends upon user disconnect. It reads
+ * user codes and calls appropriate GameService methods, sending results back
+ * to the user.
+ * 
+ * Coded by Joseph Savold  */
+
 package com.kmj.empire.server;
 
 import java.io.DataInputStream;
@@ -73,6 +82,7 @@ class User implements Runnable {
 				break;
 			}
 			
+			//choose action based on code recieved
 			switch(code) {
 				case -1: 
 					server.printMessage("Failed to read code"); 
@@ -160,6 +170,7 @@ class User implements Runnable {
 						disconnect();
 					} break;
 				
+				/* Received navigate request */
 				case GameService.NAVIGATE: try {
 						out.writeBoolean(canMove);
 						if (!canMove) {
@@ -182,7 +193,8 @@ class User implements Runnable {
 					} catch (ActionException e) {
 						disconnect();
 					} break;
-					
+
+				/* Received warp request */
 				case GameService.WARP: try {
 						out.writeBoolean(canMove);
 						if (!canMove) {
@@ -207,6 +219,8 @@ class User implements Runnable {
 						disconnect();
 					} break;
 					
+
+				/* Received set alert level request */
 				case GameService.SET_ALERT_LEVEL: try {
 						out.writeBoolean(canMove);
 						if (!canMove) {
@@ -229,6 +243,8 @@ class User implements Runnable {
 						disconnect();
 					} break;
 					
+
+				/* Received fire torpedo request */
 				case GameService.FIRE_TORPEDO: try {
 						out.writeBoolean(canMove);
 						if (!canMove) {
@@ -253,16 +269,19 @@ class User implements Runnable {
 						disconnect();
 					} break;
 					
+
+				/* Received disconnect request */
 				case GameService.DISCONNECT: try {
 					getGameService().disconnect(sessionId);
 				} catch (ConnectionFailedException e) {
 					disconnect();
 				}
-					break;
+				break;
 			}
 		}
 	}
 	
+	/* disconnect the user and remove them from the list of active users */
 	public void disconnect() {
 		disconnected = true;
 		user[sessionId] = null;

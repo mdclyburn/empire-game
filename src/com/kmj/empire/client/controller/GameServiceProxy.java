@@ -171,7 +171,7 @@ public class GameServiceProxy implements GameService {
 			if (!canMove) {
 				boolean dead = in.readBoolean();
 				if (dead) new ActionException("You are dead.");
-				throw new ActionException("Cannot navigate at this time.");
+				throw new ActionException("You have already moved this turn.");
 			}
 			out.writeInt(x);
 			out.writeInt(y);
@@ -191,7 +191,7 @@ public class GameServiceProxy implements GameService {
 			if (!canMove) {
 				boolean dead = in.readBoolean();
 				if (dead) new ActionException("You are dead.");
-				throw new ActionException("Cannot navigate at this time.");
+				throw new ActionException("You have already moved this turn.");
 			}
 			out.writeInt(sector.getX());
 			out.writeInt(sector.getY());
@@ -212,7 +212,7 @@ public class GameServiceProxy implements GameService {
 			if (!canMove) {
 				boolean dead = in.readBoolean();
 				if (dead) new ActionException("You are dead.");
-				throw new ActionException("Cannot navigate at this time.");
+				throw new ActionException("You have already moved this turn.");
 			}
 			out.writeUTF(level.toString());
 		} catch (IOException e) {
@@ -229,7 +229,7 @@ public class GameServiceProxy implements GameService {
 			if (!canMove) {
 				boolean dead = in.readBoolean();
 				if (dead) new ActionException("You are dead.");
-				throw new ActionException("Cannot navigate at this time.");
+				throw new ActionException("You have already moved this turn.");
 			}
 			out.writeInt(sector.getX());
 			out.writeInt(sector.getY());
