@@ -175,8 +175,8 @@ public class GameServiceProxy implements GameService {
 			}
 			out.writeInt(x);
 			out.writeInt(y);
-			boolean success = in.readBoolean();
-			if (!success) throw new BadDestinationException("Bad navigate destination");
+			String result = in.readUTF();
+			if (!result.equals("success")) throw new BadDestinationException(result);
 		} catch (IOException e) {
 			throw new ConnectionFailedException("Failed to connect to server.");
 		}
@@ -195,8 +195,9 @@ public class GameServiceProxy implements GameService {
 			}
 			out.writeInt(sector.getX());
 			out.writeInt(sector.getY());
-			boolean success = in.readBoolean();
-			if (!success) throw new BadDestinationException("Bad navigate destination");
+			String result = in.readUTF();
+			if (result.equals("bad dest")) throw new BadDestinationException("Bad navigate destination");
+			if (result.equals("bad energy")) throw new BadDestinationException("Not enough energy");
 		} catch (IOException e) {
 			throw new ConnectionFailedException("Failed to connect to server.");
 		}

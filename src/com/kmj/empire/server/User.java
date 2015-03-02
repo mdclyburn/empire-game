@@ -177,15 +177,16 @@ class User implements Runnable {
 							out.writeBoolean(dead);
 							continue;
 						}
+						setCanMove(false);
 						int x = in.readInt();
 						int y = in.readInt();
 						try {
 							getGameService().navigate(sessionId, x, y);
-							out.writeBoolean(true);
-						} catch (BadDestinationException e) { 
-							out.writeBoolean(false);
+							out.writeUTF("success");
+						} catch (BadDestinationException e) {
+							out.writeUTF(e.getMessage());
+							setCanMove(true);
 						}
-						setCanMove(false);
 					} catch (ConnectionFailedException e) {
 						disconnect();
 					} catch (IOException e) {
@@ -201,16 +202,17 @@ class User implements Runnable {
 							out.writeBoolean(dead);
 							continue;
 						}
+						setCanMove(false);
 						int x = in.readInt();
 						int y = in.readInt();
 						Sector sector = server.getPlayerGame(sessionId).getSector(x,y);
 						try {
 							getGameService().warp(sessionId, sector);
-							out.writeBoolean(true);
+							out.writeUTF("success");
 						} catch (BadDestinationException e) {
-							out.writeBoolean(false);
+							out.writeUTF(e.getMessage());
+							setCanMove(true);
 						}
-						setCanMove(false);
 					} catch (IOException e) {
 						disconnect();
 					} catch (ConnectionFailedException e) {
@@ -227,6 +229,7 @@ class User implements Runnable {
 							out.writeBoolean(dead);
 							continue;
 						}
+						setCanMove(false);
 						String alertString = in.readUTF();
 						if (alertString.equals("GREEN"))
 							getGameService().setAlertLevel(sessionId, AlertLevel.GREEN);
@@ -234,7 +237,6 @@ class User implements Runnable {
 							getGameService().setAlertLevel(sessionId, AlertLevel.YELLOW);
 						if (alertString.equals("RED"))
 							getGameService().setAlertLevel(sessionId, AlertLevel.RED);
-						setCanMove(false);
 					} catch (IOException e) {
 						disconnect();
 					} catch (ConnectionFailedException e) {
@@ -251,6 +253,7 @@ class User implements Runnable {
 							out.writeBoolean(dead);
 							continue;
 						}
+						setCanMove(false);
 						int sx = in.readInt();
 						int sy = in.readInt();
 						Sector sector = server.getPlayerGame(sessionId).getSector(sx, sy);
@@ -261,8 +264,8 @@ class User implements Runnable {
 							out.writeBoolean(true);
 						} catch (ActionException e) {
 							out.writeBoolean(false);
+							setCanMove(true);
 						}
-						setCanMove(false);
 					} catch (IOException e) {
 						disconnect();
 					}  catch (ConnectionFailedException e) {
