@@ -180,7 +180,7 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 		// Ship Attributes
 		shipAttributes = new JTable();
 		shipAttributeModel = new ShipAttributeTableModel();
-		shipAttributeModel.setTableSource(game.getPlayerShip(Configuration.getInstance().getUsername()));
+		shipAttributeModel.setTableSource(game.getPlayerShip(Configuration.getInstance().getUsername()).getId());
 		shipAttributes.setBounds(SHIP_ATTR_X, SHIP_ATTR_Y, SHIP_ATTR_WIDTH, SHIP_ATTR_HEIGHT);
 		shipAttributes.setModel(shipAttributeModel);
 		jsp = new JScrollPane(shipAttributes, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);

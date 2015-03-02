@@ -3,6 +3,7 @@ package com.kmj.empire.client.ui.model;
 import javax.swing.table.AbstractTableModel;
 
 import com.kmj.empire.client.controller.Configuration;
+import com.kmj.empire.client.controller.Session;
 import com.kmj.empire.client.controller.SessionObserver;
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.Ship;
@@ -14,7 +15,7 @@ public class ShipAttributeTableModel extends AbstractTableModel implements Sessi
 	
 	private static final long serialVersionUID = 5037957514446943337L;
 	
-	protected Ship ship;
+	protected int shipId;
 	protected String[] header;
 
 	public ShipAttributeTableModel() {
@@ -22,8 +23,8 @@ public class ShipAttributeTableModel extends AbstractTableModel implements Sessi
 		header[0] = "Ship Attributes";
 	}
 	
-	public void setTableSource(Ship ship) {
-		this.ship = ship;
+	public void setTableSource(int shipId) {
+		this.shipId = shipId;
 		fireTableDataChanged();
 	}
 	
@@ -49,8 +50,9 @@ public class ShipAttributeTableModel extends AbstractTableModel implements Sessi
 
 	@Override
 	public Object getValueAt(int row, int column) {
+		Ship ship = Session.getInstance().getGame().getIdShip(shipId);
 		if(ship == null) return "";
-		if(row == 0) return "Class: " + ship.getType().getName();
+		if(row == 0) return "Class: " + ship.getType().getId();
 		else if(row == 1) return "Energy: " + ship.getEnergy();
 		else if(row == 2) return "Alert: " + ship.getAlertLevel();
 		else return "Shield: " + (ship.getShieldLevel() > 0 ? ship.getShieldLevel() : "-1");
@@ -64,23 +66,6 @@ public class ShipAttributeTableModel extends AbstractTableModel implements Sessi
 	@Override
 	public void onGameChanged(Game newGame) {
 		fireTableDataChanged();
-		
-		// See if the ship that was being tracked is still in
-		// existence.
-		for(Ship s : newGame.getShips()) {
-			if(s.getId() == ship.getId()) {
-				ship = s;
-				return;
-			}
-		}
-		
-		// If not, lock onto the player's ship.
-		ship = newGame.getPlayerShip(Configuration.getInstance().getUsername());
-		
-		// If not, it shows nothing.
-		ship = null; // Make sure it's null.
-		
-		return;
 	}
 
 }
