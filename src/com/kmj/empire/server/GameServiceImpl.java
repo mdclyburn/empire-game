@@ -1,3 +1,10 @@
+/* GameServiceImpl Class
+ * 
+ * This class handles requests from the server dealing with the domain model.
+ * When a server receives a request to needs to take an action, get a game, etc,
+ * it calls the methods of this class and returns necessary information.
+ */
+
 package com.kmj.empire.server;
 
 import java.io.BufferedReader;
