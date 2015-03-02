@@ -247,7 +247,7 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 		// Listen for changes.
 		Session.getInstance().addObserver(this);
 		Session.getInstance().addObserver(playerListModel);
-		Session.getInstance().addObserver(playerListModel);
+		Session.getInstance().addObserver(shipAttributeModel);
 		Session.getInstance().addObserver(gameLogModel);
 
 		setVisible(true);
