@@ -44,6 +44,7 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 	protected JTable gameLog;
 	protected JTable shipAttributes;
 	protected ButtonGroup alertGroup;
+	protected JRadioButton red_alert, yellow_alert, green_alert;
 	protected PlayerListTableModel playerListModel;
 	protected GameLogTableModel gameLogModel;
 	protected ShipAttributeTableModel shipAttributeModel;
@@ -214,21 +215,21 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 		
 		// Set Alert selections
 		alertGroup = new ButtonGroup();
-		JRadioButton green_alert = new JRadioButton("Green");
+		green_alert = new JRadioButton("Green");
 		green_alert.setBounds(ALERT_ACTION_X, ALERT_ACTION_Y, ALERT_ACTION_WIDTH, missileButton.getPreferredSize().height);
 		green_alert.setActionCommand(ACTION_ALERT_GREEN);
 		green_alert.addActionListener(this);
 		alertGroup.add(green_alert);
 		add(green_alert);
 
-		JRadioButton yellow_alert = new JRadioButton("Yellow");
+		yellow_alert = new JRadioButton("Yellow");
 		yellow_alert.setBounds(ALERT_ACTION_X, green_alert.getY() + green_alert.getHeight(), ALERT_ACTION_WIDTH, missileButton.getPreferredSize().height);
 		yellow_alert.setActionCommand(ACTION_ALERT_YELLOW);
 		yellow_alert.addActionListener(this);
 		alertGroup.add(yellow_alert);
 		add(yellow_alert);
 
-		JRadioButton red_alert = new JRadioButton("Red");
+		red_alert = new JRadioButton("Red");
 		red_alert.setBounds(ALERT_ACTION_X, yellow_alert.getY() + yellow_alert.getHeight(), ALERT_ACTION_WIDTH, missileButton.getPreferredSize().height);
 		red_alert.setActionCommand(ACTION_ALERT_RED);
 		red_alert.addActionListener(this);
@@ -319,9 +320,16 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 		}
 		// Setting the alert level.
 		else if(s.equals(ACTION_ALERT_GREEN)) {
-			ButtonModel prev = alertGroup.getSelection();
-			if(Session.getInstance().getGame().getPlayerShip(Configuration.getInstance().getUsername()).getAlert() == AlertLevel.GREEN) {
+			AlertLevel level = Session.getInstance().getGame().getPlayerShip(Configuration.getInstance().getUsername()).getAlert();
+
+			ButtonModel prev;
+			if(level == AlertLevel.GREEN) prev = green_alert.getModel();
+			else if(level == AlertLevel.YELLOW) prev = yellow_alert.getModel();
+			else prev = red_alert.getModel();
+			
+			if(level == AlertLevel.GREEN) {
 				System.out.println("Alert already selected. Ignoring.");
+				alertGroup.setSelected(green_alert.getModel(), true);
 				return;
 			}
 			try {
@@ -336,9 +344,17 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 			}
 		}
 		else if(s.equals(ACTION_ALERT_YELLOW)) {
-			ButtonModel prev = alertGroup.getSelection();
+			AlertLevel level = Session.getInstance().getGame().getPlayerShip(Configuration.getInstance().getUsername()).getAlert();
+
+			ButtonModel prev;
+			if(level == AlertLevel.GREEN) prev = green_alert.getModel();
+			else if(level == AlertLevel.YELLOW) prev = yellow_alert.getModel();
+			else prev = red_alert.getModel();
+
 			if(Session.getInstance().getGame().getPlayerShip(Configuration.getInstance().getUsername()).getAlert() == AlertLevel.YELLOW) {
 				System.out.println("Alert already selected. Ignoring.");
+				alertGroup.setSelected(yellow_alert.getModel(), true);
+				return;
 			}
 			try {
 				Session.getInstance().setAlertLevel(AlertLevel.YELLOW);
@@ -352,9 +368,16 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 			}
 		}
 		else if(s.equals(ACTION_ALERT_RED)) {
-			ButtonModel prev = alertGroup.getSelection();
+			AlertLevel level = Session.getInstance().getGame().getPlayerShip(Configuration.getInstance().getUsername()).getAlert();
+
+			ButtonModel prev;
+			if(level == AlertLevel.GREEN) prev = green_alert.getModel();
+			else if(level == AlertLevel.YELLOW) prev = yellow_alert.getModel();
+			else prev = red_alert.getModel();
+
 			if(Session.getInstance().getGame().getPlayerShip(Configuration.getInstance().getUsername()).getAlert() == AlertLevel.RED) {
 				System.out.println("Alert already selected. Ignoring.");
+				alertGroup.setSelected(red_alert.getModel(), true);
 			}
 			try {
 				Session.getInstance().setAlertLevel(AlertLevel.RED);
