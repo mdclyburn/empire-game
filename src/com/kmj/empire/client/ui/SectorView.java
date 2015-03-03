@@ -178,7 +178,7 @@ public class SectorView extends JPanel implements SessionObserver, MouseListener
 			// Look for a ship in that sector.
 			for(Ship s : sector.getShips()) {
 				if(s.getX() == x && s.getY() == y) {
-					model.setTableSource(s);
+					model.setTableSource(s.getId());
 				}
 			}
 		}
