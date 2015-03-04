@@ -41,6 +41,16 @@ public class GameServiceImpl implements GameService {
 		this.user = user;
 	}
 
+	/**
+	 * Restores a game to the server and returns the id.
+	 * <p>
+	 * Accepts a string argument called gameData, and parses it for
+	 * data of an old game. It then adds the game to the servers
+	 * game list and returns the id that was assigned to it.
+	 * 
+	 * @param 	gameData	the string containing the game data to be restored
+	 * @return				the id of the restored game
+	 */
 	@Override
 	public int restoreGame(String gameData) {
 		BufferedReader br = new BufferedReader(new StringReader(gameData));
@@ -123,14 +133,33 @@ public class GameServiceImpl implements GameService {
 		}
 	}
 
-	/* gets a GameState object from the server of the desired game */
+	/* 
+
+	/**
+	 * Gets a GameState object from the server of the desired game.
+	 * <p>
+	 * Accepts a integer argument gameId and retrieves that game from the server's
+	 * game list.
+	 * 
+	 * @param 	gameId	the id of the desired game
+	 * @return			the GameState object of the specified game
+	 */
 	@Override
 	public GameState getGameState(int gameId) {
 		Game game = server.getGame(gameId);
 		return new GameState(game);
 	}
 
-	/* send a username and password and return 0 if successfully authenticated */
+	/**
+	 *  Authenticates a user.
+	 *  <p>
+	 *  Accepts username and password stings and determines if they are associated with
+	 *  a valid user. If so it returns 0, indicating success. Otherwise it returns -1.
+	 *  
+	 *  @param	user		username of the caller
+	 *  @param	password	password of the caller
+	 *  @return				success
+	 */
 	@Override
 	public int authenticate(String user, String password) throws AuthenticationFailedException {
 		if (password.equals("p")) return 0;
@@ -144,20 +173,49 @@ public class GameServiceImpl implements GameService {
 		return 0;
 	}
 	
-	/* returns a list of active games */
+	/**
+	 * Returns a list of active games.
+	 * <p>
+	 * Accepts the session id of the user and returns the ArrayList of
+	 * games belonging to the server.
+	 * 
+	 *  @param	sessionId	users sessionId
+	 *  @return	gamesList	ArrayList of active games on the server
+	 */
 	@Override
 	public ArrayList<Game> getGamesList(int sessionId)
 			throws AuthenticationFailedException, ConnectionFailedException {
 		return server.getGamesList();
 	}
 
-	/* removes the player from their current game */
+	/**
+	 *  Removes the player from their current game.
+	 *  <p>
+	 *  Accepts a sessionId and removes the associated user from the
+	 *  game to which they are currently connected.
+	 *  
+	 *  @param	sessionID	the users sessionId
+	 *  @return	void 
+	 */
 	@Override
 	public void disconnect(int sessionId) throws ConnectionFailedException {
 		server.getPlayerGame(sessionId).removePlayer(user.getUsername());
 	}
 
-	/* if the player is in a game, moves them to a point within the sector */
+	/**
+	 *  Allows a user to navigate their ship within current sector.
+	 *  <p>
+	 *  Accepts a sessionId that identifies the user and thus ship that is being
+	 *  requested to move. It also accepts the x and y coordinates of the desired
+	 *  destination. With this it determines whether or not the destination can be
+	 *  reached and throws appropriate exceptions if it cannot be. Otherwise it
+	 *  returns nothing.
+	 *  
+	 *  @param	sessionId	users sessionId
+	 *  @param	x			x cord of desired navigate destination
+	 *  @param	y			y cord of desired navigate destination
+	 *  @return	void
+	 */
 	@Override
 	public void navigate(int sessionId, int x, int y) throws BadDestinationException, ConnectionFailedException {
 		Game game = server.getPlayerGame(sessionId);
@@ -184,7 +242,16 @@ public class GameServiceImpl implements GameService {
 		playerShip.consumeImpulseEnergy(distance);
 	}
 
-	/* moves a ship to a sector within 1 square away */
+	/**
+	 *  Warps a ship to a nearby sector.
+	 *  <p>
+	 *  Accepts the sessionId to identify the ship and the desired warp destination
+	 *  sector. It determines if the sector can be reached and if not throws
+	 *  appropriate exceptions. It returns nothing if successful.
+	 *  
+	 *  @param	sessionId	users sessionId
+	 *  @param	sector		the sector attempting to warp to
+	 */
 	@Override
 	public void warp(int sessionId, Sector sector) throws BadDestinationException, ConnectionFailedException {
 		Game game = server.getPlayerGame(sessionId);
@@ -245,7 +312,16 @@ public class GameServiceImpl implements GameService {
 		throw new BadDestinationException("The sector is full.");
 	}
 
-	/* sets the ships alert level */
+	/** 
+	 * Sets a ships alert level.
+	 * <p>
+	 * Accepts a sessionId to identify a ship and an AlertLevel to
+	 * set it to. This is printed to the attack log on the server.
+	 * 
+	 * @param	sessionId	users sessionId
+	 * @param	level		desired AlertLevel
+	 * @return	void
+	 */
 	@Override
 	public void setAlertLevel(int sessionId, AlertLevel level) throws ConnectionFailedException {
 		user.getPlayer().getShip().setAlert(level);
@@ -255,6 +331,20 @@ public class GameServiceImpl implements GameService {
 				user.getUsername() + " is on " + level.toString().toLowerCase() + " alert.");
 	}
 
+	/**
+	 * Fires a torpedo from a ship.
+	 * <p>
+	 * Accepts a sessionId, sector, x coordinate, and y coordinate. It 
+	 * determines if the desired firing location is valid for the ship
+	 * identified by sessionId, and fires a torpedo. This is recorded in
+	 * the servers attack log.
+	 * 
+	 * @param	sessionId	users id
+	 * @param	sector		the sector that the ship is currently in
+	 * @param	x			x coordinate of desired firing target
+	 * @param	y			y coordinate of desired firing target
+	 * @return	void
+	 */
 	@Override
 	public void fireTorpedo(int sessionId, Sector sector, int x, int y) throws ActionException, ConnectionFailedException {
 		Game game = server.getPlayerGame(sessionId);
@@ -329,6 +419,17 @@ public class GameServiceImpl implements GameService {
 		game.getLog().add(0, entry);
 	}
 
+	/**
+	 * Places the user in the desired game.
+	 * <p>
+	 * Accepts sessionId to identify user and the id of the game to be
+	 * joined. It determines if the user is rejoining or not and prompts them
+	 * for necessary information if they are joining for the first time.
+	 * 
+	 * @param	sessionId	users is
+	 * @param	id			id of the game to join
+	 * @return 	void
+	 */
 	@Override
 	public void joinGame(int sessionId, int id) throws ConnectionFailedException {
 		for(Game g : server.getGamesList()) {
