@@ -22,7 +22,7 @@ import com.kmj.empire.common.exceptions.ActionException;
 import com.kmj.empire.common.exceptions.BadDestinationException;
 import com.kmj.empire.common.exceptions.ConnectionFailedException;
 
-/*
+/**
  * The view presented to the user that shows the user
  * the currently selected sector (one they have chosen).
  * It's initial sector is the sector the user is currently
@@ -55,39 +55,62 @@ public class SectorView extends JPanel implements SessionObserver, MouseListener
 	public static final int MODE_NAVIGATE = 1;
 	public static final int MODE_MISSILE = 2;
 	
+	/**
+	 * Default constructor for the SectorView.
+	 */
 	public SectorView() {
 		super();
 		addMouseListener(this);
 		Session.getInstance().addObserver(this);
 	}
 	
+	/**
+	 * Constructor for SectorView.
+	 * @param parent The containing window
+	 */
 	public SectorView(GameWindow parent) {
 		this();
 		this.parent = parent;
 	}
-	
-	// Setter Functions
-	
-	// Sets the sector for displaying. Afterwards, the view will
-	// repaint itself to show the new view.
+
+	/**
+	 * Sets the sector for displaying. The view will repaint itself
+	 * to show the new view.
+	 * @param sector
+	 */
 	public void setSector(Sector sector) {
 		this.sector = sector;
 		repaint();
 	}
 	
+	/**
+	 * Sets the table model for displaying ship attributes.
+	 * @param model the table model
+	 */
 	public void setTableModel(ShipAttributeTableModel model) {
 		this.model = model;
 	}
 	
+	/**
+	 * Sets the mode the display is in. The consequences of actions in this
+	 * window change depending on the mode that is set.
+	 * @param mode the mode to use
+	 */
 	public void setMode(int mode) {
 		this.mode = mode;
 	}
 	
+	/**
+	 * Sets the label to be updated when an action is completed.
+	 * @param status the status label
+	 */
 	public void setStatus(JLabel status) {
 		this.status = status;
 	}
 	
-	// Custom painting method to show the user the sector.
+	/**
+	 * Custom painting method to show the user the sector.
+	 */
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -151,21 +174,26 @@ public class SectorView extends JPanel implements SessionObserver, MouseListener
 		}
 	}
 	
+	/**
+	 * Please see the SessionObserver interface.
+	 */
 	@Override
 	public void onIdChanged(int newId) {
 		
 	}
 	
-	// When the Game changes, the sector needs to be able
-	// to repaint itself on cue.
+	/**
+	 * Please see the SessionObserver interface.
+	 */
 	@Override
 	public void onGameChanged(Game newGame) {
 		repaint();
 	}
 
-	// Function called when the user clicks inside the
-	// sector view. The action performed depends on the
-	// 'mode' the sector view is in.
+	/**
+	 * Called when the user clicks inside the sector view. The action
+	 * performed depends on the 'mode' the sector view is in.
+	 */
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		int x = (e.getX() / (getWidth() / 8)) + 1;
