@@ -7,7 +7,7 @@ import javax.swing.table.AbstractTableModel;
 
 import com.kmj.empire.common.Game;
 
-/*
+/**
  * Managing class for the list of games a player can join. Provides
  * backend support for the game list in the ServerListWindow class.
  */
@@ -22,20 +22,32 @@ public class GameListTableModel extends AbstractTableModel {
 	ArrayList<Game> games;
 	String[] header;
 
+	/**
+	 * Default constructor for GameListTableModel.
+	 */
 	public GameListTableModel() {
 		header = new String[2];
 		header[0] = "Name";
 		header[1] = "Players";
 	}
 
-	// The list from which the model will provide a list of games.
+	/**
+	 * Set the list of games from which the model will derive data from.
+	 * @param games the list of games
+	 */
 	public void setTableSource(ArrayList<Game> games) { this.games = games; }
 
+	/**
+	 * Returns a list of rows in the table.
+	 */
 	@Override
 	public int getRowCount() {
 		return (games != null ? games.size() : 0);
 	}
 
+	/**
+	 * Returns the number of columns in the table.
+	 */
 	@Override
 	public int getColumnCount() {
 		// COLUMN	DESCRIPTION
@@ -45,9 +57,17 @@ public class GameListTableModel extends AbstractTableModel {
 		return 2;
 	}
 
+	/**
+	 * Returns the name of the table.
+	 */
 	@Override
 	public String getColumnName(int c) { return header[c]; }
 
+	/**
+	 * Returns the value at the specified row, column.
+	 * @param row the row
+	 * @param column the column
+	 */
 	@Override
 	public Object getValueAt(int row, int column) {
 		if(row == -1) {
