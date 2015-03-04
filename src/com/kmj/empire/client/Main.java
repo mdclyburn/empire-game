@@ -1,5 +1,9 @@
 package com.kmj.empire.client;
 
+/**
+ * The main driver for the client-side implementation.
+ */
+
 import com.kmj.empire.client.controller.Configuration;
 import com.kmj.empire.client.ui.ServerConnectionWindow;
 
