@@ -1,4 +1,4 @@
-/*
+/**
  * Holds all the client-side configuration data. This class also saves the data
  * with the appropriate method call to the location specified by the String
  * CONFIGURATION_FILE.
@@ -26,6 +26,10 @@ public class Configuration implements Serializable {
 
 	public static final String CONFIGURATION_FILE = "resources/client_configuration";
 
+	/**
+	 * Default constructor for the Configuration object. All
+	 * fields are blanked out or set to zero initially.
+	 */
 	private Configuration() {
 		username = "";
 		password = "";
@@ -38,10 +42,18 @@ public class Configuration implements Serializable {
 		configuration = new Configuration();
 	}
 
+	/**
+	 * Returns the configuration object.
+	 * @return The singleton Configuration object.
+	 */
 	public static Configuration getInstance() { return configuration; }
 
-	// ===== Setters
-	// These functions also implement some checking for invalid input.
+	/**
+	 * Sets the username into the configuration. This method checks if the provided
+	 * username is blank before returning.
+	 * @param username The username to be applied
+	 * @throws BadConfigurationException
+	 */
 	public void setUsername(String username) throws BadConfigurationException {
 		// The username:
 		// - cannot be blank
@@ -50,6 +62,12 @@ public class Configuration implements Serializable {
 		this.username = username;
 	}
 
+	/**
+	 * Sets the password into the configuration. This method checks if the provided
+	 * password is blank before returning.
+	 * @param password The password to be applied
+	 * @throws BadConfigurationException
+	 */
 	public void setPassword(String password) throws BadConfigurationException {
 		// The password:
 		// - cannot be blank
@@ -58,6 +76,12 @@ public class Configuration implements Serializable {
 		this.password = password;
 	}
 
+	/**
+	 * Sets the server's address into the configuration. This method checks if the provided
+	 * address is blank before returning.
+	 * @param serverAddress The address of the server
+	 * @throws BadConfigurationException
+	 */
 	public void setServerAddress(String serverAddress) throws BadConfigurationException {
 		// The server address:
 		// - cannot be blank
@@ -65,6 +89,13 @@ public class Configuration implements Serializable {
 			throw new BadConfigurationException("The server address cannot be blank.");
 		this.serverAddress = serverAddress;
 	}
+	
+	/**
+	 * Sets the server's port into the configuration. This method checks if the provided
+	 * port is within the appropriate range before returning.
+	 * @param serverPort
+	 * @throws BadConfigurationException
+	 */
 	public void setServerPort(int serverPort) throws BadConfigurationException {
 		// The server port:
 		// - must be greater than or equal to 0
@@ -76,13 +107,36 @@ public class Configuration implements Serializable {
 		this.serverPort = serverPort;
 	}
 
-	// ===== Getters
+	/**
+	 * Returns the set username.
+	 * @return The username
+	 */
 	public String getUsername() { return username; }
+	
+	/**
+	 * Returns the set password.
+	 * @return The password
+	 */
 	public String getPassword() { return password; }
+	
+	/**
+	 * Returns the set server address.
+	 * @return The server address
+	 */
 	public String getServerAddress() { return serverAddress; }
+	
+	/**
+	 * Returns the set server port.
+	 * @return The server port
+	 */
 	public int getServerPort() { return serverPort; }
 
-	// Load the serialized Configuration from disk.
+	/**
+	 * Deserializes the Configuration object from the file specified by
+	 * CONFIGURATION_FILE. This method will gracefully return if no configuration
+	 * is located in the specified location or if it cannot otherwise reach that
+	 * location.
+	 */
 	public void load() {
 		File configurationFile = new File(CONFIGURATION_FILE);
 
@@ -108,7 +162,9 @@ public class Configuration implements Serializable {
 		}
 	}
 
-	// Save the user's configuration to disk.
+	/**
+	 * Serializes the Configuration object to disk.
+	 */
 	public void save() {
 		File configurationFile = new File(CONFIGURATION_FILE);
 
