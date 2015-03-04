@@ -60,7 +60,6 @@ class User implements Runnable {
 	
 	public void run()
 	{
-		server.printMessage("User thread started...");
 		
 		//server loop
 		while (!Thread.interrupted()) {
@@ -74,8 +73,6 @@ class User implements Runnable {
 				disconnected = true;
 			}
 			
-			server.printMessage("code: "+code);
-			
 			//if unauthenticated user attempts prohibited action
 			if (disconnected || (!authenticated && code != GameService.AUTHENTICATE)) {
 				server.printMessage("ending user thread...");
@@ -85,12 +82,11 @@ class User implements Runnable {
 			//choose action based on code recieved
 			switch(code) {
 				case -1: 
-					server.printMessage("Failed to read code"); 
+					server.printMessage("Failed to read client request code."); 
 					System.exit(1); 
 
 				/* restoreGame() request received */
 				case GameService.RESTORE_GAME: try {
-						server.printMessage("restore game, reading utf");
 						String gameData = in.readUTF();
 						int gameId = getGameService().restoreGame(gameData);
 						out.writeInt(gameId);
@@ -114,14 +110,9 @@ class User implements Runnable {
 
 				/* getGamesList() request received */
 				case GameService.GET_GAMES_LIST: try {
-						server.printMessage("sending game list");
-						for (Game g : getGameService().getGamesList(code)) {
+						for (Game g : getGameService().getGamesList(code))
 							out.writeUTF(new Gson().toJson(new GameState(g)));
-	
-							server.printMessage("sending game");
-						}
 						out.writeUTF("");
-						server.printMessage("sent game list");
 					} catch (ConnectionFailedException e) {
 						disconnect();
 					} catch (AuthenticationFailedException e) {
@@ -162,7 +153,6 @@ class User implements Runnable {
 				/* Received join request */
 				case GameService.JOIN_GAME: try {
 						int gameId = in.readInt();
-						server.printMessage("Joining gameid: "+gameId);
 						getGameService().joinGame(sessionId, gameId);
 					} catch (ConnectionFailedException e) {
 						disconnect();

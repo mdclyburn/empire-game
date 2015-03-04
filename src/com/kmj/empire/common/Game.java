@@ -135,11 +135,10 @@ public class Game {
 	}
 	
 	public void addPlayer(Player player) {
-		System.out.println("adding player: "+player.getUsername());
 		if(!hasPlayed(player.getUsername())) {
 			//assign the players ship a new id
 			int id = 0;
-			while (getIdShip(id) != null) { System.out.println("Ship: "+id+" exists"); id++; }
+			while (getIdShip(id) != null) id++;
 			player.getShip().setId(id);
 			
 			//add player ship relationship to mapping
@@ -237,7 +236,9 @@ public class Game {
 		for(int i = 0; i < ships.size(); i++) {
 			Ship ship = ships.get(i);
 			// See if this is an AI ship.
-			if(getPropertyMapping().get(ship.getId()) == null) {
+			boolean playerActive = false;
+			for (Player p : getActivePlayers()) if (p.getShip().getId() == ship.getId()) playerActive = true;
+			if(!playerActive) {
 				Sector sector = ship.getSector();
 				// Search the sector for an enemy ship.
 				ArrayList<Ship> enemies = new ArrayList<Ship>();

@@ -348,7 +348,6 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 			else prev = red_alert.getModel();
 			
 			if(level == AlertLevel.GREEN) {
-				System.out.println("Alert already selected. Ignoring.");
 				alertGroup.setSelected(green_alert.getModel(), true);
 				return;
 			}
@@ -372,7 +371,6 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 			else prev = red_alert.getModel();
 
 			if(Session.getInstance().getGame().getPlayerShip(Configuration.getInstance().getUsername()).getAlert() == AlertLevel.YELLOW) {
-				System.out.println("Alert already selected. Ignoring.");
 				alertGroup.setSelected(yellow_alert.getModel(), true);
 				return;
 			}
@@ -396,7 +394,6 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 			else prev = red_alert.getModel();
 
 			if(Session.getInstance().getGame().getPlayerShip(Configuration.getInstance().getUsername()).getAlert() == AlertLevel.RED) {
-				System.out.println("Alert already selected. Ignoring.");
 				alertGroup.setSelected(red_alert.getModel(), true);
 			}
 			try {

@@ -324,7 +324,9 @@ public class GameServiceImpl implements GameService {
 	 */
 	@Override
 	public void setAlertLevel(int sessionId, AlertLevel level) throws ConnectionFailedException {
-		user.getPlayer().getShip().setAlert(level);
+		Game game = server.getPlayerGame(sessionId);
+		Ship playerShip = game.getPlayerShip(user.getUsername());
+		playerShip.setAlert(level);
 
 		// Log entry.
 		server.getPlayerGame(sessionId).getLog().add(0, server.getPlayerGame(sessionId).getStardate() + ": " + 
@@ -459,9 +461,7 @@ public class GameServiceImpl implements GameService {
 					} catch (IOException e) {
 						throw new ConnectionFailedException("");
 					}
-					server.printMessage("shipType String: "+shipType);
 					shipType = shipType.substring(shipType.indexOf('(')+1,shipType.indexOf(')'));
-					server.printMessage("id : "+shipType);
 					
 					// Find a random spot.
 					Random r = new Random();
