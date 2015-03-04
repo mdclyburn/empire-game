@@ -20,7 +20,7 @@ import com.kmj.empire.common.exceptions.ActionException;
 import com.kmj.empire.common.exceptions.BadDestinationException;
 import com.kmj.empire.common.exceptions.ConnectionFailedException;
 
-/*
+/**
  * The view that is presented to the user that allows them to
  * get a summary of the contents of each sector.
  */
@@ -50,6 +50,9 @@ public class UniverseView extends JPanel implements SessionObserver, MouseListen
 	protected static final int MODE_SCANNER = 0;
 	protected static final int MODE_WARP = 1;
 
+	/**
+	 * Default constructor.
+	 */
 	public UniverseView() {
 		super();
 		selectedSectorX = selectedSectorY = 1;
@@ -58,6 +61,10 @@ public class UniverseView extends JPanel implements SessionObserver, MouseListen
 		Session.getInstance().addObserver(this);
 	}
 	
+	/**
+	 * Constructor for UniverseView.
+	 * @param parent the containing window
+	 */
 	public UniverseView(GameWindow parent) {
 		super();
 		this.parent = parent;
@@ -72,26 +79,46 @@ public class UniverseView extends JPanel implements SessionObserver, MouseListen
 		selectedSectorY = ship.getSector().getY();
 	}
 	
-	// Sets the view, mode, and status.
+	/**
+	 * Sets the view that should be notified of changes in this view.
+	 * @param sectorView the sector view
+	 */
 	public void setSectorView(SectorView sectorView) {
 		this.sectorView = sectorView;
 		sectorView.setSector(Session.getInstance().getGame().getSector(selectedSectorX, selectedSectorY));
 	}
 	
+	/**
+	 * Sets the display's mode.
+	 * @param mode the mode to use
+	 */
 	public void setMode(int mode) {
 		this.mode = mode;
 	}
 	
+	/**
+	 * Sets the status label so it can be reset when an action takes place.
+	 * @param status the status label
+	 */
 	public void setStatus(JLabel status) {
 		this.status = status;
 	}
 	
+	/**
+	 * Set the selected sector
+	 * @param x the X-coordinate of the selected sector
+	 * @param y the Y-coordinate of the selected sector
+	 */
 	public void setSelectedSector(int x, int y) {
 		selectedSectorX = x;
 		selectedSectorY = y;
 		repaint();
 	}
 	
+	/**
+	 * Custom painting method
+	 * @param g Graphics object
+	 */
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -164,16 +191,26 @@ public class UniverseView extends JPanel implements SessionObserver, MouseListen
 		}
 	}
 	
+	/**
+	 * Please see the SessionObserver interface.
+	 */
 	@Override
 	public void onIdChanged(int newId) {
 		
 	}
 	
+	/**
+	 * Please see the SessionObserver interface.
+	 */
 	@Override
 	public void onGameChanged(Game newGame) {
 		repaint();
 	}
 
+	/**
+	 * Responses to mouse events.
+	 * @param e the mouse event
+	 */
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		Game game = Session.getInstance().getGame();
