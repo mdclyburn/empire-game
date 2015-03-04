@@ -135,7 +135,7 @@ public class Game {
 	}
 	
 	public void addPlayer(Player player) {
-		
+		System.out.println("adding player: "+player.getUsername());
 		if(!hasPlayed(player.getUsername())) {
 			//assign the players ship a new id
 			int id = 0;
@@ -234,7 +234,6 @@ public class Game {
 	
 	public void advance() {
 		ArrayList<Ship> ships = getShips();
-		System.out.println(getPropertyMapping());
 		for(int i = 0; i < ships.size(); i++) {
 			Ship ship = ships.get(i);
 			// See if this is an AI ship.

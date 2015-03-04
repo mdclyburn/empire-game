@@ -118,7 +118,6 @@ public class GameServiceImpl implements GameService {
 				restoredGame.getPossessionMapping().put(player.getUsername(), player.getShip().getId());
 				restoredGame.getPropertyMapping().put(player.getShip().getId(),player.getUsername());
 				restoredGame.getHasPlayed().add(player.getUsername());
-				restoredGame.addPlayer(player);
 				line = br.readLine();
 			}
 			br.close();
@@ -447,7 +446,6 @@ public class GameServiceImpl implements GameService {
 
 				if(g.hasPlayed(username)) {
 					Ship ship = g.getPlayerShip(username);
-					if (ship == null) return;
 					Player player = new Player(username, ship.getType().getEmpire(), ship);
 					g.addPlayer(player);
 				}
