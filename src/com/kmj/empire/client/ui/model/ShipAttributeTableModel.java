@@ -8,7 +8,7 @@ import com.kmj.empire.client.controller.SessionObserver;
 import com.kmj.empire.common.Game;
 import com.kmj.empire.common.Ship;
 
-/*
+/**
  * Model class showing the attributes for a selected ship.
  */
 public class ShipAttributeTableModel extends AbstractTableModel implements SessionObserver {
@@ -18,16 +18,27 @@ public class ShipAttributeTableModel extends AbstractTableModel implements Sessi
 	protected int shipId;
 	protected String[] header;
 
+	/**
+	 * Default constructor.
+	 */
 	public ShipAttributeTableModel() {
 		header = new String[1];
 		header[0] = "Ship Attributes";
 	}
 	
+	/**
+	 * Sets the ship to pull information from.
+	 * @param shipId ID of the ship
+	 */
 	public void setTableSource(int shipId) {
 		this.shipId = shipId;
 		fireTableDataChanged();
 	}
 	
+	/**
+	 * Returns the number of rows in the table
+	 * @return number of rows
+	 */
 	@Override
 	public int getRowCount() {
 		// The number of attributes to display:
@@ -38,11 +49,19 @@ public class ShipAttributeTableModel extends AbstractTableModel implements Sessi
 		return 4;
 	}
 
+	/**
+	 * Returns the number of columns in the table.
+	 * @return number of columns
+	 */
 	@Override
 	public int getColumnCount() {
 		return 1;
 	}
 	
+	/**
+	 * Returns the name of the table.
+	 * @return name of the table
+	 */
 	@Override
 	public String getColumnName(int c) {
 		return header[c];
@@ -58,11 +77,17 @@ public class ShipAttributeTableModel extends AbstractTableModel implements Sessi
 		else return "Shield: " + (ship.getShieldLevel() > 0 ? ship.getShieldLevel() : "-1");
 	}
 	
+	/**
+	 * Please see the SessionObserver interface.
+	 */
 	@Override
 	public void onIdChanged(int newId) {
 		
 	}
 	
+	/**
+	 * Please see the SessionObserver interface.
+	 */
 	@Override
 	public void onGameChanged(Game newGame) {
 		fireTableDataChanged();
