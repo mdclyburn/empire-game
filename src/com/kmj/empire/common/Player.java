@@ -20,7 +20,7 @@ public class Player {
 		this.ship = ship;
 	}
 	
-	public String getUserame() { return username; }
+	public String getUsername() { return username; }
 	public Ship getShip() { return ship; }
 	public EmpireType getEmpire() { return empire; }
 	

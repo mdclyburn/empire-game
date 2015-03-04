@@ -29,6 +29,7 @@ public class GameState {
 	private ArrayList<String> log;
 	private HashMap<String, Integer> possessionMapping;
 	private HashMap<Integer, String> propertyMapping;
+	private ArrayList<String> hasPlayed;
 	
 	
 	private int stardate;
@@ -43,6 +44,7 @@ public class GameState {
 		universeName = game.getUniverse().getName();
 		possessionMapping = game.getPossessionMapping();
 		propertyMapping = game.getPropertyMapping();
+		hasPlayed = game.getHasPlayed();
 		
 		//important
 		empires = new ArrayList<String>();
@@ -87,6 +89,7 @@ public class GameState {
 		game.setStardate(stardate);
 		game.setPossessionMapping(possessionMapping);
 		game.setPropertyMapping(propertyMapping);
+		game.setHasPlayed(hasPlayed);
 		for (String s : ships) game.addShip(Ship.fromString(s, game));
 		for (String s : bases) game.addBase(Base.fromString(s, game));
 		for (String s : planets) game.addPlanet(Planet.fromString(s, game));

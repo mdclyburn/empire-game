@@ -18,8 +18,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import com.kmj.empire.client.controller.Configuration;
 import com.kmj.empire.client.controller.Session;
 import com.kmj.empire.client.ui.model.GameListTableModel;
+import com.kmj.empire.common.Game;
 import com.kmj.empire.common.exceptions.AuthenticationFailedException;
 import com.kmj.empire.common.exceptions.ConnectionFailedException;
 import com.kmj.empire.common.exceptions.InvalidGameFileException;
@@ -180,7 +182,16 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 			if(gameName == null) return;
 			try {
 				System.out.println("Requesting to join game " + model.getValueAt(table.getSelectedRow(), 2));
-				Session.getInstance().joinGame((int) model.getValueAt(table.getSelectedRow(), 2));
+				for (Game g : Session.getInstance().getLocalGamesList()) {
+					if (g.getId() == (Integer) model.getValueAt(table.getSelectedRow(), 2)) {
+						if (g.hasPlayed(Configuration.getInstance().getUsername()) 
+								&& !g.getPossessionMapping().containsKey(Configuration.getInstance().getUsername())) {
+							JOptionPane.showMessageDialog(this, "You have already died in this game.", "Join Error", JOptionPane.ERROR_MESSAGE);
+							return;
+						}
+					}	
+				}
+				Session.getInstance().joinGame((Integer) model.getValueAt(table.getSelectedRow(), 2));
 				System.out.println("Joined game");
 			} catch (ConnectionFailedException c) {
 				if(c.getMessage().length() != 0)

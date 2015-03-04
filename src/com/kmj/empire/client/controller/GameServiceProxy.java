@@ -311,5 +311,4 @@ public class GameServiceProxy implements GameService {
 			throw new ConnectionFailedException("Failed to connect to server.");
 		}
 	}
-
 }

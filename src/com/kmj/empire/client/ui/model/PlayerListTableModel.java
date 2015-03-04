@@ -61,7 +61,7 @@ public class PlayerListTableModel extends AbstractTableModel implements SessionO
 	@Override
 	public Object getValueAt(int row, int column) {
 		switch(column) {
-		case COLUMN_NAME: return Session.getInstance().getGame().getActivePlayers().get(row).getUserame();
+		case COLUMN_NAME: return Session.getInstance().getGame().getActivePlayers().get(row).getUsername();
 		default:
 			System.out.println("Invalid row-column query: " + row + "-" + column + ".");
 			return null;

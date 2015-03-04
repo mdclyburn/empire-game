@@ -18,6 +18,7 @@ public class Game {
 	private ArrayList<String> log;
 	private HashMap<String, Integer> possessionMapping;
 	private HashMap<Integer, String> propertyMapping;
+	private ArrayList<String> hasPlayed;
 	
 	private int stardate;
 	private Sector[][] sectorGrid;
@@ -38,6 +39,7 @@ public class Game {
 		log = new ArrayList<String>();
 		possessionMapping = new HashMap<String, Integer>();
 		propertyMapping = new HashMap<Integer, String>();
+		hasPlayed = new ArrayList<String>();
 		name = "Empire Session";
 	}
 	
@@ -103,6 +105,10 @@ public class Game {
 		return planets;
 	}
 	
+	public ArrayList<String> getHasPlayed() {
+		return hasPlayed;
+	}
+	
 	public ArrayList<String> getLog() {
 		return log;
 	}
@@ -130,15 +136,16 @@ public class Game {
 	
 	public void addPlayer(Player player) {
 		
-		if(!hasPlayed(player.getUserame())) {
+		if(!hasPlayed(player.getUsername())) {
 			//assign the players ship a new id
 			int id = 0;
-			while (getIdShip(id) != null) id++;
+			while (getIdShip(id) != null) { System.out.println("Ship: "+id+" exists"); id++; }
 			player.getShip().setId(id);
 			
 			//add player ship relationship to mapping
-			possessionMapping.put(player.getUserame(), player.getShip().getId());
-			propertyMapping.put(player.getShip().getId(), player.getUserame());
+			possessionMapping.put(player.getUsername(), player.getShip().getId());
+			propertyMapping.put(player.getShip().getId(), player.getUsername());
+			hasPlayed.add(player.getUsername());
 			sectorGrid[player.getShip().getSector().getX() - 1][player.getShip().getSector().getY() - 1].getShips().add(player.getShip());
 			ships.add(player.getShip());
 		}
@@ -187,7 +194,7 @@ public class Game {
 	
 	public void removePlayer(String username) {
 		for(Player p : players) {
-			if(p.getUserame().equals(username)) {
+			if(p.getUsername().equals(username)) {
 				players.remove(p);
 				break;
 			}
@@ -195,7 +202,11 @@ public class Game {
 	}
 	
 	public boolean hasPlayed(String username) {
-		return possessionMapping.containsKey(username);
+		for (String s : hasPlayed) {
+			if (s.equals(username))
+				return true;
+		}
+		return false;
 	}
 	
 	public void destroy(Ship ship) {
@@ -206,7 +217,7 @@ public class Game {
 
 		for(int i = 0; i < players.size(); i++) {
 			Player p = players.get(i);
-			if(p.getUserame().equals(username)) {
+			if(p.getUsername().equals(username)) {
 				players.remove(p);
 			}
 		}
@@ -223,10 +234,11 @@ public class Game {
 	
 	public void advance() {
 		ArrayList<Ship> ships = getShips();
+		System.out.println(getPropertyMapping());
 		for(int i = 0; i < ships.size(); i++) {
 			Ship ship = ships.get(i);
 			// See if this is an AI ship.
-			if(getPropertyMapping().get(ship) == null) {
+			if(getPropertyMapping().get(ship.getId()) == null) {
 				Sector sector = ship.getSector();
 				// Search the sector for an enemy ship.
 				ArrayList<Ship> enemies = new ArrayList<Ship>();
@@ -308,6 +320,10 @@ public class Game {
 				sectorGrid[i][j].planets.removeAll(sectorGrid[i][j].planets);
 			}
 		}
+	}
+
+	public void setHasPlayed(ArrayList<String> hasPlayed) {
+		this.hasPlayed = hasPlayed;
 	}
 	
 }

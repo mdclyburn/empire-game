@@ -200,7 +200,7 @@ public class DummyServerConnectionProxy implements GameService {
 				int shipId = Integer.valueOf(line.substring(0, line.length()));
 				Ship playerShip = restoredGame.getIdShip(shipId);
 				Player player = new Player(playerid, empire, restoredGame.getIdShip(shipId));
-				restoredGame.map(player.getUserame(), playerShip);
+				restoredGame.map(player.getUsername(), playerShip);
 				restoredGame.addPlayer(player);
 				line = br.readLine();
 			}
