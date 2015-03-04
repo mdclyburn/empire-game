@@ -17,7 +17,7 @@ import com.kmj.empire.common.exceptions.AuthenticationFailedException;
 import com.kmj.empire.common.exceptions.BadConfigurationException;
 import com.kmj.empire.common.exceptions.ConnectionFailedException;
 
-/*
+/**
  * The window presented to the user when the application
  * is first launched. This allows the user to connect to
  * a server that is running.
@@ -54,6 +54,9 @@ public class ServerConnectionWindow extends JFrame implements ActionListener {
 	protected final static String ACTION_CONNECT = "connect";
 	protected final static String ACTION_CANCEL = "cancel";
 
+	/**
+	 * Default constructor. Performs setup of the graphical interface.
+	 */
 	public ServerConnectionWindow() {
 		super();
 		setTitle("Connect To Server");
@@ -139,7 +142,9 @@ public class ServerConnectionWindow extends JFrame implements ActionListener {
 		setVisible(true);
 	}
 	
-	// Responses for ActionListener.
+	/**
+	 * Responses for action events that occur.
+	 */
 	public void actionPerformed(ActionEvent e) {
 		String s = e.getActionCommand();
 		
