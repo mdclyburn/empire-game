@@ -31,13 +31,22 @@ import com.kmj.empire.common.exceptions.ConnectionFailedException;
 // during gameplay. It will consist of a canvas handled by a custom
 // engine and buttons at the bottom of the display to facilitate
 // user actions.
+/**
+ * The GameWindow is where the user will spend most of their time
+ * during gameplay. It will consist of a canvas handled by custom
+ * JPanels and buttons at the bottom of the display to facilitate
+ * user actions.
+ */
 
 public class GameWindow extends JFrame implements SessionObserver, ActionListener, WindowListener {
 	
 	private static final long serialVersionUID = 4943992678626809378L;
 
+	// The ServerListWindow. This window will be made active again once
+	// the user leaves this window.
 	protected ServerListWindow serverListWindow;
 
+	// Swing components that need to be referenced.
 	protected JLabel stardate;
 	protected JLabel actionStatus;
 	protected JTable playerList;
@@ -49,6 +58,7 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 	protected GameLogTableModel gameLogModel;
 	protected ShipAttributeTableModel shipAttributeModel;
 
+	// Custom JPanels implementing scanner controls.
 	protected UniverseView universeView;
 	protected SectorView sectorView;
 
@@ -104,20 +114,30 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 	protected static final String ACTION_ALERT_RED = "red_alert";
 	protected static final String ACTION_REFRESH = "refresh";
 
+	/**
+	 * Default constructor for GameWindow. This constructor should not be used and
+	 * is defined only to notify when it is being inadvertently used.
+	 */
 	public GameWindow() {
 		super();
 		System.out.println("The default GameWindow constructor is in use. No valid\n" +
 				"session ID was given. Correct this.");
 	}
 
-	// The constructor that should be used when creating the GameWindow.
+	/**
+	 * The constructor that should be used when creating a GameWindow.
+	 * @param name The name of the window
+	 * @param serverListWindow The window to be reopened when this window is closed
+	 */
 	public GameWindow(String name, ServerListWindow serverListWindow) {
 		super(name);
 		this.serverListWindow = serverListWindow;
 		launch();
 	}
 
-	// Set up the GameWindow interface.
+	/**
+	 * Sets up the GameWindow interface.
+	 */
 	protected void launch() {
 		setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		setResizable(false);
@@ -255,10 +275,15 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 		setVisible(true);
 	}
 	
-	// Action to be taken when the 
+	/**
+	 * Please see the SessionObserver interface.
+	 */
 	@Override
 	public void onIdChanged(int newId) {}
 	
+	/**
+	 * Please see the SessionObserver interface.
+	 */
 	@Override
 	public void onGameChanged(Game newGame) {
 		// See if the player is still alive.\
@@ -267,18 +292,11 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 		// Set the stardate.
 		stardate.setText("Stardate " + Integer.toString(Session.getInstance().getGame().getStardate()));
 	}
-	
-	// Controls whether UI is enabled or disabled.
-	void setUIEnabled(boolean b) {
-		if(b) { // Allow input in all buttons.
-			
-		}
-		else { // Disallow input in all buttons.
-			
-		}
-	}
 
-	// Update statuses.
+	/**
+	 * Query the session to see if the game is over. Displays the appropriate
+	 * message and exits if it is.
+	 */
 	private void checkGameOver() {
 		// See if player is still alive.
 		if(Session.getInstance().isGameOver()) {
@@ -287,15 +305,17 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 		}
 	}
 
-	// Code to be executed when an ActionEvent is sent to the GameWindow. The
-	// only thing the GameWindow is responsible for here is setting the action
-	// string to let the user know what they're doing and setting the mode in the
-	// scanner views.
+	/**
+	 * Method to be executed when an ActionEvent is sent to the GameWindow. The
+	 * only actions GameWindow is responsible for handling is setting the actions
+	 * string to let the user know what they're doing, setting the mode in the
+	 * scanner views, and handling alert settings.
+	 */
 	public void actionPerformed(ActionEvent e) {
 		String s = e.getActionCommand();
 		Game game = Session.getInstance().getGame();
 
-		// Impulse movment.
+		// Impulse movement.
 		if(s.equals(ACTION_IMPULSE)) {
 			actionStatus.setText("Impulse Movement");
 			// Switch view to current sector.
@@ -405,8 +425,10 @@ public class GameWindow extends JFrame implements SessionObserver, ActionListene
 		return;
 	}
 
-	// Custom action to occur when the user closes the window. The
-	// application should bring the user back to the list window.
+	/**
+	 * Custom implementation to be invoked when the user closes the window. The
+	 * application will bring the user back to the game list window.
+	 */
 	@Override
 	public void windowClosing(WindowEvent e) {
 		try {
