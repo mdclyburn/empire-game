@@ -8,7 +8,7 @@ import com.kmj.empire.client.controller.Session;
 import com.kmj.empire.client.controller.SessionObserver;
 import com.kmj.empire.common.Game;
 
-/*
+/**
  * Managing class for the in-game log a player sees. Provides
  * backend support for the game log in the GameWindow class.
  */
@@ -20,17 +20,26 @@ public class GameLogTableModel extends AbstractTableModel implements SessionObse
 
 	protected String[] header;
 
+	/**
+	 * Default constructor.
+	 */
 	public GameLogTableModel() {
 		header = new String[1];
 		header[COLUMN_ENTRY] = "Universe Log";
 	}
 
+	/**
+	 * Return the number of rows in the table.
+	 */
 	@Override
 	public int getRowCount() {
 		ArrayList<String> log = Session.getInstance().getGame().getLog();
 		return (log != null ? log.size() : 0);
 	}
 
+	/**
+	 * Returns the number of columns in the table.
+	 */
 	public int getColumnCount() {
 		// COLUMN	DESCRIPTION
 		// ====================
@@ -38,6 +47,9 @@ public class GameLogTableModel extends AbstractTableModel implements SessionObse
 		return header.length;
 	}
 
+	/**
+	 * Returns the name of the table.
+	 */
 	@Override
 	public String getColumnName(int c) { return header[c]; }
 
@@ -51,11 +63,17 @@ public class GameLogTableModel extends AbstractTableModel implements SessionObse
 		}
 	}
 	
+	/**
+	 * Please see the SessionObserver interface.
+	 */
 	@Override
 	public void onIdChanged(int newId) {
 		
 	}
-	
+
+	/**
+	 * Please see the SessionObserver interface.
+	 */
 	@Override
 	public void onGameChanged(Game newGame) {
 		fireTableDataChanged();
