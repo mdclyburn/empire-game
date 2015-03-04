@@ -24,7 +24,7 @@ import com.kmj.empire.common.exceptions.AuthenticationFailedException;
 import com.kmj.empire.common.exceptions.ConnectionFailedException;
 import com.kmj.empire.common.exceptions.InvalidGameFileException;
 
-/*
+/**
  * A window that displays a list of games present
  * on a server. The session ID should be set before
  * the client queries the server.
@@ -56,13 +56,18 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 	protected static final String ACTION_REFRESH = "refresh";
 	protected static final String ACTION_DISCONNECT = "disconnect";
 
+	/**
+	 * Default constructor. Subsequently calls the launch() function which constructs
+	 * the user interface.
+	 */
 	public ServerListWindow() {
 		super();
 		launch();
 	}
 	
-	// Set up the window to be presented to the
-	// user.
+	/**
+	 * Set up the window to be presented to the user.
+	 */
 	protected void launch() {
 		setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		setResizable(false);
@@ -126,8 +131,9 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 		return;
 	}
 	
-	// Refresh the list of games available
-	// on the server.
+	/**
+	 * Refresh the list of games available on the server.
+	 */
 	protected void refresh() {
 		// Get new list from server.
 		try {
@@ -146,15 +152,19 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 		
 		return;
 	}
-	
-	// Convenience function to close the window. It's much
-	// shorter than writing out the dispatchEvent.
+
+	/**
+	 * Convenience function to close the window. It's much shorter
+	 * than writing out the dispatchEvent.
+	 */
 	public void close() {
 		dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 		return;
 	}
 	
-	// Responses for ActionListener.
+	/**
+	 * Responses for action events.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String s = e.getActionCommand();
@@ -226,26 +236,34 @@ public class ServerListWindow extends JFrame implements ActionListener, MouseLis
 		
 		return;
 	}
-	
-	// Custom function to make the window visible. When
-	// the window becomes visible, go ahead and refresh
-	// the list of games. It seems that it would logically follow
-	// that the list would be up to date when the user arrived
-	// back at this screen.
+
+	/**
+	 * Custom function to make the window visible. When the window
+	 * becomes visible, the list of games is refreshed.
+	 */
 	@Override public void setVisible(boolean b) {
 		super.setVisible(b);
 		if(b && (model != null)) refresh();
 	}
-	
-	// Keep the 'join' button disabled until the user clicks
-	// a game. Some UI polish.
+
+	/**
+	 * Responses for mouse clicks.
+	 */
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		
+		// The only mouse clicks being listened for are thos that occur inside the
+		// table view. When it does happen, enable the joinButton.
 		joinButton.setEnabled(true);
 	}
 
 	// Custom function to close the window. When this window
 	// closes, the connection window should reappear.
+	/**
+	 * Custom function to close the window. When this window
+	 * closes, the connection window will reappear.
+	 * @param e the window event
+	 */
 	@Override
 	public void windowClosing(WindowEvent e) {
 		// Reopen the server connection window.
