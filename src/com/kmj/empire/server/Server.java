@@ -179,8 +179,9 @@ public class Server extends JFrame {
 	
 	public static void main(String args[]) throws Exception
 	{
-		@SuppressWarnings("unused")
-		Server server = new Server(8080);
+		int port = 8080; //default port 8080
+		if (args.length > 0) port = Integer.valueOf(args[0]);
+		new Server(port);
 	}
 	
 	/* print a string to the server window */
