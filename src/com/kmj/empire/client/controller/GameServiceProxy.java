@@ -19,15 +19,27 @@ import com.kmj.empire.common.exceptions.BadDestinationException;
 import com.kmj.empire.common.exceptions.ConnectionFailedException;
 import com.kmj.empire.common.exceptions.InvalidGameFileException;
 
-/*
+/**
  * The object the client will interact with to send and
  * receive information to and from the server.
  */
 public class GameServiceProxy implements GameService {
 
+	/**
+	 * Write-only connection to the server.
+	 */
 	private DataInputStream in;
+	
+	/**
+	 * Read-only connection to the server.
+	 */
 	private DataOutputStream out;
 	
+	/**
+	 * Constructor for the GameServiceProxy object.
+	 * @param socket The socket connection to be used that is already
+	 * configured to connect to the server.
+	 */
 	public GameServiceProxy(Socket socket) {
 		try {
 			this.in = new DataInputStream(socket.getInputStream());
@@ -38,8 +50,11 @@ public class GameServiceProxy implements GameService {
 		}
 	}
 	
-	// Send data for a game to the server for restoration. The
-	// client is given the ID of the game in return.
+	/**
+	 * Sends game data to the server for restoration.
+	 * @param gameData String representation of the game to restore
+	 * @return The ID of the restored game.
+	 */
 	@Override
 	public int restoreGame(String gameData) throws InvalidGameFileException, ConnectionFailedException {
 		int gameId = -1; 
@@ -59,8 +74,11 @@ public class GameServiceProxy implements GameService {
 		return gameId;
 	}
 
-	// Get the GameState of the Game the user is currently
-	// playing.
+	/**
+	 * Retrieves the game state of the game the user is currently playing.
+	 * @param sessionId The session ID of the user
+	 * @throws ConnectionFailedException
+	 */
 	@Override
 	public GameState getGameState(int sessionId) throws ConnectionFailedException {
 		GameState gameState = null;
@@ -74,8 +92,14 @@ public class GameServiceProxy implements GameService {
 		return gameState;
 	}
 
-	// Send authentication details to the server the user
-	// is connecting to.
+	/**
+	 * Forward authentication details to the server the user is
+	 * connected to.
+	 * @param user The username of the user
+	 * @param password The password of the user
+	 * @throws AuthenticationFailedException
+	 * @throws ConnectionFailedException
+	 */
 	@Override
 	public int authenticate(String user, String password) throws AuthenticationFailedException, ConnectionFailedException {
 		try {
@@ -90,8 +114,11 @@ public class GameServiceProxy implements GameService {
 		}
 	}
 
-	// Add a new game to the server the user is currently connected
-	// to.
+	/**
+	 * Create a new game on the server the user is connected to.
+	 * @return The ID of the new game.
+	 * @throws ConnectionFailedException
+	 */
 	@Override
 	public int createGame() throws ConnectionFailedException {
 		try {
@@ -103,8 +130,13 @@ public class GameServiceProxy implements GameService {
 		}
 	}
 
-	// Retrieves a list of currently loaded games on the server
-	// for displaying to the user.
+	/**
+	 * Retrieves a list of currently active games on the server the user is
+	 * connected to.
+	 * @param The ID of the user's session
+	 * @returns A collection of active games that are joinable.
+	 * @throws ConnectionFailedException
+	 */
 	@Override
 	public ArrayList<Game> getGamesList(int sessionId) throws ConnectionFailedException {
 		try {
@@ -122,7 +154,12 @@ public class GameServiceProxy implements GameService {
 		}
 	}
 
-	// Add a user to the game they request.
+	/**
+	 * Add a user to a game.
+	 * @param sessionId The ID of the user's session
+	 * @param id The ID of the game to be joined.
+	 * @throws ConnectionFailedException
+	 */
 	@Override
 	public void joinGame(int sessionId, int id) throws ConnectionFailedException {
 		try {
@@ -152,7 +189,11 @@ public class GameServiceProxy implements GameService {
 		}
 	}
 
-	// Remove the user from the game they've connected to.
+	/**
+	 * Remove the user from the game they are connected to.
+	 * @param sessionId The ID of the user's session
+	 * @throws ConnectionFailedException
+	 */
 	@Override
 	public void disconnect(int sessionId) throws ConnectionFailedException {
 		try {
@@ -162,7 +203,15 @@ public class GameServiceProxy implements GameService {
 		}
 	}
 
-	// Allow the user to navigate within their current sector.
+	/**
+	 * Navigate a ship within its current sector.
+	 * @param sessionId The ID of the user's session
+	 * @param x The X-coordinate of the location to navigate to
+	 * @param y The Y-coordinate of the location to navigate to
+	 * @throws BadDestinationException
+	 * @throws ConnectionFailedException
+	 * @throws ActionException
+	 */
 	@Override
 	public void navigate(int sessionId, int x, int y) throws BadDestinationException, ConnectionFailedException, ActionException {
 		try {
@@ -182,7 +231,14 @@ public class GameServiceProxy implements GameService {
 		}
 	}
 
-	// Allow the user to warp to other sectors in the universe.
+	/**
+	 * Navigate to the specified sector.
+	 * @param sessionId The ID of the user's session
+	 * @param sector The sector to be warped to
+	 * @throws BadDestinationException
+	 * @throws ConnectionFailedException
+	 * @throws ActionException
+	 */
 	@Override
 	public void warp(int sessionId, Sector sector) throws BadDestinationException, ConnectionFailedException, ActionException {
 		try {
@@ -203,8 +259,13 @@ public class GameServiceProxy implements GameService {
 		}
 	}
 
-	// Send a request to the server to set the user's ship's alert
-	// level.
+	/**
+	 * Set the user's ship's alert level.
+	 * @param sessionId The ID of the user's session
+	 * @param level The AlertLevel that the ship should be set to
+	 * @throws ConnectionFailedException
+	 * @throws ActionException
+	 */
 	@Override
 	public void setAlertLevel(int sessionId, AlertLevel level) throws ConnectionFailedException, ActionException {
 		try {
@@ -221,7 +282,15 @@ public class GameServiceProxy implements GameService {
 		}
 	}
 
-	// Fire a torpedo at another ship within the same sector.
+	/**
+	 * Fire a torpedo at a ship within the same sector.
+	 * @param sessionId The ID of the user's session
+	 * @param sector The sector that the user's ship is currently in
+	 * @param x The X-coordinate to fire a torpedo at
+	 * @param y The Y-coordinate to fire a torpedo at
+	 * @throws ActionException
+	 * @throws ConnectionFailedException
+	 */
 	@Override
 	public void fireTorpedo(int sessionId, Sector sector, int x, int y) throws ActionException, ConnectionFailedException {
 		try {
