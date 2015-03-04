@@ -21,17 +21,28 @@ public class PlayerListTableModel extends AbstractTableModel implements SessionO
 	
 	protected String[] header;
 	
+	/**
+	 * Default constructor.
+	 */
 	public PlayerListTableModel() {
 		header = new String[1];
 		header[COLUMN_NAME] = "Player List";
 	}
 	
+	/**
+	 * Returns the number of rows in the table.
+	 * @return number of rows
+	 */
 	@Override
 	public int getRowCount() {
 		ArrayList<Player> players = Session.getInstance().getGame().getActivePlayers();
 		return (players != null ? players.size() : 0);
 	}
 	
+	/**
+	 * Returns the number of columns in the table.
+	 * @return number of columns
+	 */
 	@Override
 	public int getColumnCount() {
 		// COLUMN	DESCRIPTION
@@ -40,6 +51,10 @@ public class PlayerListTableModel extends AbstractTableModel implements SessionO
 		return header.length;
 	}
 	
+	/**
+	 * Returns the name of the table.
+	 * @return name of the table
+	 */
 	@Override
 	public String getColumnName(int c) { return header[c]; }
 	
@@ -53,11 +68,17 @@ public class PlayerListTableModel extends AbstractTableModel implements SessionO
 		}
 	}
 	
+	/**
+	 * Please see the SessionObserver interface.
+	 */
 	@Override
 	public void onIdChanged(int newId) {
 		
 	}
 	
+	/**
+	 * Please see the SessionObserver interface.
+	 */
 	@Override
 	public void onGameChanged(Game newGame) {
 		fireTableDataChanged();
