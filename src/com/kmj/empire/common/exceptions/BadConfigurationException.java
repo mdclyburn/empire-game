@@ -1,4 +1,4 @@
-/*
+/**
  * An exception that is thrown when the user provides invalid
  * input when entering configuration data in the client.
  */

@@ -1,6 +1,6 @@
 package com.kmj.empire.common.exceptions;
 
-/*
+/**
  * Exception thrown when an error occurs with player authentications.
  */
 public class AuthenticationFailedException extends Exception {

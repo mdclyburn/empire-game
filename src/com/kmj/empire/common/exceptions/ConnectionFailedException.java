@@ -1,6 +1,6 @@
 package com.kmj.empire.common.exceptions;
 
-/*
+/**
  * Exception to be failed when a connection to the server
  * cannot be established.
  */

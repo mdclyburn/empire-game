@@ -1,4 +1,4 @@
-/*
+/**
  * An exception that is thrown when an illegal action is performed
  * by the client that is detected by the server.
  */

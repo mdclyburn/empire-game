@@ -1,6 +1,6 @@
 package com.kmj.empire.common.exceptions;
 
-/*
+/**
  * Exception to be thrown when the client supplies an invalid
  * game file to restore.
  */

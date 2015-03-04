@@ -1,6 +1,6 @@
 package com.kmj.empire.common.exceptions;
 
-/*
+/**
  * Exception to be thrown when a player selects an invalid destination.
  */
 public class BadDestinationException extends Exception {
